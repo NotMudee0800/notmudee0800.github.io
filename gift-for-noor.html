@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Gift for Noor ❤️</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Dancing Script', cursive, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        #container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #video {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 240px;
+            height: 180px;
+            border: 2px solid #ff1493;
+            border-radius: 8px;
+            transform: scaleX(-1);
+            z-index: 10;
+            display: none;
+            opacity: 0.3;
+        }
+
+        #video.active {
+            display: block;
+        }
+
+        #controls {
+            display: none;
+        }
+
+        h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #ff1493;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .shape-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .shape-btn {
+            padding: 10px;
+            background: #222;
+            border: 2px solid #333;
+            border-radius: 6px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .shape-btn:hover {
+            background: #333;
+            border-color: #ff1493;
+        }
+
+        .shape-btn.active {
+            background: #ff1493;
+            color: #000;
+            border-color: #ff1493;
+            font-weight: bold;
+        }
+
+        #status {
+            display: none;
+        }
+
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 18px;
+            color: #ff1493;
+            z-index: 5;
+        }
+
+        .spinner {
+            border: 3px solid #333;
+            border-top: 3px solid #ff1493;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 18px;
+            color: #ff1493;
+            text-shadow: 0 0 10px #ff1493, 0 0 20px #ff1493;
+            font-family: 'Dancing Script', cursive;
+            z-index: 20;
+            letter-spacing: 2px;
+        }
+
+        #message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 42px;
+            font-weight: 700;
+            color: #ff1493;
+            text-align: center;
+            z-index: 15;
+            text-shadow: 0 0 20px #ff1493, 0 0 30px #ff69b4, 0 0 40px #ff1493;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 1s;
+            font-family: 'Dancing Script', cursive;
+            padding: 40px 60px;
+            background: radial-gradient(ellipse at center, rgba(255, 20, 147, 0.15) 0%, rgba(255, 105, 180, 0.05) 50%, transparent 100%);
+            border: 3px solid rgba(255, 20, 147, 0.4);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            box-shadow: 
+                0 0 30px rgba(255, 20, 147, 0.6),
+                0 0 60px rgba(255, 105, 180, 0.4),
+                inset 0 0 30px rgba(255, 20, 147, 0.2);
+            animation: flowerGlow 3s ease-in-out infinite;
+            letter-spacing: 3px;
+        }
+
+        @keyframes flowerGlow {
+            0%, 100% {
+                box-shadow: 
+                    0 0 30px rgba(255, 20, 147, 0.6),
+                    0 0 60px rgba(255, 105, 180, 0.4),
+                    inset 0 0 30px rgba(255, 20, 147, 0.2);
+                border-color: rgba(255, 20, 147, 0.4);
+            }
+            50% {
+                box-shadow: 
+                    0 0 50px rgba(255, 20, 147, 0.8),
+                    0 0 90px rgba(255, 105, 180, 0.6),
+                    inset 0 0 50px rgba(255, 20, 147, 0.3);
+                border-color: rgba(255, 20, 147, 0.7);
+            }
+        }
+
+        #message.show {
+            opacity: 1;
+        }
+
+        #handCanvas {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 240px;
+            height: 180px;
+            border: 2px solid #ff1493;
+            border-radius: 8px;
+            z-index: 11;
+            pointer-events: none;
+            transform: scaleX(-1);
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    
+    <video id="video" autoplay playsinline></video>
+    <canvas id="handCanvas"></canvas>
+    
+    <div id="controls">
+        <div class="control-group">
+            <label>🎁 Make a heart with two fingers to see magic!</label>
+            <div class="shape-buttons">
+                <button class="shape-btn active" data-shape="heart">Heart</button>
+                <button class="shape-btn" data-shape="sphere">Sphere</button>
+                <button class="shape-btn" data-shape="flower">🌹</button>
+                <button class="shape-btn" data-shape="spiral">Spiral</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="status">
+        <div class="status-item">
+            <span class="status-label">Hand Detected:</span>
+            <span class="status-value" id="handStatus">No</span>
+        </div>
+        <div class="status-item">
+            <span class="status-label">Gesture:</span>
+            <span class="status-value" id="gestureStatus">None</span>
+        </div>
+        <div class="status-item">
+            <span class="status-label">FPS:</span>
+            <span class="status-value" id="fpsStatus">0</span>
+        </div>
+    </div>
+    
+    <div id="loading">
+        <div class="spinner"></div>
+        Initializing hand tracking...
+    </div>
+
+    <div id="footer">Made with love for Noor ❤️✨ by M✨</div>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        // Configuration
+        const config = {
+            particleCount: 25000,
+            forceStrength: 0.5,
+            interactionRadius: 5.0,
+            currentShape: 'saturn',
+            damping: 0.94,
+            returnForce: 0.06,
+            transitionSpeed: 0.05
+        };
+
+        // Three.js setup
+        let scene, camera, renderer, particles, particleSystem;
+        let handPosition = null;
+        let prevHandPosition = null;
+        let smoothHandPosition = { x: 0, y: 0, z: 0 };
+        let handPosition2 = null;
+        let prevHandPosition2 = null;
+        let smoothHandPosition2 = { x: 0, y: 0, z: 0 };
+        let twoHandsActive = false;
+        let firstHandPalmCenter = null; // Track first hand's palm position
+        let isOpenHand = false;
+        let isFist = false;
+        let isLoveGesture = false;
+        let controls;
+        let targetShape = null;
+        let shapeTransitioning = false;
+        let autoRotate = false;
+        let rotationSpeed = 0.3;
+        
+        // FPS tracking
+        let frameCount = 0;
+        let lastTime = performance.now();
+
+        // Initialize Three.js
+        function initThree() {
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x000000);
+            
+            // Create simple starfield
+            const starGeometry = new THREE.BufferGeometry();
+            const starCount = 800;
+            const starPositions = new Float32Array(starCount * 3);
+            const starSizes = new Float32Array(starCount);
+            
+            for (let i = 0; i < starCount; i++) {
+                // Random positions in a large sphere
+                const radius = 150 + Math.random() * 350;
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos(2 * Math.random() - 1);
+                
+                starPositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+                starPositions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+                starPositions[i * 3 + 2] = radius * Math.cos(phi);
+                
+                starSizes[i] = Math.random() * 1.5 + 0.5;
+            }
+            
+            starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+            starGeometry.setAttribute('size', new THREE.BufferAttribute(starSizes, 1));
+            
+            const starMaterial = new THREE.PointsMaterial({
+                color: 0xffffff,
+                size: 1.5,
+                transparent: true,
+                opacity: 0.8,
+                sizeAttenuation: true
+            });
+            
+            const stars = new THREE.Points(starGeometry, starMaterial);
+            scene.add(stars);
+            
+            // Store for animation
+            scene.userData.stars = stars;
+            scene.userData.starSizes = starSizes;
+
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 15;
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            document.getElementById('container').appendChild(renderer.domElement);
+
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+
+            // Ambient light
+            const ambientLight = new THREE.AmbientLight(0x404040);
+            scene.add(ambientLight);
+
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        // Shape generators
+        function generateSphere(count) {
+            const positions = new Float32Array(count * 3);
+            const radius = 5;
+            
+            for (let i = 0; i < count; i++) {
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos(2 * Math.random() - 1);
+                const r = radius * Math.cbrt(Math.random());
+                
+                positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+                positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+                positions[i * 3 + 2] = r * Math.cos(phi);
+            }
+            
+            return positions;
+        }
+
+        function generateHeart(count) {
+            const positions = new Float32Array(count * 3);
+            const scale = 1.5;
+            
+            // 70% for heart outline, 30% for text inside
+            const heartCount = Math.floor(count * 0.7);
+            const textCount = count - heartCount;
+            
+            let idx = 0;
+            
+            // Heart outline
+            for (let i = 0; i < heartCount; i++) {
+                const t = Math.random() * Math.PI * 2;
+                const u = Math.random() * Math.PI;
+                
+                const x = scale * (16 * Math.pow(Math.sin(t), 3));
+                const y = scale * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+                const z = scale * (Math.sin(u) * 5);
+                
+                positions[idx * 3] = x * 0.3 + (Math.random() - 0.5) * 1;
+                positions[idx * 3 + 1] = y * 0.3 + (Math.random() - 0.5) * 1;
+                positions[idx * 3 + 2] = z * 0.3 + (Math.random() - 0.5) * 1;
+                idx++;
+            }
+            
+            // Text inside heart
+            const textPositions = generateSmallTextParticles('U Are My\nUniverse', textCount);
+            for (let i = 0; i < textCount; i++) {
+                positions[idx * 3] = textPositions[i * 3];
+                positions[idx * 3 + 1] = textPositions[i * 3 + 1];
+                positions[idx * 3 + 2] = textPositions[i * 3 + 2];
+                idx++;
+            }
+            
+            return positions;
+        }
+
+        function generateSpiral(count) {
+            const positions = new Float32Array(count * 3);
+            const turns = 5;
+            const radius = 5;
+            
+            for (let i = 0; i < count; i++) {
+                const t = (i / count) * turns * Math.PI * 2;
+                const r = (i / count) * radius;
+                const height = (i / count) * 10 - 5;
+                
+                positions[i * 3] = r * Math.cos(t) + (Math.random() - 0.5) * 0.5;
+                positions[i * 3 + 1] = height + (Math.random() - 0.5) * 0.5;
+                positions[i * 3 + 2] = r * Math.sin(t) + (Math.random() - 0.5) * 0.5;
+            }
+            
+            return positions;
+        }
+
+        function generateFlower(count) {
+            const positions = new Float32Array(count * 3);
+            
+            // Distribute particles: 70% bloom, 20% stem, 10% leaves
+            const bloomCount = Math.floor(count * 0.7);
+            const stemCount = Math.floor(count * 0.2);
+            const leafCount = count - bloomCount - stemCount;
+            
+            let idx = 0;
+            
+            // Rose bloom (spiral sphere at top)
+            for (let i = 0; i < bloomCount; i++) {
+                const ratio = i / bloomCount;
+                const angle = ratio * Math.PI * 8;
+                const height = ratio * 3;
+                const radius = 1.5 * (1 - ratio * 0.5);
+                
+                positions[idx * 3] = radius * Math.cos(angle) + (Math.random() - 0.5) * 0.2;
+                positions[idx * 3 + 1] = height + 2 + (Math.random() - 0.5) * 0.2;
+                positions[idx * 3 + 2] = radius * Math.sin(angle) + (Math.random() - 0.5) * 0.2;
+                idx++;
+            }
+            
+            // Stem (vertical line going down)
+            for (let i = 0; i < stemCount; i++) {
+                const ratio = i / stemCount;
+                const height = -ratio * 5;
+                
+                positions[idx * 3] = (Math.random() - 0.5) * 0.15;
+                positions[idx * 3 + 1] = height + 2;
+                positions[idx * 3 + 2] = (Math.random() - 0.5) * 0.15;
+                idx++;
+            }
+            
+            // Leaves (two side extensions)
+            for (let i = 0; i < leafCount; i++) {
+                const side = i < leafCount / 2 ? -1 : 1;
+                const ratio = (i % (leafCount / 2)) / (leafCount / 2);
+                
+                positions[idx * 3] = side * (0.5 + ratio * 0.8);
+                positions[idx * 3 + 1] = -1 - ratio * 0.5;
+                positions[idx * 3 + 2] = (Math.random() - 0.5) * 0.3;
+                idx++;
+            }
+            
+            return positions;
+        }
+
+        function generateSaturn(count) {
+            const positions = new Float32Array(count * 3);
+            const colors = new Float32Array(count * 3);
+            
+            // 40% for planet sphere, 60% for rings (more ring particles)
+            const sphereCount = Math.floor(count * 0.4);
+            const ringCount = count - sphereCount;
+            
+            let idx = 0;
+            
+            // Saturn sphere (golden planet)
+            for (let i = 0; i < sphereCount; i++) {
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos(2 * Math.random() - 1);
+                const r = 4 * Math.cbrt(Math.random());
+                
+                positions[idx * 3] = r * Math.sin(phi) * Math.cos(theta);
+                positions[idx * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+                positions[idx * 3 + 2] = r * Math.cos(phi);
+                
+                // Golden color for planet
+                colors[idx * 3] = 0.96; // R
+                colors[idx * 3 + 1] = 0.87; // G
+                colors[idx * 3 + 2] = 0.70; // B
+                idx++;
+            }
+            
+            // Saturn rings with multiple colored layers
+            for (let i = 0; i < ringCount; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const radius = 5 + Math.random() * 4; // Ring radius 5-9
+                const thickness = (Math.random() - 0.5) * 0.4; // Thin rings
+                
+                positions[idx * 3] = radius * Math.cos(angle);
+                positions[idx * 3 + 1] = thickness;
+                positions[idx * 3 + 2] = radius * Math.sin(angle);
+                
+                // Colorful rings based on radius
+                let r, g, b;
+                if (radius < 6) {
+                    // Inner ring - golden/yellow
+                    r = 1.0;
+                    g = 0.9 + Math.random() * 0.1;
+                    b = 0.5 + Math.random() * 0.2;
+                } else if (radius < 7) {
+                    // Middle ring - orange/pink
+                    r = 1.0;
+                    g = 0.6 + Math.random() * 0.2;
+                    b = 0.7 + Math.random() * 0.2;
+                } else if (radius < 8) {
+                    // Outer middle ring - pink/purple
+                    r = 0.9 + Math.random() * 0.1;
+                    g = 0.4 + Math.random() * 0.2;
+                    b = 0.8 + Math.random() * 0.2;
+                } else {
+                    // Outermost ring - purple/blue
+                    r = 0.7 + Math.random() * 0.2;
+                    g = 0.5 + Math.random() * 0.2;
+                    b = 0.9 + Math.random() * 0.1;
+                }
+                
+                colors[idx * 3] = r;
+                colors[idx * 3 + 1] = g;
+                colors[idx * 3 + 2] = b;
+                idx++;
+            }
+            
+            return { positions, colors };
+        }
+
+        function generateSmallTextParticles(text, count) {
+            const positions = new Float32Array(count * 3);
+            
+            // Create offscreen canvas to render text
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 800;
+            canvas.height = 400;
+            
+            // Draw filled text
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 140px "Dancing Script", cursive';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            // Handle multi-line text
+            const lines = text.split('\n');
+            const lineHeight = 120;
+            const startY = (canvas.height - (lines.length - 1) * lineHeight) / 2;
+            
+            lines.forEach((line, index) => {
+                ctx.fillText(line, canvas.width / 2, startY + index * lineHeight);
+            });
+            
+            // Get pixel data
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const pixels = imageData.data;
+            
+            // Extract white pixels
+            const textPixels = [];
+            for (let y = 0; y < canvas.height; y += 3) {
+                for (let x = 0; x < canvas.width; x += 3) {
+                    const index = (y * canvas.width + x) * 4;
+                    if (pixels[index] > 128) {
+                        textPixels.push({
+                            x: (x - canvas.width / 2) / 80,
+                            y: (canvas.height / 2 - y) / 80,
+                            z: 0
+                        });
+                    }
+                }
+            }
+            
+            // Distribute particles
+            for (let i = 0; i < count; i++) {
+                const pixel = textPixels[i % textPixels.length];
+                positions[i * 3] = pixel.x + (Math.random() - 0.5) * 0.05;
+                positions[i * 3 + 1] = pixel.y + (Math.random() - 0.5) * 0.05;
+                positions[i * 3 + 2] = pixel.z + (Math.random() - 0.5) * 0.5;
+            }
+            
+            return positions;
+        }
+
+        function generateTextParticles(text, count) {
+            const positions = new Float32Array(count * 3);
+            
+            // Create offscreen canvas to render text
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 2400;
+            canvas.height = 600;
+            
+            // Draw filled text for better readability
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 180px "Dancing Script", cursive';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+            
+            // Get pixel data
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const pixels = imageData.data;
+            
+            // Extract white pixels - sample more for better definition
+            const textPixels = [];
+            for (let y = 0; y < canvas.height; y += 2) {
+                for (let x = 0; x < canvas.width; x += 2) {
+                    const index = (y * canvas.width + x) * 4;
+                    if (pixels[index] > 128) {
+                        textPixels.push({
+                            x: (x - canvas.width / 2) / 50,
+                            y: (canvas.height / 2 - y) / 50,
+                            z: 0
+                        });
+                    }
+                }
+            }
+            
+            // Distribute particles across text with less randomness
+            for (let i = 0; i < count; i++) {
+                const pixel = textPixels[i % textPixels.length];
+                positions[i * 3] = pixel.x + (Math.random() - 0.5) * 0.1;
+                positions[i * 3 + 1] = pixel.y + (Math.random() - 0.5) * 0.1;
+                positions[i * 3 + 2] = pixel.z + (Math.random() - 0.5) * 1;
+            }
+            
+            return positions;
+        }
+
+        function generateFlowerText(count) {
+            const positions = new Float32Array(count * 3);
+            
+            // 60% for flower outline, 40% for text inside
+            const flowerCount = Math.floor(count * 0.6);
+            const textCount = count - flowerCount;
+            
+            let idx = 0;
+            
+            // Create beautiful flower petals (8 petals)
+            const numPetals = 8;
+            const particlesPerPetal = Math.floor(flowerCount / numPetals);
+            
+            for (let petal = 0; petal < numPetals; petal++) {
+                const petalAngle = (petal * Math.PI * 2) / numPetals;
+                
+                for (let i = 0; i < particlesPerPetal; i++) {
+                    // Use parametric equations for smooth petal shape
+                    const t = (i / particlesPerPetal) * Math.PI;
+                    const petalRadius = 3 + Math.sin(t) * 3; // Varying radius for petal shape
+                    const angleOffset = Math.sin(t * 2) * 0.3; // Slight curve
+                    
+                    const angle = petalAngle + angleOffset;
+                    const r = petalRadius + (Math.random() - 0.5) * 0.3;
+                    
+                    positions[idx * 3] = r * Math.cos(angle);
+                    positions[idx * 3 + 1] = r * Math.sin(angle);
+                    positions[idx * 3 + 2] = (Math.random() - 0.5) * 0.5;
+                    idx++;
+                }
+            }
+            
+            // Fill remaining flower particles
+            while (idx < flowerCount) {
+                const t = Math.random() * Math.PI * 2;
+                const r = 2 + Math.random() * 4;
+                positions[idx * 3] = r * Math.cos(t);
+                positions[idx * 3 + 1] = r * Math.sin(t);
+                positions[idx * 3 + 2] = (Math.random() - 0.5) * 0.5;
+                idx++;
+            }
+            
+            // Text inside flower (centered and scaled smaller)
+            const textPositions = generateSmallTextParticles('U are my\nflower', textCount);
+            for (let i = 0; i < textCount; i++) {
+                positions[idx * 3] = textPositions[i * 3] * 0.7; // Scale down text
+                positions[idx * 3 + 1] = textPositions[i * 3 + 1] * 0.7;
+                positions[idx * 3 + 2] = textPositions[i * 3 + 2];
+                idx++;
+            }
+            
+            return positions;
+        }
+
+        // Create particle system
+        function createParticleSystem(count, shape) {
+            if (particleSystem) {
+                scene.remove(particleSystem);
+                particles.geometry.dispose();
+                particles.material.dispose();
+            }
+
+            let positions, colors;
+            if (shape === 'saturn') {
+                const saturnData = generateSaturn(count);
+                positions = saturnData.positions;
+                colors = saturnData.colors;
+            } else {
+                switch (shape) {
+                    case 'sphere': positions = generateSphere(count); break;
+                    case 'heart': positions = generateHeart(count); break;
+                    case 'spiral': positions = generateSpiral(count); break;
+                    case 'flower': positions = generateFlower(count); break;
+                    case 'flowerText': positions = generateFlowerText(count); break;
+                    case 'text': positions = generateTextParticles('TE AMO', count); break;
+                    default: positions = generateHeart(count);
+                }
+            }
+
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+            // Store original positions
+            const originalPositions = new Float32Array(positions);
+            geometry.setAttribute('originalPosition', new THREE.BufferAttribute(originalPositions, 3));
+
+            // Velocities
+            const velocities = new Float32Array(count * 3);
+            geometry.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
+
+            // Add colors if Saturn
+            if (colors) {
+                geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            }
+
+            // Material - color depends on shape
+            let color = 0xff1493; // Default pink
+            let size = 0.08;
+            let opacity = 0.8;
+            let vertexColors = false;
+            
+            if (shape === 'saturn') {
+                vertexColors = true; // Use vertex colors for Saturn
+                size = 0.12;
+                opacity = 0.9;
+            } else if (shape === 'text') {
+                color = 0xff1493; // Pink for text
+                size = 0.09;
+                opacity = 0.9;
+            }
+            
+            const material = new THREE.PointsMaterial({
+                color: vertexColors ? 0xffffff : color,
+                size: size,
+                blending: THREE.AdditiveBlending,
+                transparent: true,
+                opacity: opacity,
+                sizeAttenuation: true,
+                vertexColors: vertexColors
+            });
+
+            particles = {
+                geometry,
+                material
+            };
+
+            particleSystem = new THREE.Points(geometry, material);
+            scene.add(particleSystem);
+        }
+
+        // Animate to a new shape
+        function animateToShape(shape) {
+            if (!particles) return;
+            
+            const count = config.particleCount;
+            let newPositions, newColors;
+            
+            if (shape === 'saturn') {
+                const saturnData = generateSaturn(count);
+                newPositions = saturnData.positions;
+                newColors = saturnData.colors;
+            } else {
+                switch (shape) {
+                    case 'sphere': newPositions = generateSphere(count); break;
+                    case 'heart': newPositions = generateHeart(count); break;
+                    case 'spiral': newPositions = generateSpiral(count); break;
+                    case 'flower': newPositions = generateFlower(count); break;
+                    case 'flowerText': newPositions = generateFlowerText(count); break;
+                    case 'text': newPositions = generateTextParticles('TE AMO', count); break;
+                    default: newPositions = generateHeart(count);
+                }
+            }
+            
+            const originalPositions = particles.geometry.attributes.originalPosition.array;
+            const positions = particles.geometry.attributes.position.array;
+            
+            // Update material and colors for different shapes
+            if (shape === 'saturn') {
+                particles.material.vertexColors = true;
+                particles.material.color.setHex(0xffffff);
+                particles.material.size = 0.12;
+                particles.material.opacity = 0.9;
+                particles.material.needsUpdate = true;
+                
+                // Add or update color attribute
+                if (!particles.geometry.attributes.color) {
+                    particles.geometry.setAttribute('color', new THREE.BufferAttribute(newColors, 3));
+                } else {
+                    particles.geometry.attributes.color.array.set(newColors);
+                    particles.geometry.attributes.color.needsUpdate = true;
+                }
+            } else {
+                particles.material.vertexColors = false;
+                particles.material.needsUpdate = true;
+                
+                if (shape === 'text') {
+                    particles.material.color.setHex(0xff1493);
+                    particles.material.size = 0.09;
+                    particles.material.opacity = 0.9;
+                } else if (shape === 'flowerText') {
+                    particles.material.color.setHex(0xff69b4);
+                    particles.material.size = 0.08;
+                    particles.material.opacity = 0.85;
+                } else {
+                    particles.material.color.setHex(0xff1493);
+                    particles.material.size = 0.08;
+                    particles.material.opacity = 0.8;
+                }
+            }
+            
+            const transitionDuration = 500;
+            const startTime = performance.now();
+            
+            const transition = (currentTime) => {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / transitionDuration, 1);
+                
+                const eased = 1 - Math.pow(1 - progress, 2);
+                
+                if (progress < 1) {
+                    for (let i = 0; i < count * 3; i++) {
+                        originalPositions[i] = originalPositions[i] + (newPositions[i] - originalPositions[i]) * eased * 0.2;
+                        positions[i] = positions[i] + (newPositions[i] - positions[i]) * 0.08;
+                    }
+                    
+                    particles.geometry.attributes.originalPosition.needsUpdate = true;
+                    particles.geometry.attributes.position.needsUpdate = true;
+                    requestAnimationFrame(transition);
+                } else {
+                    for (let i = 0; i < count * 3; i++) {
+                        originalPositions[i] = newPositions[i];
+                        positions[i] = newPositions[i];
+                    }
+                    particles.geometry.attributes.originalPosition.needsUpdate = true;
+                    particles.geometry.attributes.position.needsUpdate = true;
+                    
+                    config.currentShape = shape;
+                    shapeTransitioning = false;
+                    
+                    // Update UI
+                    document.querySelectorAll('.shape-btn').forEach(btn => {
+                        btn.classList.toggle('active', btn.dataset.shape === shape);
+                    });
+                }
+            };
+            
+            requestAnimationFrame(transition);
+        }
+        
+        // Update particles physics
+        function updateParticles() {
+            if (!particles) return;
+
+            const positions = particles.geometry.attributes.position.array;
+            const originalPositions = particles.geometry.attributes.originalPosition.array;
+            const velocities = particles.geometry.attributes.velocity.array;
+            const count = positions.length / 3;
+
+            // Add gentle breathing animation
+            const time = Date.now() * 0.0003;
+            const breathScale = 1 + Math.sin(time) * 0.02;
+
+            // Smooth hand position once per frame with better responsiveness
+            if (handPosition) {
+                smoothHandPosition.x += (handPosition.x - smoothHandPosition.x) * 0.15;
+                smoothHandPosition.y += (handPosition.y - smoothHandPosition.y) * 0.15;
+                smoothHandPosition.z += (handPosition.z - smoothHandPosition.z) * 0.15;
+            }
+
+            for (let i = 0; i < count; i++) {
+                const idx = i * 3;
+                
+                let x = positions[idx];
+                let y = positions[idx + 1];
+                let z = positions[idx + 2];
+
+                const ox = originalPositions[idx];
+                const oy = originalPositions[idx + 1];
+                const oz = originalPositions[idx + 2];
+
+                let vx = velocities[idx];
+                let vy = velocities[idx + 1];
+                let vz = velocities[idx + 2];
+
+                if (handPosition) {
+                    const dx = x - smoothHandPosition.x;
+                    const dy = y - smoothHandPosition.y;
+                    const dz = z - smoothHandPosition.z;
+                    const distSq = dx * dx + dy * dy + dz * dz;
+                    const radiusSq = config.interactionRadius * config.interactionRadius;
+
+                    if (distSq < radiusSq) {
+                        const distance = Math.sqrt(distSq);
+                        const force = (1 - distance / config.interactionRadius) * config.forceStrength;
+                        
+                        if (isOpenHand) {
+                            const invDist = 1 / distance;
+                            vx += dx * invDist * force * 1.5;
+                            vy += dy * invDist * force * 1.5;
+                            vz += dz * invDist * force * 1.5;
+                        } else if (isFist) {
+                            const centerDistSq = x * x + y * y + z * z;
+                            
+                            if (centerDistSq > 0.0001) {
+                                const centerDist = Math.sqrt(centerDistSq);
+                                const invCenterDist = 1 / centerDist;
+                                vx -= x * invCenterDist * force * 5.0;
+                                vy -= y * invCenterDist * force * 5.0;
+                                vz -= z * invCenterDist * force * 5.0;
+                            }
+                        }
+                    }
+                }
+                
+                // Extra compression force when fist is active - pulls all particles to center
+                if (isFist) {
+                    const centerDistSq = x * x + y * y + z * z;
+                    
+                    if (centerDistSq > 0.0001) {
+                        const centerDist = Math.sqrt(centerDistSq);
+                        const invCenterDist = 1 / centerDist;
+                        vx -= x * invCenterDist * config.forceStrength * 1.2;
+                        vy -= y * invCenterDist * config.forceStrength * 1.2;
+                        vz -= z * invCenterDist * config.forceStrength * 1.2;
+                    }
+                }
+
+                const returnX = (ox * breathScale - x) * config.returnForce;
+                const returnY = (oy * breathScale - y) * config.returnForce;
+                const returnZ = (oz * breathScale - z) * config.returnForce;
+
+                vx += returnX;
+                vy += returnY;
+                vz += returnZ;
+
+                vx *= config.damping;
+                vy *= config.damping;
+                vz *= config.damping;
+
+                velocities[idx] = vx;
+                velocities[idx + 1] = vy;
+                velocities[idx + 2] = vz;
+
+                positions[idx] += vx;
+                positions[idx + 1] += vy;
+                positions[idx + 2] += vz;
+            }
+
+            particles.geometry.attributes.position.needsUpdate = true;
+        }
+
+        // Window resize handler
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if (scene.userData.stars) {
+                const time = Date.now() * 0.0005;
+                const sizes = scene.userData.stars.geometry.attributes.size.array;
+                const originalSizes = scene.userData.starSizes;
+                
+                for (let i = 0; i < sizes.length; i++) {
+                    sizes[i] = originalSizes[i] * (0.85 + Math.sin(time + i * 0.5) * 0.15);
+                }
+                scene.userData.stars.geometry.attributes.size.needsUpdate = true;
+            }
+
+            // Two hands mode - center and gentle float, no rotation
+            if (twoHandsActive) {
+                const time = Date.now() * 0.0015; // Faster animation (was 0.0005)
+                if (particleSystem) {
+                    // Gentle floating animation
+                    particleSystem.position.x = Math.sin(time) * 0.5;
+                    particleSystem.position.y = Math.cos(time * 0.7) * 0.3;
+                    // Slowly reset rotation to center
+                    particleSystem.rotation.x *= 0.95;
+                    particleSystem.rotation.y *= 0.95;
+                    particleSystem.rotation.z *= 0.95;
+                }
+                if (scene.userData.stars) {
+                    scene.userData.stars.position.x = Math.sin(time + 1) * 0.3;
+                    scene.userData.stars.position.y = Math.cos(time * 0.5) * 0.2;
+                    scene.userData.stars.rotation.x *= 0.95;
+                    scene.userData.stars.rotation.y *= 0.95;
+                }
+            }
+            // Single hand mode - rotate with hand movement
+            else if (handPosition && prevHandPosition) {
+                const handDeltaX = handPosition.x - prevHandPosition.x;
+                const handDeltaY = handPosition.y - prevHandPosition.y;
+                
+                if (particleSystem) {
+                    particleSystem.rotation.y += handDeltaX * 0.1;
+                    particleSystem.rotation.x -= handDeltaY * 0.1;
+                    // Reset position when not in two-hand mode
+                    particleSystem.position.x *= 0.9;
+                    particleSystem.position.y *= 0.9;
+                }
+                
+                if (scene.userData.stars) {
+                    scene.userData.stars.rotation.y += handDeltaX * 0.1;
+                    scene.userData.stars.rotation.x -= handDeltaY * 0.1;
+                    scene.userData.stars.position.x *= 0.9;
+                    scene.userData.stars.position.y *= 0.9;
+                }
+            }
+
+            updateParticles();
+            controls.update();
+            renderer.render(scene, camera);
+
+            frameCount++;
+            const currentTime = performance.now();
+            if (currentTime >= lastTime + 1000) {
+                document.getElementById('fpsStatus').textContent = frameCount;
+                frameCount = 0;
+                lastTime = currentTime;
+            }
+        }
+
+        // MediaPipe Hands setup
+        let hands, camera3D;
+
+        async function initMediaPipe() {
+            try {
+                const videoElement = document.getElementById('video');
+                const loadingElement = document.getElementById('loading');
+
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js';
+                document.head.appendChild(script);
+
+                const cameraScript = document.createElement('script');
+                cameraScript.src = 'https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js';
+                document.head.appendChild(cameraScript);
+
+                await new Promise((resolve, reject) => {
+                    let loaded = 0;
+                    const timeout = setTimeout(() => reject(new Error('Script loading timeout')), 10000);
+                    
+                    script.onload = () => { 
+                        loaded++; 
+                        if (loaded === 2) {
+                            clearTimeout(timeout);
+                            resolve();
+                        }
+                    };
+                    cameraScript.onload = () => { 
+                        loaded++; 
+                        if (loaded === 2) {
+                            clearTimeout(timeout);
+                            resolve();
+                        }
+                    };
+                    script.onerror = () => reject(new Error('Failed to load hands.js'));
+                    cameraScript.onerror = () => reject(new Error('Failed to load camera_utils.js'));
+                });
+
+                hands = new Hands({
+                    locateFile: (file) => {
+                        return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+                    }
+                });
+
+                hands.setOptions({
+                    maxNumHands: 2,
+                    modelComplexity: 1,
+                    minDetectionConfidence: 0.7,
+                    minTrackingConfidence: 0.7
+                });
+
+                hands.onResults(onHandResults);
+
+                camera3D = new Camera(videoElement, {
+                    onFrame: async () => {
+                        await hands.send({ image: videoElement });
+                    },
+                    width: 640,
+                    height: 480
+                });
+
+                await camera3D.start();
+                videoElement.classList.add('active');
+                loadingElement.style.display = 'none';
+            } catch (error) {
+                console.error('Error initializing hand tracking:', error);
+                document.getElementById('loading').innerHTML = `
+                    <div style="text-align: center; color: #ff6b6b;">
+                        <div>⚠️ Hand tracking unavailable</div>
+                        <div style="font-size: 12px; margin-top: 10px;">Camera permission denied or scripts failed to load</div>
+                        <div style="font-size: 12px; margin-top: 5px;">Particles will still work without hand tracking</div>
+                    </div>
+                `;
+                setTimeout(() => {
+                    document.getElementById('loading').style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // Process hand results
+        function onHandResults(results) {
+            const handStatusEl = document.getElementById('handStatus');
+            const gestureStatusEl = document.getElementById('gestureStatus');
+            
+            // Draw hand landmarks on canvas
+            const canvas = document.getElementById('handCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 240;
+            canvas.height = 180;
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                const numHands = results.multiHandLandmarks.length;
+                twoHandsActive = numHands === 2;
+                handStatusEl.textContent = twoHandsActive ? 'Two Hands' : 'Yes';
+                
+                let controlHandIndex = 0;
+                let fixHandIndex = 1;
+                
+                // If only one hand, remember its position as the control hand
+                if (numHands === 1) {
+                    firstHandPalmCenter = results.multiHandLandmarks[0][9];
+                }
+                // If two hands and we have a reference position, find which hand matches
+                else if (numHands === 2 && firstHandPalmCenter) {
+                    const palm0 = results.multiHandLandmarks[0][9];
+                    const palm1 = results.multiHandLandmarks[1][9];
+                    
+                    // Calculate distance from each hand to the original control hand position
+                    const dist0 = Math.sqrt(
+                        Math.pow(palm0.x - firstHandPalmCenter.x, 2) +
+                        Math.pow(palm0.y - firstHandPalmCenter.y, 2) +
+                        Math.pow(palm0.z - firstHandPalmCenter.z, 2)
+                    );
+                    const dist1 = Math.sqrt(
+                        Math.pow(palm1.x - firstHandPalmCenter.x, 2) +
+                        Math.pow(palm1.y - firstHandPalmCenter.y, 2) +
+                        Math.pow(palm1.z - firstHandPalmCenter.z, 2)
+                    );
+                    
+                    // The hand closest to the original position is the control hand
+                    if (dist1 < dist0) {
+                        controlHandIndex = 1;
+                        fixHandIndex = 0;
+                    }
+                    
+                    // Update the tracked position with the control hand
+                    firstHandPalmCenter = results.multiHandLandmarks[controlHandIndex][9];
+                }
+                
+                // Draw all detected hands with correct colors based on their role
+                results.multiHandLandmarks.forEach((landmarks, handIndex) => {
+                    const isControlHand = handIndex === controlHandIndex;
+                    
+                    // Add label for each hand (no lines or dots)
+                    const palmCenter = landmarks[9];
+                    ctx.font = 'bold 16px "Dancing Script", cursive';
+                    ctx.fillStyle = isControlHand ? '#00d9ff' : '#ffaa00';
+                    ctx.fillText(
+                        isControlHand ? 'CONTROL' : 'FIX',
+                        palmCenter.x * canvas.width - 30,
+                        palmCenter.y * canvas.height - 15
+                    );
+                });
+                
+                // Control hand - for gesture control
+                const landmarks = results.multiHandLandmarks[controlHandIndex];
+                const palmCenter = landmarks[9];
+                
+                prevHandPosition = handPosition ? { ...handPosition } : null;
+                
+                handPosition = {
+                    x: (palmCenter.x - 0.5) * 20,
+                    y: -(palmCenter.y - 0.5) * 15,
+                    z: -palmCenter.z * 10
+                };
+                
+                // Second hand - to fix/center the view
+                if (twoHandsActive) {
+                    const landmarks2 = results.multiHandLandmarks[fixHandIndex];
+                    const palmCenter2 = landmarks2[9];
+                    
+                    prevHandPosition2 = handPosition2 ? { ...handPosition2 } : null;
+                    
+                    handPosition2 = {
+                        x: (palmCenter2.x - 0.5) * 20,
+                        y: -(palmCenter2.y - 0.5) * 15,
+                        z: -palmCenter2.z * 10
+                    };
+                } else {
+                    handPosition2 = null;
+                    prevHandPosition2 = null;
+                }
+
+                const fingerTips = [8, 12, 16, 20];
+                const fingerBases = [5, 9, 13, 17];
+                
+                const fingerExtensions = [];
+                for (let i = 0; i < fingerTips.length; i++) {
+                    const tip = landmarks[fingerTips[i]];
+                    const base = landmarks[fingerBases[i]];
+                    const distance = Math.sqrt(
+                        Math.pow(tip.x - base.x, 2) +
+                        Math.pow(tip.y - base.y, 2)
+                    );
+                    fingerExtensions.push(distance > 0.1);
+                }
+                
+                let extendedFingers = fingerExtensions.filter(e => e).length;
+                
+                const isIndexExtended = fingerExtensions[0];
+                const isMiddleExtended = fingerExtensions[1];
+                const isRingExtended = fingerExtensions[2];
+                const isPinkyExtended = fingerExtensions[3];
+                
+                // Check thumb for heart gesture detection
+                const thumbTip = landmarks[4];
+                const indexTip = landmarks[8];
+                const middleTip = landmarks[12];
+                
+                // Calculate thumb-index distance for heart gesture (fingers crossed/touching)
+                const thumbIndexDistance = Math.sqrt(
+                    Math.pow(thumbTip.x - indexTip.x, 2) +
+                    Math.pow(thumbTip.y - indexTip.y, 2)
+                );
+                
+                // Check thumb extension
+                const thumbBase = landmarks[2];
+                const thumbExtension = Math.sqrt(
+                    Math.pow(thumbTip.x - thumbBase.x, 2) +
+                    Math.pow(thumbTip.y - thumbBase.y, 2)
+                );
+                const isThumbExtended = thumbExtension > 0.1;
+                
+                // Closed fist: all fingers closed including thumb
+                if (extendedFingers === 0 && !isThumbExtended) {
+                    isOpenHand = false;
+                    isFist = true;
+                    isLoveGesture = false;
+                    gestureStatusEl.textContent = '✊ Fist (Compress)';
+                    gestureStatusEl.style.color = '#f4e7c3';
+                    
+                    if (config.currentShape !== 'saturn' && !shapeTransitioning) {
+                        shapeTransitioning = true;
+                        animateToShape('saturn');
+                    }
+                }
+                // 1 finger (pointing): show "TE AMO" text
+                else if (isIndexExtended && !isMiddleExtended && !isRingExtended && !isPinkyExtended) {
+                    isOpenHand = false;
+                    isFist = false;
+                    isLoveGesture = true;
+                    gestureStatusEl.textContent = '☝️ One Finger (TE AMO)';
+                    gestureStatusEl.style.color = '#ff1493';
+                    
+                    if (config.currentShape !== 'text' && !shapeTransitioning) {
+                        shapeTransitioning = true;
+                        animateToShape('text');
+                    }
+                }
+                // 3 fingers: show "U are a flower" with flower
+                else if (isIndexExtended && isMiddleExtended && isRingExtended && !isPinkyExtended) {
+                    isOpenHand = false;
+                    isFist = false;
+                    isLoveGesture = true;
+                    gestureStatusEl.textContent = '🌸 Three Fingers (Flower)';
+                    gestureStatusEl.style.color = '#ff69b4';
+                    
+                    if (config.currentShape !== 'flowerText' && !shapeTransitioning) {
+                        shapeTransitioning = true;
+                        animateToShape('flowerText');
+                    }
+                }
+                // 2 fingers (peace/victory): show Heart
+                else if (isIndexExtended && isMiddleExtended && !isRingExtended && !isPinkyExtended) {
+                    isOpenHand = false;
+                    isFist = false;
+                    isLoveGesture = true;
+                    gestureStatusEl.textContent = '❤️ Two Fingers (Heart)';
+                    gestureStatusEl.style.color = '#ff1493';
+                    
+                    if (config.currentShape !== 'heart' && !shapeTransitioning) {
+                        shapeTransitioning = true;
+                        animateToShape('heart');
+                    }
+                }
+                // Open hand: show Saturn
+                else if (extendedFingers >= 4) {
+                    isOpenHand = true;
+                    isFist = false;
+                    isLoveGesture = false;
+                    gestureStatusEl.textContent = '🖐️ Open Hand (Saturn)';
+                    gestureStatusEl.style.color = '#f4e7c3';
+                    
+                    if (config.currentShape !== 'saturn' && !shapeTransitioning) {
+                        shapeTransitioning = true;
+                        animateToShape('saturn');
+                    }
+                } else {
+                    isOpenHand = false;
+                    isFist = false;
+                    isLoveGesture = false;
+                    gestureStatusEl.textContent = 'Neutral';
+                    gestureStatusEl.style.color = '#ff1493';
+                }
+            } else {
+                handStatusEl.textContent = 'No';
+                gestureStatusEl.textContent = 'None';
+                handPosition = null;
+                prevHandPosition = null;
+                handPosition2 = null;
+                prevHandPosition2 = null;
+                twoHandsActive = false;
+                firstHandPalmCenter = null; // Reset tracking
+                isOpenHand = false;
+                isFist = false;
+                isLoveGesture = false;
+            }
+        }
+
+        // UI Controls
+        document.querySelectorAll('.shape-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (!shapeTransitioning) {
+                    shapeTransitioning = true;
+                    animateToShape(btn.dataset.shape);
+                }
+            });
+        });
+
+        // Initialize everything
+        initThree();
+        createParticleSystem(config.particleCount, config.currentShape);
+        initMediaPipe();
+        animate();
+    </script>
+</body>
+</html>
