@@ -1,0 +1,1796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ramadan Kareem — Noor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  min-height:100vh;
+  background:radial-gradient(ellipse at 30% 0%,#1a0f3a 0%,#0d0820 40%,#060412 100%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Amiri',serif;
+  overflow-x:hidden;
+  padding:20px 0;
+}
+
+/* Stars bg */
+#stars-bg{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+/* Card */
+.card{
+  position:relative;z-index:2;
+  width:min(700px,96vw);
+  background:linear-gradient(170deg,#fffdf5 0%,#fdf5e0 60%,#f5e8c8 100%);
+  border-radius:6px;
+  box-shadow:0 0 0 2px rgba(212,165,60,.35),0 0 40px rgba(212,165,60,.15),0 30px 100px rgba(0,0,0,.6);
+  overflow:hidden;
+  animation:cardAppear 1.2s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes cardAppear{from{opacity:0;transform:translateY(40px) scale(.97);}to{opacity:1;transform:none;}}
+
+/* Gold bars */
+.top-bar,.bottom-bar{
+  height:6px;
+  background:linear-gradient(90deg,#6b3a0a,#d4a017,#f5d84a,#fce97a,#f5d84a,#d4a017,#6b3a0a);
+  background-size:300% 100%;
+  animation:shimmerBar 4s linear infinite;
+}
+.bottom-bar{position:absolute;bottom:0;left:0;right:0;}
+@keyframes shimmerBar{0%{background-position:100% 0;}100%{background-position:-100% 0;}}
+
+/* ═══ HEADER ═══ */
+.header{
+  position:relative;
+  background:linear-gradient(175deg,#a87000 0%,#d4a017 25%,#f0d050 50%,#d4a017 75%,#a87000 100%);
+  padding:22px 32px 0;
+  text-align:center;
+  overflow:hidden;
+  min-height:290px;
+}
+
+/* Geometric pattern */
+.header::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.07)' stroke-width='.6'%3E%3Ccircle cx='40' cy='40' r='32'/%3E%3Ccircle cx='40' cy='40' r='22'/%3E%3Ccircle cx='0' cy='0' r='32'/%3E%3Ccircle cx='80' cy='0' r='32'/%3E%3Ccircle cx='0' cy='80' r='32'/%3E%3Ccircle cx='80' cy='80' r='32'/%3E%3Cline x1='0' y1='40' x2='80' y2='40'/%3E%3Cline x1='40' y1='0' x2='40' y2='80'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:80px 80px;
+  animation:patternDrift 30s linear infinite;
+}
+@keyframes patternDrift{from{background-position:0 0;}to{background-position:80px 80px;}}
+
+/* Inner glow */
+.header::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 40%,rgba(255,240,120,.18) 0%,transparent 70%);
+  animation:headerGlow 3s ease-in-out infinite alternate;
+}
+@keyframes headerGlow{0%{opacity:.5;}100%{opacity:1;}}
+
+/* ── Lanterns ── */
+.lanterns{
+  position:absolute;top:0;left:0;right:0;
+  height:160px;display:flex;justify-content:space-around;
+  padding:0 6px;pointer-events:none;z-index:5;
+}
+.ln{display:flex;flex-direction:column;align-items:center;transform-origin:top center;}
+.ln:nth-child(1){animation:sw 4.1s ease-in-out infinite;margin-top:-4px;}
+.ln:nth-child(2){animation:sw 5.3s ease-in-out infinite reverse;margin-top:8px;}
+.ln:nth-child(3){animation:sw 3.8s ease-in-out infinite;margin-top:-14px;}
+.ln:nth-child(4){animation:sw 4.7s ease-in-out infinite reverse;margin-top:8px;}
+.ln:nth-child(5){animation:sw 5.8s ease-in-out infinite;margin-top:-4px;}
+@keyframes sw{0%,100%{transform:rotate(-5deg);}50%{transform:rotate(5deg);}}
+
+.ln-cord{width:1.5px;background:rgba(80,48,6,.55);}
+.ln-body{position:relative;filter:drop-shadow(0 3px 8px rgba(0,0,0,.3));}
+.ln-glow{
+  position:absolute;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,220,60,.65) 0%,transparent 70%);
+  animation:lnGlow 2.1s ease-in-out infinite alternate;pointer-events:none;
+}
+@keyframes lnGlow{0%{opacity:.55;transform:scale(.9);}100%{opacity:1;transform:scale(1.15);}}
+
+/* Windows flicker */
+@keyframes winGlow{0%,100%{opacity:.22;}50%{opacity:.7;}}
+.wg{animation:winGlow 3s ease-in-out infinite;}
+.wg:nth-child(2n){animation-delay:1s;}
+.wg:nth-child(3n){animation-delay:2s;}
+
+/* Crescent appear */
+.cres{animation:crescentSpin 1.8s cubic-bezier(.22,1,.36,1) .6s both;}
+@keyframes crescentSpin{from{opacity:0;transform:rotate(-90deg) scale(.4);}to{opacity:1;transform:none;}}
+
+/* Star twinkle */
+@keyframes stw{0%,100%{opacity:.5;transform:scale(1);}50%{opacity:1;transform:scale(1.6);}}
+.ms{animation:stw 2s ease-in-out infinite;}
+.ms:nth-child(2n){animation-delay:.8s;}
+.ms:nth-child(3n){animation-delay:1.5s;}
+
+/* Titles */
+.arabic-calligraphy{
+  position:relative;z-index:6;
+  font-family:'Amiri',serif;font-size:clamp(.85rem,3vw,1.15rem);
+  color:rgba(50,28,2,.7);letter-spacing:5px;margin-bottom:4px;
+  font-style:italic;animation:fsd .9s .3s both;margin-top:10px;
+}
+.main-title{
+  position:relative;z-index:6;
+  font-family:'Amiri',serif;font-weight:700;
+  font-size:clamp(2rem,7vw,3.6rem);
+  color:#1a0c00;
+  text-shadow:0 2px 10px rgba(255,230,80,.5),0 1px 0 rgba(255,255,255,.3);
+  line-height:1.1;letter-spacing:1px;
+  animation:fsd .9s .5s both;margin-bottom:2px;
+}
+.header-sub{
+  position:relative;z-index:6;
+  font-family:'Playfair Display',serif;
+  font-size:clamp(.72rem,2vw,.92rem);
+  color:rgba(50,28,2,.65);letter-spacing:3px;font-style:italic;
+  animation:fsd .9s .7s both;margin-bottom:10px;
+}
+@keyframes fsd{from{opacity:0;transform:translateY(-14px);}to{opacity:1;transform:none;}}
+
+/* Moon top-right */
+.moon-deco{
+  position:absolute;top:14px;right:18px;z-index:6;
+  animation:moonFlt 5s ease-in-out infinite;
+}
+@keyframes moonFlt{0%,100%{transform:translateY(0) rotate(0);}50%{transform:translateY(-6px) rotate(4deg);}}
+
+/* ═══ MOSQUE SCENE ═══ */
+.mosque-scene{
+  position:relative;z-index:4;
+  width:100%;display:flex;justify-content:center;
+  margin-top:2px;
+}
+.mosque-scene svg{
+  width:min(680px,100%);display:block;
+  animation:mAppear 1.4s .3s both;
+  filter:drop-shadow(0 -4px 22px rgba(180,130,0,.28));
+}
+@keyframes mAppear{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:none;}}
+
+/* ── BODY ── */
+.body{padding:40px 40px 32px;text-align:center;position:relative;}
+
+/* Corners */
+.corner{position:absolute;width:55px;height:55px;opacity:.4;}
+.corner-tl{top:8px;left:8px;}
+.corner-tr{top:8px;right:8px;transform:scaleX(-1);}
+.corner-bl{bottom:8px;left:8px;transform:scaleY(-1);}
+.corner-br{bottom:8px;right:8px;transform:scale(-1,-1);}
+.corner svg{width:100%;height:100%;animation:cPulse 4s ease-in-out infinite alternate;}
+@keyframes cPulse{0%{opacity:.25;}100%{opacity:.65;}}
+
+/* Greeting + Name */
+.greeting-line{
+  font-family:'Amiri',serif;font-weight:700;font-style:italic;
+  font-size:clamp(1.3rem,4.5vw,2rem);color:#9c6e00;
+  animation:ta .8s .9s both;display:block;
+}
+.name-section{position:relative;display:inline-block;margin:4px 0 2px;}
+.name-noor{
+  font-family:'Amiri',serif;font-weight:700;
+  font-size:clamp(2rem,6.5vw,3.2rem);color:#b8860b;
+  text-shadow:0 0 30px rgba(212,165,0,.3);
+  display:inline-block;position:relative;z-index:2;
+  animation:nAppear 1s 1.1s both,nGlow 3s 2.1s ease-in-out infinite alternate;
+}
+@keyframes nAppear{from{opacity:0;transform:scale(.6);}to{opacity:1;transform:scale(1);}}
+@keyframes nGlow{0%{text-shadow:0 0 20px rgba(212,165,0,.2);}100%{text-shadow:0 0 40px rgba(212,165,0,.7),0 0 70px rgba(255,200,50,.25);}}
+@keyframes ta{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+
+/* Hearts orbit */
+.hearts-orbit{position:absolute;inset:-35px;pointer-events:none;z-index:1;}
+.ho{
+  position:absolute;top:50%;left:50%;line-height:1;
+  transform-origin:0 0;
+  animation:hOrb linear infinite;
+}
+@keyframes hOrb{
+  from{transform:rotate(var(--s)) translateX(var(--r)) rotate(calc(-1*var(--s))) scale(.85);}
+  to{transform:rotate(calc(var(--s) + 360deg)) translateX(var(--r)) rotate(calc(-1*(var(--s)+360deg))) scale(.85);}
+}
+
+/* Flying hearts */
+.fly-h{
+  position:fixed;pointer-events:none;z-index:10;
+  animation:flyUp linear forwards;opacity:0;
+}
+@keyframes flyUp{
+  0%{transform:translateY(0) rotate(var(--rot)) scale(1);opacity:.85;}
+  100%{transform:translateY(-85vh) rotate(calc(var(--rot)+25deg)) scale(.2);opacity:0;}
+}
+
+/* Divider */
+.divider{display:flex;align-items:center;gap:14px;margin:18px auto;max-width:400px;}
+.div-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(180,130,20,.35),transparent);}
+.div-gem{color:#c8860a;font-size:1rem;animation:gemSpin 6s linear infinite;}
+@keyframes gemSpin{0%{transform:rotate(0);}100%{transform:rotate(360deg);}}
+
+/* Message */
+.message{
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:clamp(.88rem,2.3vw,1.05rem);
+  color:#5a4020;line-height:2;
+  max-width:500px;margin:0 auto 6px;
+  animation:ta .8s 1.3s both;
+}
+
+/* Dua */
+.dua-box{
+  background:linear-gradient(135deg,rgba(200,150,20,.08),rgba(200,150,20,.03));
+  border:1px solid rgba(180,130,20,.2);
+  border-radius:10px;padding:22px 28px;
+  max-width:480px;margin:0 auto 22px;
+  position:relative;overflow:hidden;
+  animation:ta .8s 1.5s both;
+}
+.dua-box::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(212,165,0,.4),transparent);
+  animation:shimmerBar 3s linear infinite;
+}
+.dua-arabic{font-family:'Amiri',serif;font-size:clamp(1.1rem,3.5vw,1.5rem);color:#c8860a;margin-bottom:12px;direction:rtl;}
+.dua-text{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(.82rem,2vw,.95rem);color:#7a5a28;line-height:1.9;}
+
+/* Stars row */
+.stars-row{
+  color:#c8860a;letter-spacing:10px;font-size:.9rem;margin:8px 0;
+  animation:starsRow 3s ease-in-out infinite;
+}
+@keyframes starsRow{0%,100%{opacity:.5;letter-spacing:10px;}50%{opacity:1;letter-spacing:15px;}}
+
+/* Signature */
+.signature{margin-top:22px;font-family:'Amiri',serif;font-size:clamp(.95rem,2.8vw,1.15rem);color:#8a6010;font-style:italic;animation:ta .8s 1.7s both;}
+.signature strong{display:block;font-size:clamp(1.2rem,3.5vw,1.45rem);color:#c8860a;font-weight:700;animation:sigGlow 3s ease-in-out infinite alternate;}
+@keyframes sigGlow{0%{text-shadow:none;}100%{text-shadow:0 0 20px rgba(200,134,10,.45);}}
+
+.footer-strip{text-align:center;padding:12px 0 0;font-size:.75rem;color:rgba(100,70,10,.4);letter-spacing:2px;font-family:'Playfair Display',serif;font-style:italic;}
+
+/* Particles */
+.ptcl{position:fixed;pointer-events:none;font-size:1rem;opacity:0;animation:ptRise linear infinite;z-index:1;}
+@keyframes ptRise{0%{transform:translateY(100vh) rotate(0) scale(1);opacity:0;}10%{opacity:.3;}90%{opacity:.3;}100%{transform:translateY(-80px) rotate(360deg) scale(.3);opacity:0;}}
+
+@media(max-width:520px){
+  .body{padding:36px 18px 28px;}
+  .dua-box{padding:18px 16px;}
+  .ln:nth-child(1),.ln:nth-child(5){display:none;}
+}
+
+/* ═══ LOCK SCREEN ═══ */
+#lock-screen{
+  position:fixed;inset:0;z-index:9999;
+  background:radial-gradient(ellipse at 50% 0%,#1a0f3a 0%,#0a051f 60%,#060310 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity 1.4s ease,transform 1.4s ease;
+  overflow:hidden;
+}
+#lock-screen.unlocked{opacity:0;transform:scale(1.08);pointer-events:none;}
+.ls-float{position:absolute;bottom:-20px;pointer-events:none;opacity:0;animation:lsRise linear infinite;font-size:1.1rem;}
+@keyframes lsRise{0%{transform:translateY(0) rotate(0);opacity:0;}10%{opacity:.3;}90%{opacity:.3;}100%{transform:translateY(-100vh) rotate(360deg);opacity:0;}}
+.ls-crescent{margin-bottom:16px;filter:drop-shadow(0 0 22px rgba(245,216,74,.5));animation:moonFlt 4s ease-in-out infinite;}
+.ls-title-ar{
+  font-family:'Amiri',serif;font-size:clamp(1.6rem,5vw,2.7rem);
+  color:#f5d84a;text-shadow:0 0 30px rgba(245,216,74,.4);
+  margin-bottom:6px;direction:rtl;letter-spacing:2px;
+}
+.ls-title-en{
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:clamp(.9rem,2.5vw,1.25rem);
+  color:rgba(245,216,74,.6);letter-spacing:4px;margin-bottom:30px;
+}
+.ls-form{display:flex;flex-direction:column;align-items:center;gap:13px;}
+#ls-input{
+  width:265px;padding:13px 24px;
+  border:1.5px solid rgba(245,216,74,.3);
+  border-radius:50px;background:rgba(255,255,255,.05);
+  color:#fff;font-family:'Amiri',serif;font-size:1.05rem;
+  text-align:center;letter-spacing:5px;outline:none;
+  transition:all .35s;backdrop-filter:blur(8px);
+}
+#ls-input:focus{border-color:#f5d84a;box-shadow:0 0 28px rgba(245,216,74,.3);background:rgba(255,255,255,.09);}
+#ls-input::placeholder{color:rgba(255,255,255,.3);letter-spacing:2px;}
+#ls-btn{
+  padding:12px 50px;border:none;border-radius:50px;
+  background:linear-gradient(135deg,#c48a00,#f5d84a,#c48a00);
+  color:#1a0c00;font-family:'Amiri',serif;font-weight:700;
+  font-size:1rem;letter-spacing:2px;cursor:pointer;
+  transition:all .35s;box-shadow:0 5px 24px rgba(212,160,20,.5);
+}
+#ls-btn:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(212,160,20,.7);}
+#ls-err{
+  color:rgba(255,180,80,.85);font-family:'Amiri',serif;
+  font-style:italic;font-size:.95rem;min-height:1.3em;
+  letter-spacing:1px;transition:all .3s;
+}
+.ls-hint{font-family:'Playfair Display',serif;font-style:italic;font-size:.78rem;color:rgba(200,150,0,.35);letter-spacing:1px;margin-top:-4px;}
+
+/* ═══ MAIN CARD hidden until unlock ═══ */
+#main-card{transition:opacity 1s .5s ease;opacity:0;pointer-events:none;}
+#main-card.visible{opacity:.65;pointer-events:auto;}
+
+/* ═══ FLOATING ACTION BUTTONS ═══ */
+#action-bar{
+  position:fixed;bottom:26px;right:24px;z-index:500;
+  display:none;flex-direction:column;gap:10px;align-items:flex-end;
+}
+#action-bar.show{display:flex;}
+.act-btn{
+  display:flex;align-items:center;gap:9px;
+  padding:11px 20px;border:none;border-radius:50px;
+  background:rgba(10,6,0,.88);
+  border:1px solid rgba(212,160,20,.32);
+  color:#f5d84a;font-family:'Amiri',serif;font-size:.95rem;
+  cursor:pointer;transition:all .3s;
+  box-shadow:0 4px 18px rgba(0,0,0,.55);
+  backdrop-filter:blur(10px);white-space:nowrap;
+}
+.act-btn:hover{transform:translateX(-5px);border-color:rgba(212,160,20,.6);box-shadow:0 6px 26px rgba(0,0,0,.65),0 0 14px rgba(212,160,20,.14);}
+.act-btn.active{background:linear-gradient(135deg,#6b3e00,#b8720a);border-color:#f5d84a;color:#fff0c0;}
+.act-icon{font-size:1.1rem;}
+
+/* ═══ MUSIC BAR ═══ */
+#music-bar{
+  position:fixed;bottom:26px;left:24px;z-index:500;
+  display:none;align-items:center;gap:10px;
+  padding:10px 18px;border-radius:50px;
+  background:rgba(10,6,0,.88);
+  border:1px solid rgba(212,160,20,.32);
+  backdrop-filter:blur(10px);
+  box-shadow:0 4px 18px rgba(0,0,0,.55);
+  color:rgba(245,216,74,.55);font-family:'Amiri',serif;font-size:.82rem;
+  letter-spacing:1px;
+}
+#music-bar.show{display:flex;}
+#music-bar .bars{display:flex;gap:3px;align-items:flex-end;height:18px;}
+#music-bar .bar{width:3px;border-radius:2px;background:#f5d84a;transform-origin:bottom;}
+#music-bar .bar:nth-child(1){animation:barDance .7s ease-in-out infinite alternate;height:8px;}
+#music-bar .bar:nth-child(2){animation:barDance .5s ease-in-out .1s infinite alternate;height:14px;}
+#music-bar .bar:nth-child(3){animation:barDance .8s ease-in-out .2s infinite alternate;height:10px;}
+#music-bar .bar:nth-child(4){animation:barDance .6s ease-in-out .05s infinite alternate;height:16px;}
+#music-bar .bar:nth-child(5){animation:barDance .9s ease-in-out .15s infinite alternate;height:7px;}
+@keyframes barDance{from{transform:scaleY(.4);}to{transform:scaleY(1.1);}}
+#music-bar.paused .bar{animation-play-state:paused;}
+
+/* ═══ DUA POPUP ═══ */
+#dua-popup{
+  position:fixed;inset:0;z-index:800;
+  display:none;place-items:center;
+  background:rgba(4,2,12,.72);backdrop-filter:blur(7px);
+}
+#dua-popup.show{display:grid;animation:fadeIn .3s;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.dpbox{
+  background:linear-gradient(160deg,#251500 0%,#100900 100%);
+  border:1px solid rgba(212,160,20,.4);border-radius:14px;
+  padding:40px 42px 34px;max-width:460px;width:90%;
+  text-align:center;position:relative;
+  box-shadow:0 20px 60px rgba(0,0,0,.7),0 0 40px rgba(212,160,20,.12);
+  animation:popIn .4s cubic-bezier(.22,1,.36,1);
+}
+@keyframes popIn{from{opacity:0;transform:scale(.84);}to{opacity:1;transform:none;}}
+.dpbox .dp-close{position:absolute;top:14px;right:18px;background:none;border:none;color:rgba(245,216,74,.4);font-size:1.5rem;cursor:pointer;transition:.25s;}
+.dpbox .dp-close:hover{color:#f5d84a;transform:scale(1.15);}
+.dp-ar{font-family:'Amiri',serif;font-size:clamp(1.3rem,4vw,1.8rem);color:#f5d84a;direction:rtl;line-height:2.1;margin-bottom:16px;}
+.dp-en{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(.85rem,2.2vw,.98rem);color:rgba(245,216,74,.75);line-height:2.1;}
+.dp-sig{margin-top:18px;font-family:'Amiri',serif;font-size:.9rem;color:rgba(245,216,74,.4);letter-spacing:1px;}
+
+/* ═══ SURPRISE BURST ═══ */
+.burst-p{position:fixed;pointer-events:none;z-index:900;font-size:1.5rem;animation:burstFly linear forwards;opacity:0;}
+@keyframes burstFly{
+  0%{opacity:1;transform:translate(0,0) rotate(0) scale(1);}
+  100%{opacity:0;transform:translate(var(--bx),var(--by)) rotate(var(--br)) scale(.25);}
+}
+
+/* ═══ COUNTDOWN WIDGET ═══ */
+.countdown-wrap{
+  margin:22px auto 0;max-width:460px;
+  background:linear-gradient(135deg,rgba(180,120,0,.1),rgba(180,120,0,.04));
+  border:1px solid rgba(180,130,20,.22);border-radius:14px;
+  padding:22px 16px 18px;
+  animation:ta .8s 1.6s both;
+}
+.countdown-label{
+  font-family:'Amiri',serif;font-size:clamp(.8rem,2.2vw,.92rem);
+  color:#9c6e00;letter-spacing:3px;margin-bottom:14px;direction:rtl;
+}
+.countdown-label span{display:block;font-size:clamp(.68rem,1.8vw,.8rem);color:rgba(156,110,0,.6);direction:ltr;margin-top:2px;}
+.cd-boxes{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;}
+.cd-box{
+  display:flex;flex-direction:column;align-items:center;
+  background:rgba(10,6,0,.06);border:1px solid rgba(180,130,20,.18);
+  border-radius:10px;padding:12px 16px 9px;min-width:66px;
+}
+.cd-num{
+  font-family:'Amiri',serif;font-weight:700;
+  font-size:clamp(1.6rem,5vw,2.4rem);color:#b8860b;
+  line-height:1;text-shadow:0 0 18px rgba(200,134,10,.25);
+  transition:transform .25s;
+}
+.cd-num.bump{transform:scale(1.25);}
+.cd-unit{
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:.68rem;color:rgba(156,110,0,.55);letter-spacing:1px;margin-top:4px;
+}
+.cd-eid-msg{
+  margin-top:14px;font-family:'Amiri',serif;font-style:italic;
+  font-size:clamp(.85rem,2.2vw,1rem);color:#9c6e00;
+  display:none;animation:ta .6s both;
+}
+
+/* ═══ QUIZ POPUP ═══ */
+/* ═══ QURAN PLAN SECTION ═══ */
+.quran-section{
+  margin:0 0 26px;
+  background:linear-gradient(160deg,rgba(0,40,12,.55),rgba(0,25,8,.55));
+  border:1px solid rgba(100,200,100,.18);
+  border-radius:14px;padding:28px 28px 24px;
+  position:relative;overflow:hidden;
+  animation:ta .8s 1.6s both;
+}
+.quran-section::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(80,200,120,.45),transparent);
+  animation:shimmerBar 3s linear infinite;
+}
+.qr-title{
+  font-family:'Amiri',serif;font-size:clamp(1.1rem,3.5vw,1.4rem);
+  color:#6fda9a;direction:rtl;text-align:center;
+  margin-bottom:6px;text-shadow:0 0 18px rgba(80,200,120,.2);
+}
+.qr-subtitle{
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:clamp(.75rem,2vw,.88rem);
+  color:rgba(111,218,154,.5);text-align:center;margin-bottom:20px;
+}
+.qr-plan{
+  display:grid;grid-template-columns:repeat(5,1fr);
+  gap:8px;margin-bottom:20px;
+}
+@media(max-width:480px){.qr-plan{grid-template-columns:repeat(3,1fr);}}
+.qr-card{
+  background:rgba(0,60,20,.35);border:1px solid rgba(80,200,120,.15);
+  border-radius:10px;padding:11px 8px 9px;
+  text-align:center;direction:rtl;
+}
+.qr-card .qrc-icon{font-size:1.2rem;margin-bottom:4px;display:block;}
+.qr-card .qrc-prayer{font-family:'Amiri',serif;font-size:.82rem;color:rgba(111,218,154,.7);margin-bottom:2px;}
+.qr-card .qrc-pages{font-family:'Amiri',serif;font-weight:700;font-size:clamp(1rem,3vw,1.15rem);color:#6fda9a;}
+.qr-card .qrc-label{font-family:'Playfair Display',serif;font-style:italic;font-size:.66rem;color:rgba(111,218,154,.4);margin-top:2px;}
+.qr-note{
+  background:rgba(0,60,20,.25);border:1px solid rgba(80,200,120,.12);
+  border-radius:10px;padding:14px 16px;margin-bottom:20px;
+  direction:rtl;text-align:right;
+}
+.qr-note p{
+  font-family:'Amiri',serif;font-size:clamp(.85rem,2.3vw,.96rem);
+  color:rgba(111,218,154,.75);line-height:2.2;
+}
+.qr-note strong{color:#6fda9a;}
+.qr-divider-line{display:flex;align-items:center;gap:10px;margin:14px 0;}
+.qr-divider-line .ql{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(80,200,120,.2),transparent);}
+.qr-divider-line span{color:rgba(111,218,154,.5);font-size:.78rem;font-family:'Amiri',serif;white-space:nowrap;text-align:center;}
+.qr-tracker-title{
+  font-family:'Amiri',serif;font-size:clamp(.88rem,2.5vw,.98rem);
+  color:#6fda9a;direction:rtl;text-align:center;margin-bottom:12px;
+}
+.qr-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;}
+@media(max-width:420px){.qr-grid{grid-template-columns:repeat(5,1fr);}}
+.qr-day{
+  aspect-ratio:1;border-radius:8px;
+  background:rgba(0,60,20,.3);border:1px solid rgba(80,200,120,.15);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .2s;position:relative;
+  font-family:'Amiri',serif;
+}
+.qr-day:hover{border-color:rgba(80,200,120,.45);background:rgba(0,80,30,.4);}
+.qr-day.done{background:rgba(0,120,50,.35);border-color:rgba(80,200,120,.6);}
+.qr-day.done::after{content:'✓';position:absolute;font-size:1.1rem;color:#6fda9a;text-shadow:0 0 10px rgba(80,200,120,.5);}
+.qr-day .day-num{font-size:.68rem;color:rgba(111,218,154,.5);}
+.qr-day.done .day-num,.qr-day.done .day-juz{opacity:0;}
+.qr-day .day-juz{font-size:.66rem;color:rgba(111,218,154,.3);}
+.qr-progress-bar{margin-top:14px;height:6px;background:rgba(0,60,20,.4);border-radius:50px;overflow:hidden;}
+.qr-progress-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,#2a8c50,#6fda9a);transition:width .4s ease;box-shadow:0 0 10px rgba(80,200,120,.35);}
+.qr-progress-label{text-align:center;margin-top:7px;font-family:'Amiri',serif;font-size:.82rem;color:rgba(111,218,154,.5);}
+
+/* ═══ INLINE QUIZ ═══ */
+.quiz-section{
+  margin:0 0 26px;
+  background:linear-gradient(160deg,#1a0d00 0%,#0d0600 100%);
+  border:1px solid rgba(212,160,20,.35);
+  border-radius:14px;padding:28px 28px 24px;
+  position:relative;overflow:hidden;
+}
+.quiz-section::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(212,165,0,.5),transparent);
+  animation:shimmerBar 3s linear infinite;
+}
+.q-header{font-family:'Amiri',serif;font-size:.8rem;color:rgba(245,216,74,.35);letter-spacing:3px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;}
+.q-header .q-title{color:rgba(245,216,74,.6);font-size:.9rem;}
+.q-header strong{color:#f5d84a;font-size:.95rem;}
+.q-text{
+  font-family:'Amiri',serif;font-size:clamp(1rem,3vw,1.15rem);
+  color:#f5d84a;line-height:2;margin-bottom:18px;min-height:50px;
+  direction:rtl;text-align:right;
+}
+.q-options{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:16px;}
+.q-opt{
+  padding:10px 12px;border-radius:10px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(212,160,20,.2);
+  color:rgba(245,216,74,.8);font-family:'Amiri',serif;font-size:.92rem;
+  cursor:pointer;text-align:right;direction:rtl;
+  transition:all .2s;
+}
+.q-opt:hover{background:rgba(212,160,20,.13);border-color:rgba(212,160,20,.55);}
+.q-opt.correct{background:rgba(50,180,60,.22)!important;border-color:rgba(80,200,80,.65)!important;color:#a0f0a0!important;}
+.q-opt.wrong{background:rgba(200,50,50,.22)!important;border-color:rgba(220,80,80,.55)!important;color:#f0a0a0!important;}
+.q-opt:disabled{cursor:default;pointer-events:none;}
+.q-feedback{
+  font-family:'Amiri',serif;font-style:italic;
+  font-size:.9rem;min-height:1.4em;
+  color:rgba(245,216,74,.6);margin-bottom:12px;
+  direction:rtl;text-align:right;
+}
+.q-next{
+  padding:10px 32px;border:1px solid rgba(212,160,20,.4);border-radius:50px;
+  background:linear-gradient(135deg,rgba(180,120,0,.3),rgba(120,80,0,.3));
+  color:#f5d84a;font-family:'Amiri',serif;font-size:.95rem;
+  cursor:pointer;transition:all .3s;display:none;
+}
+.q-next:hover{background:linear-gradient(135deg,#8b6000,#c8980a);}
+.q-score{text-align:center;display:none;font-family:'Amiri',serif;}
+.q-score .qs-num{font-size:clamp(2.5rem,8vw,4rem);color:#f5d84a;font-weight:700;display:block;}
+.q-score .qs-msg{font-size:clamp(.9rem,2.5vw,1.05rem);color:rgba(245,216,74,.7);margin-top:8px;display:block;font-style:italic;direction:rtl;}
+.q-restart{
+  margin-top:16px;padding:10px 32px;border:1px solid rgba(212,160,20,.4);border-radius:50px;
+  background:transparent;color:#f5d84a;font-family:'Amiri',serif;cursor:pointer;transition:.3s;
+}
+.q-restart:hover{background:rgba(212,160,20,.15);}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════
+     LOCK SCREEN
+     Password: noor
+══════════════════════════ -->
+<div id="lock-screen">
+  <!-- floating symbols -->
+  <div id="ls-floats"></div>
+
+  <div class="ls-crescent">
+    <svg viewBox="0 0 70 70" width="64" height="64">
+      <defs><radialGradient id="lmg"><stop offset="0%" stop-color="#fff8c0"/><stop offset="100%" stop-color="#f5d84a"/></radialGradient></defs>
+      <circle cx="35" cy="35" r="32" fill="url(#lmg)" opacity=".1"/>
+      <path d="M35 9 A26 26 0 1 1 35 61 A20 20 0 1 0 35 9Z" fill="#f5d84a"/>
+      <circle cx="50" cy="15" r="3.5" fill="#f5d84a" opacity=".5"/>
+      <circle cx="58" cy="30" r="2.2" fill="#f5d84a" opacity=".35"/>
+      <circle cx="20" cy="12" r="2" fill="#f5d84a" opacity=".3"/>
+    </svg>
+  </div>
+
+  <p class="ls-title-ar">رَمَضَانُ كَرِيمٌ</p>
+  <p class="ls-title-en">Enter to open your gift</p>
+
+  <div class="ls-form">
+    <input type="password" id="ls-input" placeholder="enter the key ☪" autocomplete="off"/>
+    <button id="ls-btn">✦ Open ✦</button>
+    <p id="ls-err"></p>
+    <p class="ls-hint">Hint: your name 🌙</p>
+  </div>
+</div>
+
+<canvas id="stars-bg"></canvas>
+<div id="fly-hearts"></div>
+<div id="ptcls"></div>
+
+<!-- ══════ MAIN CARD ══════ -->
+<div id="main-card">
+<div class="card">
+  <div class="top-bar"></div>
+
+  <!-- ══ HEADER ══ -->
+  <div class="header">
+
+    <!-- Moon -->
+    <div class="moon-deco">
+      <svg viewBox="0 0 44 44" width="36" height="36">
+        <defs><radialGradient id="mG"><stop offset="0%" stop-color="#fff8d0"/><stop offset="100%" stop-color="#f0c840"/></radialGradient></defs>
+        <circle cx="22" cy="22" r="20" fill="url(#mG)" opacity=".18"/>
+        <path d="M22 6 A16 16 0 1 1 22 38 A12 12 0 1 0 22 6Z" fill="#f5d84a" opacity=".9"/>
+        <circle cx="30" cy="10" r="2" fill="#f5d84a" class="ms"/>
+        <circle cx="36" cy="20" r="1.4" fill="#f5d84a" opacity=".5" class="ms"/>
+        <circle cx="14" cy="8" r="1.2" fill="#f5d84a" opacity=".4" class="ms"/>
+      </svg>
+    </div>
+
+    <!-- Lanterns -->
+    <div class="lanterns">
+
+      <!-- L1 small -->
+      <div class="ln">
+        <div class="ln-cord" style="height:22px;"></div>
+        <div class="ln-body">
+          <div class="ln-glow" style="width:52px;height:52px;top:-10px;left:-10px;"></div>
+          <svg viewBox="0 0 38 66" width="28" height="50">
+            <defs><linearGradient id="lg1" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f5d050"/><stop offset="50%" stop-color="#fce96a"/><stop offset="100%" stop-color="#d4a017"/></linearGradient></defs>
+            <rect x="14" y="0" width="10" height="7" rx="2.5" fill="#7a4e04"/>
+            <ellipse cx="19" cy="7" rx="9" ry="3.5" fill="#8b5e0a"/>
+            <path d="M10 14 Q6 22 6 33 Q6 45 10 51 Q14 57 19 57 Q24 57 28 51 Q32 45 32 33 Q32 22 28 14 Q24 10 19 10 Q14 10 10 14Z" fill="url(#lg1)"/>
+            <line x1="6" y1="27" x2="32" y2="27" stroke="rgba(100,60,0,.2)" stroke-width=".7"/>
+            <line x1="6" y1="39" x2="32" y2="39" stroke="rgba(100,60,0,.2)" stroke-width=".7"/>
+            <line x1="12" y1="14" x2="12" y2="51" stroke="rgba(100,60,0,.15)" stroke-width=".6"/>
+            <line x1="19" y1="10" x2="19" y2="57" stroke="rgba(100,60,0,.15)" stroke-width=".6"/>
+            <line x1="26" y1="14" x2="26" y2="51" stroke="rgba(100,60,0,.15)" stroke-width=".6"/>
+            <ellipse cx="19" cy="53" rx="9" ry="3.5" fill="#8b5e0a"/>
+            <ellipse cx="19" cy="57" rx="6" ry="2.5" fill="#7a4e04"/>
+            <line x1="19" y1="59" x2="19" y2="66" stroke="#6b3e04" stroke-width="1.5"/>
+            <ellipse cx="19" cy="66" rx="4" ry="2" fill="#6b3e04"/>
+            <circle cx="19" cy="33" r="7" fill="rgba(255,190,20,.45)" class="wg"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- L2 medium -->
+      <div class="ln">
+        <div class="ln-cord" style="height:34px;"></div>
+        <div class="ln-body">
+          <div class="ln-glow" style="width:64px;height:64px;top:-12px;left:-12px;"></div>
+          <svg viewBox="0 0 44 76" width="34" height="60">
+            <defs><linearGradient id="lg2" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f0c830"/><stop offset="50%" stop-color="#fce060"/><stop offset="100%" stop-color="#c89010"/></linearGradient></defs>
+            <rect x="17" y="0" width="10" height="8" rx="3" fill="#6b3e04"/>
+            <ellipse cx="22" cy="8" rx="11" ry="4" fill="#7a4e08"/>
+            <path d="M11 16 Q7 26 7 38 Q7 52 11 59 Q16 65 22 65 Q28 65 33 59 Q37 52 37 38 Q37 26 33 16 Q28 11 22 11 Q16 11 11 16Z" fill="url(#lg2)"/>
+            <line x1="7" y1="29" x2="37" y2="29" stroke="rgba(100,60,0,.2)" stroke-width=".8"/>
+            <line x1="7" y1="46" x2="37" y2="46" stroke="rgba(100,60,0,.2)" stroke-width=".8"/>
+            <line x1="13" y1="16" x2="13" y2="59" stroke="rgba(100,60,0,.14)" stroke-width=".7"/>
+            <line x1="22" y1="11" x2="22" y2="65" stroke="rgba(100,60,0,.14)" stroke-width=".7"/>
+            <line x1="31" y1="16" x2="31" y2="59" stroke="rgba(100,60,0,.14)" stroke-width=".7"/>
+            <path d="M22 26 L25.5 34 L22 42 L18.5 34Z" fill="rgba(100,60,0,.12)"/>
+            <ellipse cx="22" cy="61" rx="11" ry="4" fill="#7a4e08"/>
+            <ellipse cx="22" cy="65" rx="7" ry="3" fill="#6b3e04"/>
+            <line x1="22" y1="67" x2="22" y2="76" stroke="#6b3e04" stroke-width="1.5"/>
+            <ellipse cx="22" cy="76" rx="4" ry="2.5" fill="#5a3403"/>
+            <circle cx="22" cy="37" r="8" fill="rgba(255,200,30,.42)" class="wg"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- L3 CENTRE ornate -->
+      <div class="ln">
+        <div class="ln-cord" style="height:42px;"></div>
+        <div class="ln-body">
+          <div class="ln-glow" style="width:88px;height:88px;top:-18px;left:-18px;"></div>
+          <svg viewBox="0 0 56 96" width="44" height="76">
+            <defs>
+              <linearGradient id="lg3" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#f5e060"/>
+                <stop offset="40%" stop-color="#fce870"/>
+                <stop offset="100%" stop-color="#c89010"/>
+              </linearGradient>
+              <radialGradient id="ig3"><stop offset="0%" stop-color="rgba(255,220,50,.8)"/><stop offset="100%" stop-color="rgba(255,180,0,0)"/></radialGradient>
+            </defs>
+            <rect x="22" y="0" width="12" height="9" rx="3.5" fill="#5a3403"/>
+            <path d="M16 9 Q12 12 12 15 L44 15 Q44 12 40 9Z" fill="#6b4008"/>
+            <ellipse cx="28" cy="15" rx="16" ry="5" fill="#7a4e0a"/>
+            <!-- decorative arch top -->
+            <path d="M17 23 Q14 19 14 15 L42 15 Q42 19 39 23Z" fill="rgba(180,120,0,.12)"/>
+            <!-- body -->
+            <path d="M13 23 Q8 33 8 46 Q8 62 13 72 Q18 80 28 80 Q38 80 43 72 Q48 62 48 46 Q48 33 43 23 Q38 18 28 18 Q18 18 13 23Z" fill="url(#lg3)"/>
+            <!-- inner glow -->
+            <ellipse cx="28" cy="46" rx="18" ry="27" fill="url(#ig3)" opacity=".6" class="wg"/>
+            <!-- rings -->
+            <line x1="8" y1="34" x2="48" y2="34" stroke="rgba(100,55,0,.2)" stroke-width=".9"/>
+            <line x1="8" y1="58" x2="48" y2="58" stroke="rgba(100,55,0,.2)" stroke-width=".9"/>
+            <!-- ribs -->
+            <line x1="15" y1="23" x2="15" y2="72" stroke="rgba(100,55,0,.13)" stroke-width=".8"/>
+            <line x1="21" y1="19" x2="21" y2="80" stroke="rgba(100,55,0,.13)" stroke-width=".8"/>
+            <line x1="28" y1="18" x2="28" y2="80" stroke="rgba(100,55,0,.13)" stroke-width=".8"/>
+            <line x1="35" y1="19" x2="35" y2="80" stroke="rgba(100,55,0,.13)" stroke-width=".8"/>
+            <line x1="41" y1="23" x2="41" y2="72" stroke="rgba(100,55,0,.13)" stroke-width=".8"/>
+            <!-- star centre -->
+            <path d="M28 35 L30.2 41.5 L37 41.5 L31.4 45.5 L33.6 52 L28 48 L22.4 52 L24.6 45.5 L19 41.5 L25.8 41.5Z" fill="rgba(120,70,0,.18)"/>
+            <!-- bottom caps -->
+            <ellipse cx="28" cy="76" rx="16" ry="5" fill="#7a4e0a"/>
+            <ellipse cx="28" cy="80" rx="11" ry="4" fill="#6b4008"/>
+            <!-- tassels -->
+            <line x1="23" y1="82" x2="21" y2="96" stroke="#6b4008" stroke-width="1.2"/>
+            <line x1="28" y1="82" x2="28" y2="96" stroke="#6b4008" stroke-width="1.5"/>
+            <line x1="33" y1="82" x2="35" y2="96" stroke="#6b4008" stroke-width="1.2"/>
+            <ellipse cx="28" cy="95" rx="7" ry="2.5" fill="#5a3403"/>
+            <circle cx="28" cy="46" r="10" fill="rgba(255,210,20,.5)" class="wg"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- L4 medium -->
+      <div class="ln">
+        <div class="ln-cord" style="height:34px;"></div>
+        <div class="ln-body">
+          <div class="ln-glow" style="width:64px;height:64px;top:-12px;left:-12px;"></div>
+          <svg viewBox="0 0 44 76" width="34" height="60">
+            <defs><linearGradient id="lg4" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f0c830"/><stop offset="50%" stop-color="#fce060"/><stop offset="100%" stop-color="#c89010"/></linearGradient></defs>
+            <rect x="17" y="0" width="10" height="8" rx="3" fill="#6b3e04"/>
+            <ellipse cx="22" cy="8" rx="11" ry="4" fill="#7a4e08"/>
+            <path d="M11 16 Q7 26 7 38 Q7 52 11 59 Q16 65 22 65 Q28 65 33 59 Q37 52 37 38 Q37 26 33 16 Q28 11 22 11 Q16 11 11 16Z" fill="url(#lg4)"/>
+            <line x1="7" y1="29" x2="37" y2="29" stroke="rgba(100,60,0,.2)" stroke-width=".8"/>
+            <line x1="7" y1="46" x2="37" y2="46" stroke="rgba(100,60,0,.2)" stroke-width=".8"/>
+            <line x1="13" y1="16" x2="13" y2="59" stroke="rgba(100,60,0,.14)" stroke-width=".7"/>
+            <line x1="22" y1="11" x2="22" y2="65" stroke="rgba(100,60,0,.14)" stroke-width=".7"/>
+            <line x1="31" y1="16" x2="31" y2="59" stroke="rgba(100,60,0,.14)" stroke-width=".7"/>
+            <path d="M22 26 L25.5 34 L22 42 L18.5 34Z" fill="rgba(100,60,0,.12)"/>
+            <ellipse cx="22" cy="61" rx="11" ry="4" fill="#7a4e08"/>
+            <ellipse cx="22" cy="65" rx="7" ry="3" fill="#6b3e04"/>
+            <line x1="22" y1="67" x2="22" y2="76" stroke="#6b3e04" stroke-width="1.5"/>
+            <ellipse cx="22" cy="76" rx="4" ry="2.5" fill="#5a3403"/>
+            <circle cx="22" cy="37" r="8" fill="rgba(255,200,30,.42)" class="wg"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- L5 small -->
+      <div class="ln">
+        <div class="ln-cord" style="height:22px;"></div>
+        <div class="ln-body">
+          <div class="ln-glow" style="width:52px;height:52px;top:-10px;left:-10px;"></div>
+          <svg viewBox="0 0 38 66" width="28" height="50">
+            <defs><linearGradient id="lg5" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f5d050"/><stop offset="50%" stop-color="#fce96a"/><stop offset="100%" stop-color="#d4a017"/></linearGradient></defs>
+            <rect x="14" y="0" width="10" height="7" rx="2.5" fill="#7a4e04"/>
+            <ellipse cx="19" cy="7" rx="9" ry="3.5" fill="#8b5e0a"/>
+            <path d="M10 14 Q6 22 6 33 Q6 45 10 51 Q14 57 19 57 Q24 57 28 51 Q32 45 32 33 Q32 22 28 14 Q24 10 19 10 Q14 10 10 14Z" fill="url(#lg5)"/>
+            <line x1="6" y1="27" x2="32" y2="27" stroke="rgba(100,60,0,.2)" stroke-width=".7"/>
+            <line x1="6" y1="39" x2="32" y2="39" stroke="rgba(100,60,0,.2)" stroke-width=".7"/>
+            <line x1="12" y1="14" x2="12" y2="51" stroke="rgba(100,60,0,.15)" stroke-width=".6"/>
+            <line x1="19" y1="10" x2="19" y2="57" stroke="rgba(100,60,0,.15)" stroke-width=".6"/>
+            <line x1="26" y1="14" x2="26" y2="51" stroke="rgba(100,60,0,.15)" stroke-width=".6"/>
+            <ellipse cx="19" cy="53" rx="9" ry="3.5" fill="#8b5e0a"/>
+            <ellipse cx="19" cy="57" rx="6" ry="2.5" fill="#7a4e04"/>
+            <line x1="19" y1="59" x2="19" y2="66" stroke="#6b3e04" stroke-width="1.5"/>
+            <ellipse cx="19" cy="66" rx="4" ry="2" fill="#6b3e04"/>
+            <circle cx="19" cy="33" r="7" fill="rgba(255,190,20,.45)" class="wg"/>
+          </svg>
+        </div>
+      </div>
+
+    </div><!-- /lanterns -->
+
+    <p class="arabic-calligraphy">رَمَضَانُ كَرِيمٌ</p>
+    <h1 class="main-title">Ramadan Kareem</h1>
+    <p class="header-sub">A Blessed Month · 1447 AH · 2026</p>
+
+    <!-- ══════════════════════════════════════════
+         MOSQUE — full complete detailed SVG
+         ══════════════════════════════════════════ -->
+    <div class="mosque-scene">
+      <svg viewBox="0 0 700 215" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet">
+        <defs>
+          <linearGradient id="mg" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#1a0c00" stop-opacity=".94"/>
+            <stop offset="100%" stop-color="#080400" stop-opacity="1"/>
+          </linearGradient>
+          <linearGradient id="groundG" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="rgba(200,150,0,.2)"/>
+            <stop offset="100%" stop-color="rgba(60,30,0,.0)"/>
+          </linearGradient>
+          <filter id="glw" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="1.5"/>
+          </filter>
+          <!-- window glow gradient -->
+          <radialGradient id="winG"><stop offset="0%" stop-color="#f5d060" stop-opacity=".55"/><stop offset="100%" stop-color="#d4900a" stop-opacity="0"/></radialGradient>
+        </defs>
+
+        <!-- ── Ground ── -->
+        <rect x="0" y="195" width="700" height="20" fill="url(#mg)"/>
+        <rect x="0" y="190" width="700" height="10" fill="url(#groundG)"/>
+        <!-- steps -->
+        <rect x="190" y="190" width="320" height="5" rx="1" fill="url(#mg)" opacity=".7"/>
+        <rect x="220" y="192" width="260" height="3" rx="1" fill="url(#mg)" opacity=".5"/>
+
+        <!-- ══════ FAR-LEFT thin minaret A ════════ -->
+        <g fill="url(#mg)">
+          <rect x="10" y="65" width="13" height="132"/>
+          <rect x="7"  y="83" width="19" height="5" rx="1"/>
+          <rect x="7"  y="106" width="19" height="4" rx="1" opacity=".7"/>
+          <rect x="7"  y="130" width="19" height="4" rx="1" opacity=".5"/>
+          <!-- ribs -->
+          <rect x="15" y="65" width="2" height="132" opacity=".14"/>
+          <!-- balcony -->
+          <rect x="5"  y="77" width="23" height="8" rx="1.5"/>
+          <!-- top -->
+          <rect x="10" y="48" width="13" height="19" rx="2"/>
+          <ellipse cx="16.5" cy="48" rx="9.5" ry="4"/>
+          <path d="M16.5 34 L10 48 L23 48Z"/>
+          <circle cx="16.5" cy="33" r="5" filter="url(#glw)"/>
+          <g class="cres"><path d="M16.5 27 A7 7 0 1 1 16.5 41 A5.5 5.5 0 1 0 16.5 27Z" fill="#f5d84a" opacity=".82" transform="scale(.75) translate(6,-1)"/></g>
+          <!-- windows -->
+          <path d="M12 92 L12 106 Q12 88 16.5 88 Q21 88 21 106 L21 92Z" fill="url(#winG)" class="wg"/>
+          <path d="M12 115 L12 129 Q12 111 16.5 111 Q21 111 21 129 L21 115Z" fill="url(#winG)" class="wg"/>
+        </g>
+
+        <!-- ══════ LEFT MAIN minaret B ════════ -->
+        <g fill="url(#mg)">
+          <rect x="38" y="40" width="22" height="157"/>
+          <!-- rings -->
+          <rect x="34" y="64" width="30" height="7" rx="2"/>
+          <rect x="34" y="92" width="30" height="5" rx="1.5" opacity=".8"/>
+          <rect x="34" y="120" width="30" height="5" rx="1.5" opacity=".6"/>
+          <rect x="34" y="150" width="30" height="5" rx="1.5" opacity=".45"/>
+          <!-- ribs -->
+          <rect x="47" y="40" width="3" height="157" opacity=".12"/>
+          <rect x="53" y="40" width="2" height="157" opacity=".1"/>
+          <!-- balcony -->
+          <rect x="32" y="57" width="34" height="9" rx="2.5"/>
+          <!-- top section -->
+          <rect x="38" y="22" width="22" height="20" rx="3"/>
+          <ellipse cx="49" cy="22" rx="14" ry="5.5"/>
+          <path d="M49 4 L41 22 L57 22Z"/>
+          <circle cx="49" cy="3" r="7" filter="url(#glw)"/>
+          <g class="cres"><path d="M49 -5 A9 9 0 1 1 49 13 A6.8 6.8 0 1 0 49 -5Z" fill="#f5d84a" opacity=".88" transform="scale(.82) translate(10,-1)"/></g>
+          <!-- windows -->
+          <path d="M42 73 L42 89 Q42 70 49 70 Q56 70 56 89 L56 73Z" fill="url(#winG)" class="wg"/>
+          <path d="M42 101 L42 117 Q42 98 49 98 Q56 98 56 117 L56 101Z" fill="url(#winG)" class="wg"/>
+          <path d="M42 130 L42 148 Q42 127 49 127 Q56 127 56 148 L56 130Z" fill="url(#winG)" class="wg"/>
+        </g>
+
+        <!-- ══════ LEFT SIDE WING ════════ -->
+        <g fill="url(#mg)">
+          <!-- small wing tower -->
+          <rect x="72" y="72" width="16" height="125"/>
+          <rect x="69" y="88" width="22" height="5" rx="1" opacity=".7"/>
+          <rect x="69" y="114" width="22" height="4" rx="1" opacity=".5"/>
+          <path d="M80 60 L72 72 L88 72Z"/>
+          <ellipse cx="80" cy="58" rx="8" ry="3.5"/>
+          <circle cx="80" cy="57" r="5" filter="url(#glw)"/>
+          <!-- wing dome -->
+          <path d="M91 133 Q91 84 122 82 Q153 84 153 133Z"/>
+          <!-- dome ribs -->
+          <path d="M107 133 Q109 92 122 90 Q122 90 122 133" fill="rgba(255,255,255,.04)"/>
+          <path d="M122 82 L122 133" stroke="rgba(255,255,255,.05)" stroke-width="1" fill="none"/>
+          <path d="M137 133 Q135 92 149 90 Q149 90 149 133" fill="rgba(255,255,255,.04)"/>
+          <!-- pinnacle -->
+          <rect x="119" y="66" width="6" height="18" rx="1.5"/>
+          <path d="M122 58 L117 66 L127 66Z"/>
+          <circle cx="122" cy="57" r="4" fill="#f5d84a" opacity=".5"/>
+          <!-- wing body -->
+          <rect x="91" y="133" width="62" height="62"/>
+          <!-- wing windows -->
+          <path d="M98 145 L98 167 Q98 139 108 139 Q118 139 118 167 L118 145Z" fill="url(#winG)" class="wg"/>
+          <path d="M126 145 L126 167 Q126 139 136 139 Q146 139 146 167 L126 145Z" fill="url(#winG)" class="wg"/>
+          <!-- wing door -->
+          <path d="M108 167 L108 195 Q108 157 122 157 Q136 157 136 195 L136 167Z" fill="rgba(212,160,0,.2)"/>
+          <path d="M114 172 L114 195 Q114 162 122 162 Q130 162 130 195 L130 172Z" fill="rgba(212,160,0,.12)"/>
+        </g>
+
+        <!-- ══════ CENTRE MAIN COMPLEX ════════ -->
+        <g fill="url(#mg)">
+          <!-- base platform steps -->
+          <rect x="153" y="155" width="394" height="40"/>
+          <!-- main walls -->
+          <rect x="165" y="122" width="370" height="73"/>
+          <!-- battlements left -->
+          <g opacity=".85">
+            <rect x="165" y="116" width="9" height="9" rx="1"/><rect x="178" y="116" width="9" height="9" rx="1"/>
+            <rect x="191" y="116" width="9" height="9" rx="1"/><rect x="204" y="116" width="9" height="9" rx="1"/>
+            <rect x="217" y="116" width="9" height="9" rx="1"/>
+          </g>
+          <!-- battlements right -->
+          <g opacity=".85">
+            <rect x="484" y="116" width="9" height="9" rx="1"/><rect x="497" y="116" width="9" height="9" rx="1"/>
+            <rect x="510" y="116" width="9" height="9" rx="1"/><rect x="523" y="116" width="9" height="9" rx="1"/>
+            <rect x="536" y="116" width="9" height="9" rx="1"/>
+          </g>
+
+          <!-- SECONDARY LEFT DOME -->
+          <path d="M185 155 Q185 100 220 98 Q255 100 255 155Z"/>
+          <path d="M203 155 Q204 108 220 106 Q220 106 220 155" fill="rgba(255,255,255,.04)"/>
+          <path d="M220 98 L220 155" stroke="rgba(255,255,255,.045)" stroke-width="1" fill="none"/>
+          <rect x="188" y="151" width="64" height="8" rx="2"/>
+          <rect x="214" y="141" width="12" height="16" rx="2"/>
+          <path d="M220 133 L214 143 L226 143Z"/>
+          <circle cx="220" cy="132" r="5" fill="#f5d84a" opacity=".45"/>
+
+          <!-- SECONDARY RIGHT DOME -->
+          <path d="M445 155 Q445 100 480 98 Q515 100 515 155Z"/>
+          <path d="M463 155 Q464 108 480 106 Q480 106 480 155" fill="rgba(255,255,255,.04)"/>
+          <path d="M480 98 L480 155" stroke="rgba(255,255,255,.045)" stroke-width="1" fill="none"/>
+          <rect x="448" y="151" width="64" height="8" rx="2"/>
+          <rect x="474" y="141" width="12" height="16" rx="2"/>
+          <path d="M480 133 L474 143 L486 143Z"/>
+          <circle cx="480" cy="132" r="5" fill="#f5d84a" opacity=".45"/>
+
+          <!-- MAIN CENTRAL DOME — large + detailed -->
+          <path d="M282 122 Q282 26 350 22 Q418 26 418 122Z"/>
+          <!-- dome ribs -->
+          <path d="M300 122 Q302 44 330 36 Q330 36 330 122" fill="rgba(255,255,255,.04)"/>
+          <path d="M318 122 Q319 30 340 26 Q340 26 340 122" fill="rgba(255,255,255,.035)"/>
+          <path d="M336 122 Q337 22 350 22 Q350 22 350 122" fill="rgba(255,255,255,.03)"/>
+          <path d="M364 122 Q363 30 368 26 Q368 26 368 122" fill="rgba(255,255,255,.028)"/>
+          <path d="M382 122 Q381 44 378 36 Q378 36 378 122" fill="rgba(255,255,255,.035)"/>
+          <path d="M400 122 Q398 44 395 38 Q395 38 395 122" fill="rgba(255,255,255,.04)"/>
+          <!-- drum collar -->
+          <rect x="288" y="119" width="124" height="16" rx="5"/>
+          <!-- dome base ring -->
+          <ellipse cx="350" cy="119" rx="68" ry="7"/>
+          <!-- dome glow inside -->
+          <ellipse cx="350" cy="80" rx="40" ry="50" fill="rgba(240,190,20,.03)" class="wg"/>
+
+          <!-- PINNACLE -->
+          <rect x="345" y="16" width="10" height="24" rx="2"/>
+          <path d="M350 0 L342 17 L358 17Z"/>
+          <circle cx="350" cy="-1" r="8" filter="url(#glw)"/>
+          <!-- MAIN CRESCENT -->
+          <g class="cres" style="animation-delay:.15s">
+            <path d="M350 -10 A11 11 0 1 1 350 12 A8.5 8.5 0 1 0 350 -10Z" fill="#f5d84a" opacity=".92" transform="translate(0,2)"/>
+          </g>
+          <!-- star beside crescent -->
+          <path d="M366 -2 L367.5 2.5 L372 2.5 L368.3 5.3 L369.8 9.8 L366 7 L362.2 9.8 L363.7 5.3 L360 2.5 L364.5 2.5Z" fill="#f5d84a" opacity=".6" class="ms"/>
+
+          <!-- Main body windows — left side -->
+          <path d="M175 130 L175 162 Q175 118 190 118 Q205 118 205 162 L205 130Z" fill="url(#winG)" class="wg"/>
+          <path d="M212 130 L212 162 Q212 118 227 118 Q242 118 242 162 L212 130Z" fill="url(#winG)" class="wg"/>
+          <path d="M254 130 L254 162 Q254 118 269 118 Q284 118 284 162 L254 130Z" fill="url(#winG)" class="wg"/>
+          <!-- Main door arch -->
+          <path d="M325 143 L325 195 Q325 128 350 128 Q375 128 375 195 L375 143Z" fill="rgba(212,160,0,.22)"/>
+          <path d="M332 150 L332 195 Q332 135 350 135 Q368 135 368 195 L368 150Z" fill="rgba(212,160,0,.14)"/>
+          <!-- door crossbar -->
+          <line x1="325" y1="165" x2="375" y2="165" stroke="rgba(212,160,0,.3)" stroke-width="1.2"/>
+          <!-- Main body windows right side -->
+          <path d="M416 130 L416 162 Q416 118 431 118 Q446 118 446 162 L416 130Z" fill="url(#winG)" class="wg"/>
+          <path d="M458 130 L458 162 Q458 118 473 118 Q488 118 488 162 L458 130Z" fill="url(#winG)" class="wg"/>
+          <path d="M495 130 L495 162 Q495 118 510 118 Q525 118 525 162 L495 130Z" fill="url(#winG)" class="wg"/>
+        </g>
+
+        <!-- ══════ RIGHT SIDE WING ════════ -->
+        <g fill="url(#mg)">
+          <rect x="547" y="72" width="16" height="125"/>
+          <rect x="544" y="88" width="22" height="5" rx="1" opacity=".7"/>
+          <rect x="544" y="114" width="22" height="4" rx="1" opacity=".5"/>
+          <path d="M555 60 L547 72 L563 72Z"/>
+          <ellipse cx="555" cy="58" rx="8" ry="3.5"/>
+          <circle cx="555" cy="57" r="5" filter="url(#glw)"/>
+          <path d="M547 133 Q547 84 578 82 Q609 84 609 133Z"/>
+          <path d="M563 133 Q565 92 578 90 Q578 90 578 133" fill="rgba(255,255,255,.04)"/>
+          <path d="M578 82 L578 133" stroke="rgba(255,255,255,.05)" stroke-width="1" fill="none"/>
+          <rect x="547" y="133" width="62" height="62"/>
+          <rect x="547" y="151" width="62" height="8" rx="2"/>
+          <rect x="572" y="141" width="12" height="16" rx="2"/>
+          <path d="M578 133 L572 143 L584 143Z"/>
+          <circle cx="578" cy="132" r="4" fill="#f5d84a" opacity=".5"/>
+          <path d="M554 145 L554 167 Q554 139 564 139 Q574 139 574 167 L554 145Z" fill="url(#winG)" class="wg"/>
+          <path d="M582 145 L582 167 Q582 139 592 139 Q602 139 602 167 L582 145Z" fill="url(#winG)" class="wg"/>
+          <path d="M559 167 L559 195 Q559 157 578 157 Q597 157 597 195 L597 167Z" fill="rgba(212,160,0,.2)"/>
+        </g>
+
+        <!-- ══════ RIGHT MAIN minaret B ════════ -->
+        <g fill="url(#mg)">
+          <rect x="640" y="40" width="22" height="157"/>
+          <rect x="636" y="64" width="30" height="7" rx="2"/>
+          <rect x="636" y="92" width="30" height="5" rx="1.5" opacity=".8"/>
+          <rect x="636" y="120" width="30" height="5" rx="1.5" opacity=".6"/>
+          <rect x="636" y="150" width="30" height="5" rx="1.5" opacity=".45"/>
+          <rect x="649" y="40" width="3" height="157" opacity=".12"/>
+          <rect x="634" y="57" width="34" height="9" rx="2.5"/>
+          <rect x="640" y="22" width="22" height="20" rx="3"/>
+          <ellipse cx="651" cy="22" rx="14" ry="5.5"/>
+          <path d="M651 4 L643 22 L659 22Z"/>
+          <circle cx="651" cy="3" r="7" filter="url(#glw)"/>
+          <g class="cres" style="animation-delay:.35s"><path d="M651 -5 A9 9 0 1 1 651 13 A6.8 6.8 0 1 0 651 -5Z" fill="#f5d84a" opacity=".88" transform="scale(.82) translate(10,-1)"/></g>
+          <path d="M644 73 L644 89 Q644 70 651 70 Q658 70 658 89 L658 73Z" fill="url(#winG)" class="wg"/>
+          <path d="M644 101 L644 117 Q644 98 651 98 Q658 98 658 117 L658 101Z" fill="url(#winG)" class="wg"/>
+          <path d="M644 130 L644 148 Q644 127 651 127 Q658 127 658 148 L658 130Z" fill="url(#winG)" class="wg"/>
+        </g>
+
+        <!-- ══════ FAR-RIGHT thin minaret A ════════ -->
+        <g fill="url(#mg)">
+          <rect x="677" y="65" width="13" height="132"/>
+          <rect x="674" y="83" width="19" height="5" rx="1"/>
+          <rect x="674" y="106" width="19" height="4" rx="1" opacity=".7"/>
+          <rect x="674" y="130" width="19" height="4" rx="1" opacity=".5"/>
+          <rect x="681" y="65" width="2" height="132" opacity=".14"/>
+          <rect x="672" y="77" width="22" height="8" rx="1.5"/>
+          <rect x="677" y="48" width="13" height="19" rx="2"/>
+          <ellipse cx="683.5" cy="48" rx="9.5" ry="4"/>
+          <path d="M683.5 34 L677 48 L690 48Z"/>
+          <circle cx="683.5" cy="33" r="5" filter="url(#glw)"/>
+          <g class="cres" style="animation-delay:.5s"><path d="M683.5 27 A7 7 0 1 1 683.5 41 A5.5 5.5 0 1 0 683.5 27Z" fill="#f5d84a" opacity=".82" transform="scale(.75) translate(6,-1)"/></g>
+          <path d="M679 92 L679 106 Q679 88 683.5 88 Q688 88 688 106 L688 92Z" fill="url(#winG)" class="wg"/>
+          <path d="M679 115 L679 129 Q679 111 683.5 111 Q688 111 688 129 L688 115Z" fill="url(#winG)" class="wg"/>
+        </g>
+
+        <!-- sky stars -->
+        <circle cx="80"  cy="14" r="1.5" fill="#f5d84a" opacity=".55" class="ms"/>
+        <circle cx="130" cy="7"  r="1.1" fill="#f5d84a" opacity=".4"  class="ms"/>
+        <circle cx="210" cy="11" r="1.8" fill="#f5d84a" opacity=".6"  class="ms"/>
+        <circle cx="270" cy="6"  r="1.2" fill="#f5d84a" opacity=".45" class="ms"/>
+        <circle cx="430" cy="7"  r="1.2" fill="#f5d84a" opacity=".45" class="ms"/>
+        <circle cx="490" cy="11" r="1.8" fill="#f5d84a" opacity=".6"  class="ms"/>
+        <circle cx="575" cy="7"  r="1.1" fill="#f5d84a" opacity=".4"  class="ms"/>
+        <circle cx="625" cy="14" r="1.5" fill="#f5d84a" opacity=".55" class="ms"/>
+
+        <!-- horizon ground glow -->
+        <rect x="0" y="183" width="700" height="32" fill="url(#groundG)"/>
+      </svg>
+    </div><!-- /mosque -->
+
+  </div><!-- /header -->
+
+  <!-- ══ BODY ══ -->
+  <div class="body">
+
+    <!-- Corner ornaments -->
+    <div class="corner corner-tl"><svg viewBox="0 0 55 55" fill="none"><path d="M4 4 L24 4 Q4 4 4 24" stroke="rgba(180,130,20,.55)" stroke-width="1.5"/><path d="M8 4 L18 4 Q8 4 8 14" stroke="rgba(180,130,20,.38)" stroke-width="1"/><circle cx="4" cy="4" r="2.5" fill="rgba(180,130,20,.55)"/><circle cx="22" cy="4" r="1.5" fill="rgba(180,130,20,.3)"/><circle cx="4" cy="22" r="1.5" fill="rgba(180,130,20,.3)"/><path d="M14 4 C14 13 4 13 4 13" fill="none" stroke="rgba(180,130,20,.3)" stroke-width=".7"/><circle cx="14" cy="14" r="1" fill="rgba(180,130,20,.22)"/></svg></div>
+    <div class="corner corner-tr"><svg viewBox="0 0 55 55" fill="none"><path d="M4 4 L24 4 Q4 4 4 24" stroke="rgba(180,130,20,.55)" stroke-width="1.5"/><path d="M8 4 L18 4 Q8 4 8 14" stroke="rgba(180,130,20,.38)" stroke-width="1"/><circle cx="4" cy="4" r="2.5" fill="rgba(180,130,20,.55)"/><circle cx="22" cy="4" r="1.5" fill="rgba(180,130,20,.3)"/><circle cx="4" cy="22" r="1.5" fill="rgba(180,130,20,.3)"/></svg></div>
+    <div class="corner corner-bl"><svg viewBox="0 0 55 55" fill="none"><path d="M4 4 L24 4 Q4 4 4 24" stroke="rgba(180,130,20,.55)" stroke-width="1.5"/><circle cx="4" cy="4" r="2.5" fill="rgba(180,130,20,.55)"/></svg></div>
+    <div class="corner corner-br"><svg viewBox="0 0 55 55" fill="none"><path d="M4 4 L24 4 Q4 4 4 24" stroke="rgba(180,130,20,.55)" stroke-width="1.5"/><circle cx="4" cy="4" r="2.5" fill="rgba(180,130,20,.55)"/></svg></div>
+
+    <!-- Greeting + Name with orbiting hearts -->
+    <div style="animation:ta .9s .9s both;display:block;">
+      <p class="greeting-line">Ramadan Kareem,</p>
+      <div class="name-section">
+        <div class="hearts-orbit" id="hearts-orbit"></div>
+        <span class="name-noor">Noor</span>
+      </div>
+    </div>
+
+    <div class="divider"><div class="div-line"></div><span class="div-gem">✦</span><div class="div-line"></div></div>
+
+    <p class="message">
+      In this blessed month, every morning I wake with your name<br>
+      woven into my prayers. You are my light, my peace,<br>
+      my most beautiful reminder of all that is good in this world.
+    </p>
+
+    <div class="divider"><div class="div-line"></div><span class="div-gem">☪</span><div class="div-line"></div></div>
+
+    <div class="dua-box">
+      <p class="dua-arabic">﷽</p>
+      <p class="dua-text" style="direction:rtl;font-family:'Amiri',serif;font-size:clamp(1rem,3vw,1.2rem);line-height:2.4;color:#7a5a28;">
+        بَارَكَ اللهُ فِي صِيَامِكِ وَتَقَبَّلَ مِنْكِ صَلَاتَكِ وَدُعَاءَكِ.<br>
+        وَجَعَلَ اللهُ هٰذَا الرَّمَضَانَ يَمْلَأُ قَلْبَكِ فَرَحًا،<br>
+        وَبَيْتَكِ سَكِينَةً وَسَلَامًا،<br>
+        وَحَيَاتَكِ بِكُلِّ نِعْمَةٍ تَمَنَّيْتِهَا.<br><br>
+        <em>آمِيـن 🤍</em>
+      </p>
+    </div>
+
+    <div class="stars-row">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+    <p class="message" style="font-size:clamp(.85rem,2.2vw,.98rem);margin-bottom:6px;">
+      Your smile is my favourite gift this Ramadan —<br>
+      and every Ramadan to come.
+    </p>
+
+    <!-- Countdown to Eid -->
+    <div class="countdown-wrap">
+      <p class="countdown-label">
+        العَدُّ التَّنَازُلِيُّ حَتَّى عِيدِ الفِطْرِ
+        <span>Countdown to Eid Al-Fitr 1447</span>
+      </p>
+      <div class="cd-boxes">
+        <div class="cd-box"><span class="cd-num" id="cd-d">--</span><span class="cd-unit">Days · أيام</span></div>
+        <div class="cd-box"><span class="cd-num" id="cd-h">--</span><span class="cd-unit">Hours · ساعات</span></div>
+        <div class="cd-box"><span class="cd-num" id="cd-m">--</span><span class="cd-unit">Minutes · دقائق</span></div>
+        <div class="cd-box"><span class="cd-num" id="cd-s">--</span><span class="cd-unit">Seconds · ثواني</span></div>
+      </div>
+      <p class="cd-eid-msg" id="cd-eid-msg">🌙 عِيدٌ مُبَارَكٌ يَا نُور — Eid Mubarak! 🌙</p>
+    </div>
+
+    <div class="divider"><div class="div-line"></div><span class="div-gem">✦</span><div class="div-line"></div></div>
+
+    <div class="signature">
+      With all my love &amp; prayers,
+      <strong>Mahmoud 🌙</strong>
+    </div>
+
+    <!-- ══ QURAN PLAN ══ -->
+    <div class="quran-section">
+      <div class="qr-title">📚 طريقنا لختم القرآن في رمضان</div>
+      <div class="qr-subtitle">Our Quran completion plan — 1 Juz per day</div>
+
+      <div class="qr-plan">
+        <div class="qr-card">
+          <span class="qrc-icon">🌅</span>
+          <div class="qrc-prayer">الفجر</div>
+          <div class="qrc-pages">4 صفحات</div>
+          <div class="qrc-label">Fajr</div>
+        </div>
+        <div class="qr-card">
+          <span class="qrc-icon">☀️</span>
+          <div class="qrc-prayer">الظهر</div>
+          <div class="qrc-pages">4 صفحات</div>
+          <div class="qrc-label">Dhuhr</div>
+        </div>
+        <div class="qr-card">
+          <span class="qrc-icon">🌤️</span>
+          <div class="qrc-prayer">العصر</div>
+          <div class="qrc-pages">4 صفحات</div>
+          <div class="qrc-label">Asr</div>
+        </div>
+        <div class="qr-card">
+          <span class="qrc-icon">🌇</span>
+          <div class="qrc-prayer">المغرب</div>
+          <div class="qrc-pages">4 صفحات</div>
+          <div class="qrc-label">Maghrib</div>
+        </div>
+        <div class="qr-card">
+          <span class="qrc-icon">🌙</span>
+          <div class="qrc-prayer">العشاء</div>
+          <div class="qrc-pages">4 صفحات</div>
+          <div class="qrc-label">Isha</div>
+        </div>
+      </div>
+
+      <div class="qr-divider-line">
+        <div class="ql"></div>
+        <span>5 صلوات × 4 صفحات = 20 صفحة = جزء واحد يومياً = ختم القرآن في 30 يوماً</span>
+        <div class="ql"></div>
+      </div>
+
+      <div class="qr-note">
+        <p>
+          📖 القرآن الكريم = <strong>30 جزءاً</strong><br>
+          📄 كل جزء = <strong>20 صفحة</strong><br>
+          🕐 كل صفحة = <strong>10 دقائق تقريباً</strong><br>
+          ✨ مجموع القراءة اليومية = <strong>200 دقيقة فقط</strong>
+        </p>
+      </div>
+
+      <div class="qr-tracker-title">🗓️ تتبّعي ختمك — اضغطي على اليوم لتعليمه ✓</div>
+      <div class="qr-grid" id="qr-grid"></div>
+      <div class="qr-progress-bar"><div class="qr-progress-fill" id="qr-fill" style="width:0%"></div></div>
+      <div class="qr-progress-label" id="qr-label">0 / 30 أجزاء — 0%</div>
+    </div>
+    <!-- ══ INLINE QUIZ ══ -->
+    <div class="quiz-section">
+      <div class="q-header">
+        <span class="q-title">🌙 مسابقة رمضانية</span>
+        <strong id="q-counter">1 / 32</strong>
+      </div>
+      <p class="q-text" id="q-text"></p>
+      <div class="q-options" id="q-options"></div>
+      <p class="q-feedback" id="q-feedback"></p>
+      <button class="q-next" id="q-next">التالي ←</button>
+      <div class="q-score" id="q-score">
+        <span class="qs-num" id="qs-num"></span>
+        <span class="qs-msg" id="qs-msg"></span>
+        <button class="q-restart" id="q-restart">🔄 العب مجدداً</button>
+      </div>
+    </div>
+
+    <p class="footer-strip">Made with love · Ramadan 1447 AH · 2026</p>
+  </div>
+
+  <div class="bottom-bar"></div>
+</div><!-- /card -->
+</div><!-- /main-card -->
+
+<!-- ══════ FLOATING ACTION BUTTONS ══════ -->
+<div id="action-bar">
+  <button class="act-btn" id="btn-surprise" title="Surprise!">
+    <span class="act-icon">🎊</span> Surprise!
+  </button>
+  <button class="act-btn" id="btn-dua" title="Special Dua">
+    <span class="act-icon">☪</span> Special Dua
+  </button>
+  <button class="act-btn" id="btn-music" title="Play Music">
+    <span class="act-icon">🎵</span> <span id="music-label">Play Music</span>
+  </button>
+</div>
+
+<!-- ══════ MUSIC BAR (bottom-left) ══════ -->
+<div id="music-bar">
+  <div class="bars">
+    <div class="bar"></div><div class="bar"></div>
+    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+  </div>
+</div>
+
+<!-- ══════ DUA POPUP ══════ -->
+<div id="dua-popup">
+  <div class="dpbox">
+    <button class="dp-close" id="dua-close">✕</button>
+    <div class="dp-ar">
+      اَللَّهُمَّ بَلِّغْنَا رَمَضَانَ<br>
+      وَتَقَبَّلْ مِنَّا صِيَامَنَا<br>
+      وَقِيَامَنَا وَصَالِحَ أَعْمَالِنَا
+    </div>
+    <div class="dp-en">
+      O Allah, let us reach Ramadan,<br>
+      and accept from us our fasting,<br>
+      our prayers, and our righteous deeds.<br><br>
+      <em>May this blessed month bring you joy, peace,<br>and every du'a answered — Ameen 🤍</em>
+    </div>
+    <p class="dp-sig">✦ &nbsp; with love, Mahmoud &nbsp; ✦</p>
+  </div>
+</div>
+
+<!-- YouTube hidden iframe -->
+<iframe id="yt-frame"
+  style="position:fixed;bottom:0;right:0;width:1px;height:1px;opacity:0;pointer-events:none;border:none;z-index:-1;"
+  allow="autoplay"
+  src=""
+  title="Ramadan Music">
+</iframe>
+
+<script>
+/* ═══ STARS CANVAS ═══ */
+(function(){
+  const c=document.getElementById('stars-bg'),ctx=c.getContext('2d');let stars=[];
+  function resize(){
+    c.width=innerWidth;c.height=innerHeight;stars=[];
+    for(let i=0;i<160;i++) stars.push({x:Math.random()*c.width,y:Math.random()*c.height,r:.3+Math.random()*1.4,op:.15+Math.random()*.55,sp:.003+Math.random()*.007,ph:Math.random()*Math.PI*2});
+  }
+  function draw(t){
+    ctx.clearRect(0,0,c.width,c.height);
+    stars.forEach(s=>{
+      const o=s.op*(.5+.5*Math.sin(t*.001*1000*s.sp+s.ph));
+      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(245,220,130,${o})`;ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  addEventListener('resize',resize);resize();requestAnimationFrame(draw);
+})();
+
+/* ═══ HEARTS ORBIT AROUND NOOR ═══ */
+(function(){
+  const orbit=document.getElementById('hearts-orbit');
+  const items=[
+    {s:'🤍',r:58,spd:9},  {s:'💛',r:54,spd:12},
+    {s:'🌙',r:60,spd:10}, {s:'✨',r:50,spd:14},
+    {s:'🤍',r:62,spd:8},  {s:'💛',r:52,spd:11},
+    {s:'⭐',r:56,spd:13}, {s:'🌸',r:58,spd:9.5}
+  ];
+  items.forEach((item,i)=>{
+    const el=document.createElement('span');
+    el.className='ho';
+    el.textContent=item.s;
+    el.style.fontSize=(13+Math.floor(Math.random()*6))+'px';
+    const startDeg=(i/items.length)*360;
+    el.style.setProperty('--s',startDeg+'deg');
+    el.style.setProperty('--r',item.r+'px');
+    el.style.animationDuration=item.spd+'s';
+    el.style.animationDelay=-(item.spd*i/items.length)+'s';
+    orbit.appendChild(el);
+  });
+})();
+
+/* ═══ FLYING HEARTS ═══ */
+(function(){
+  const layer=document.getElementById('fly-hearts');
+  const sym=['🤍','💛','🌙','✦','💖','🌸','⭐'];
+  function spawn(){
+    const el=document.createElement('div');
+    el.className='fly-h';
+    el.textContent=sym[Math.floor(Math.random()*sym.length)];
+    el.style.left=(8+Math.random()*84)+'vw';
+    el.style.bottom='0px';
+    const dur=4+Math.random()*5;
+    el.style.animationDuration=dur+'s';
+    el.style.setProperty('--rot',(Math.random()*40-20)+'deg');
+    layer.appendChild(el);
+    setTimeout(()=>el.remove(),(dur+.3)*1000);
+  }
+  setInterval(spawn,650);
+  for(let i=0;i<7;i++) setTimeout(spawn,i*280);
+})();
+
+/* ═══ LOCK SCREEN ═══ */
+(function(){
+  const SECRET = 'noor';
+  const WRONG = [
+    'Try again, habibi 🌙',
+    'Almost... think of your name ✨',
+    'Nope! Check the hint below 💛',
+    'So close... not quite 🤍',
+    'The key is simpler than you think ☪'
+  ];
+  let errIdx = 0;
+
+  // Floating symbols on lock screen
+  const floats = document.getElementById('ls-floats');
+  const sym = ['✦','☪','✧','🌙','⭐','❋','✶'];
+  for(let i=0;i<28;i++){
+    const el = document.createElement('div');
+    el.className = 'ls-float';
+    el.textContent = sym[Math.floor(Math.random()*sym.length)];
+    el.style.left = Math.random()*100+'vw';
+    el.style.color = Math.random()>.5 ? 'rgba(245,216,74,.35)' : 'rgba(200,150,10,.3)';
+    el.style.fontSize = (10+Math.random()*14)+'px';
+    const dur = 12+Math.random()*16;
+    el.style.animationDuration = dur+'s';
+    el.style.animationDelay = -(Math.random()*dur)+'s';
+    floats.appendChild(el);
+  }
+
+  function attempt(){
+    const val = document.getElementById('ls-input').value.trim().toLowerCase();
+    const err = document.getElementById('ls-err');
+    if(val === SECRET){
+      // unlock!
+      document.getElementById('lock-screen').classList.add('unlocked');
+      setTimeout(()=>{
+        document.getElementById('lock-screen').style.display='none';
+      }, 1500);
+      const mc = document.getElementById('main-card');
+      mc.classList.add('visible');
+      document.getElementById('action-bar').classList.add('show');
+      // auto-play music after unlock
+      setTimeout(startMusic, 1200);
+    } else {
+      err.textContent = WRONG[errIdx % WRONG.length];
+      errIdx++;
+      document.getElementById('ls-input').style.borderColor='rgba(255,120,60,.6)';
+      setTimeout(()=>{
+        document.getElementById('ls-input').style.borderColor='';
+        err.textContent='';
+      }, 2200);
+    }
+  }
+
+  document.getElementById('ls-btn').addEventListener('click', attempt);
+  document.getElementById('ls-input').addEventListener('keydown', e=>{ if(e.key==='Enter') attempt(); });
+})();
+
+/* ═══ YOUTUBE MUSIC ═══ */
+// Maher Zain - Ramadan (official)
+const YT_ID = 'sBqxCk5ESzc';
+let musicPlaying = false;
+
+function startMusic(){
+  const fr = document.getElementById('yt-frame');
+  fr.src = 'https://www.youtube.com/embed/'+YT_ID+'?autoplay=1&loop=1&playlist='+YT_ID+'&controls=0&mute=0';
+  musicPlaying = true;
+  document.getElementById('btn-music').classList.add('active');
+  document.getElementById('music-label').textContent = 'Pause Music';
+  document.getElementById('music-bar').classList.add('show');
+}
+
+function stopMusic(){
+  const fr = document.getElementById('yt-frame');
+  fr.src = '';
+  musicPlaying = false;
+  document.getElementById('btn-music').classList.remove('active');
+  document.getElementById('music-label').textContent = 'Play Music';
+  document.getElementById('music-bar').classList.remove('show');
+}
+
+document.getElementById('btn-music').addEventListener('click',()=>{
+  if(musicPlaying) stopMusic(); else startMusic();
+});
+
+/* ═══ DUA POPUP ═══ */
+document.getElementById('btn-dua').addEventListener('click',()=>{
+  document.getElementById('dua-popup').classList.add('show');
+});
+document.getElementById('dua-close').addEventListener('click',()=>{
+  document.getElementById('dua-popup').classList.remove('show');
+});
+document.getElementById('dua-popup').addEventListener('click',e=>{
+  if(e.target===document.getElementById('dua-popup'))
+    document.getElementById('dua-popup').classList.remove('show');
+});
+
+/* ═══ SURPRISE BURST ═══ */
+document.getElementById('btn-surprise').addEventListener('click',()=>{
+  const sym2 = ['🤍','💛','🌙','✨','🎊','⭐','🌸','☪','✦','💖'];
+  const cx = window.innerWidth/2, cy = window.innerHeight/2;
+  for(let i=0;i<55;i++){
+    const el = document.createElement('div');
+    el.className = 'burst-p';
+    el.textContent = sym2[Math.floor(Math.random()*sym2.length)];
+    el.style.left = cx+'px';
+    el.style.top  = cy+'px';
+    const angle = Math.random()*Math.PI*2;
+    const dist  = 100+Math.random()*340;
+    el.style.setProperty('--bx',(Math.cos(angle)*dist)+'px');
+    el.style.setProperty('--by',(Math.sin(angle)*dist)+'px');
+    el.style.setProperty('--br',(Math.random()*720-360)+'deg');
+    el.style.animationDuration=(1.2+Math.random()*.8)+'s';
+    el.style.animationDelay=(Math.random()*.25)+'s';
+    el.style.fontSize=(14+Math.random()*18)+'px';
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(), 2500);
+  }
+});
+
+/* ═══ COUNTDOWN TO EID ═══ */
+(function(){
+  // Eid Al-Fitr 1447 AH — expected March 30, 2026
+  const EID = new Date('2026-03-20T00:00:00');
+  const ids = ['cd-d','cd-h','cd-m','cd-s'];
+  function pad(n){return String(n).padStart(2,'0');}
+  function bump(id){
+    const el=document.getElementById(id);
+    el.classList.add('bump');
+    setTimeout(()=>el.classList.remove('bump'),260);
+  }
+  let prev = {};
+  function tick(){
+    const now = new Date();
+    const diff = EID - now;
+    if(diff <= 0){
+      ids.forEach(id=>document.getElementById(id).textContent='00');
+      document.getElementById('cd-eid-msg').style.display='block';
+      return;
+    }
+    const d = Math.floor(diff/864e5);
+    const h = Math.floor((diff%864e5)/36e5);
+    const m = Math.floor((diff%36e5)/6e4);
+    const s = Math.floor((diff%6e4)/1e3);
+    const vals = {d,h,m,s};
+    ['d','h','m','s'].forEach((k,i)=>{
+      const el = document.getElementById('cd-'+k);
+      const val = pad(vals[k]);
+      if(el.textContent !== val){
+        el.textContent = val;
+        if(prev[k] !== undefined) bump('cd-'+k);
+      }
+      prev[k] = val;
+    });
+  }
+  tick();
+  setInterval(tick,1000);
+})();
+
+/* ═══ RAMADAN QUIZ ═══ */
+(function(){
+  const Qs = [
+    {
+      q: 'من أول من صام من الأنبياء؟',
+      opts: ['نوح عليه السلام','إبراهيم عليه السلام','آدم عليه السلام','موسى عليه السلام'],
+      ans: 2,
+      fb: '✦ آدم عليه السلام أول من صام من الأنبياء.'
+    },
+    {
+      q: 'من النبي الذي كان يصوم يوماً ويُفطر يوماً؟',
+      opts: ['سليمان عليه السلام','يوسف عليه السلام','موسى عليه السلام','داوود عليه السلام'],
+      ans: 3,
+      fb: '✦ نبي الله داوود عليه السلام كان يصوم يوماً ويُفطر يوماً.'
+    },
+    {
+      q: 'كم رمضانًا صام رسول الله ﷺ؟',
+      opts: ['سبعة رمضانات','ثمانية رمضانات','تسعة رمضانات','عشرة رمضانات'],
+      ans: 2,
+      fb: '✦ صام رسول الله ﷺ تسع رمضانات.'
+    },
+    {
+      q: 'متى فُرض الصيام على المسلمين؟',
+      opts: ['السنة الأولى من الهجرة','السنة الثانية من الهجرة','السنة الثالثة من الهجرة','السنة الخامسة من الهجرة'],
+      ans: 1,
+      fb: '✦ فُرض الصيام على المسلمين في السنة الثانية من الهجرة.'
+    },
+    {
+      q: 'ما ترتيب الصوم في أركان الإسلام الخمسة؟',
+      opts: ['الركن الثاني','الركن الثالث','الركن الرابع','الركن الخامس'],
+      ans: 2,
+      fb: '✦ الصوم هو الركن الرابع من أركان الإسلام.'
+    },
+    {
+      q: 'كم مرة ذُكر شهر رمضان في القرآن الكريم؟',
+      opts: ['ثلاث مرات','مرتان','مرة واحدة فقط','خمس مرات'],
+      ans: 2,
+      fb: '✦ ذُكر شهر رمضان في القرآن الكريم مرة واحدة فقط.'
+    },
+    {
+      q: 'في أي سورة وآية ذُكر شهر رمضان في القرآن؟',
+      opts: ['آل عمران آية 97','النساء آية 103','البقرة آية 185','المائدة آية 6'],
+      ans: 2,
+      fb: '✦ {شَهْرُ رَمَضَانَ الَّذِي أُنزِلَ فِيهِ الْقُرْآنُ} — سورة البقرة الآية 185.'
+    },
+    {
+      q: 'ما موعد صلاة التراويح؟',
+      opts: ['قبل المغرب','بعد الفجر مباشرة','بين العشاء وحتى الفجر','بعد صلاة الظهر'],
+      ans: 2,
+      fb: '✦ موعد صلاة التراويح بين العشاء وحتى الفجر.'
+    },
+    {
+      q: 'كم عدد ركعات صلاة التراويح كحدٍّ أدنى؟',
+      opts: ['4 ركعات','8 ركعات + الشفع والوتر','12 ركعة','20 ركعة'],
+      ans: 1,
+      fb: '✦ تبدأ من 8 ركعات بالإضافة إلى الشفع والوتر.'
+    },
+    {
+      q: 'مَن أول من جمع المسلمين لصلاة التراويح؟',
+      opts: ['أبو بكر الصديق رضي الله عنه','عمر بن الخطاب رضي الله عنه','عثمان بن عفان رضي الله عنه','علي بن أبي طالب رضي الله عنه'],
+      ans: 1,
+      fb: '✦ سيدنا عمر بن الخطاب رضي الله عنه أول من جمع المسلمين لصلاة التراويح.'
+    },
+    {
+      q: 'ما أول سورة نزلت على رسول الله ﷺ؟',
+      opts: ['سورة الفاتحة','سورة البقرة','سورة العلق','سورة الكوثر'],
+      ans: 2,
+      fb: '✦ أول ما نزل هو الآيات الأولى من سورة العلق: {اقْرَأْ بِاسْمِ رَبِّكَ الَّذِي خَلَقَ}.'
+    },
+    {
+      q: 'في أي يوم من رمضان نزلت أول آيات القرآن على النبي ﷺ؟',
+      opts: ['في أول رمضان','في اليوم السابع','في السابع عشر من رمضان','في اليوم العشرين'],
+      ans: 2,
+      fb: '✦ كان ذلك في السابع عشر من رمضان، وعمر النبي ﷺ ثلاثة وأربعون عاماً.'
+    },
+    {
+      q: 'ما أفضل ليلة في شهر رمضان؟',
+      opts: ['ليلة النصف من رمضان','ليلة القدر','ليلة العيد','ليلة الجمعة الأولى'],
+      ans: 1,
+      fb: '✦ ليلة القدر هي أفضل ليلة في رمضان، وهي خير من ألف شهر.'
+    },
+    {
+      q: 'كم يعادل أجر ليلة القدر من السنوات؟',
+      opts: ['مائة شهر (8 سنوات تقريباً)','خمسمائة شهر (41 سنة)','ألف شهر (83 سنة)','ألفا شهر (166 سنة)'],
+      ans: 2,
+      fb: '✦ يعادل أجر ليلة القدر أجر ألف شهر أي 83 سنة تقريباً.'
+    },
+    {
+      q: 'ما اسم الباب الذي يدخل منه الصائمون الجنة؟',
+      opts: ['باب الكوثر','باب الريان','باب الفردوس','باب التوبة'],
+      ans: 1,
+      fb: '✦ باب الريان هو الباب المخصص للصائمين في الجنة.'
+    },
+    {
+      q: 'ما الغزوات التي خاضها المسلمون في رمضان في عهد النبي ﷺ؟',
+      opts: ['غزوة أُحد وتبوك','غزوة بدر وفتح مكة','غزوة الخندق وحنين','غزوة خيبر ومؤتة'],
+      ans: 1,
+      fb: '✦ غزوة بدر وفتح مكة كلتاهما كانتا في شهر رمضان المبارك.'
+    },
+    {
+      q: 'ما اسم الشهر السابق لرمضان؟',
+      opts: ['رجب','صفر','شعبان','محرم'],
+      ans: 2,
+      fb: '✦ شعبان هو الشهر السابق لرمضان، وشوال هو الشهر التالي له.'
+    },
+    {
+      q: 'ما الأشهر الحرم الأربعة؟',
+      opts: ['رمضان وشعبان ورجب ومحرم','ذو القعدة وذو الحجة ومحرم ورجب','صفر ومحرم ورجب وشعبان','رجب وشعبان ورمضان وشوال'],
+      ans: 1,
+      fb: '✦ الأشهر الحرم هي: ذو القعدة، وذو الحجة، والمحرم، ورجب.'
+    },
+    {
+      q: 'كم سنة قضاها رسول الله ﷺ في الدعوة بمكة المكرمة؟',
+      opts: ['10 سنوات','12 سنة','13 سنة','15 سنة'],
+      ans: 2,
+      fb: '✦ قضى رسول الله ﷺ 13 سنة يدعو في مكة المكرمة.'
+    },
+    {
+      q: 'كم سنة قضاها رسول الله ﷺ في الدعوة بالمدينة المنورة؟',
+      opts: ['7 سنوات','8 سنوات','9 سنوات','10 سنوات'],
+      ans: 3,
+      fb: '✦ قضى رسول الله ﷺ 10 سنوات يدعو في المدينة المنورة.'
+    },
+    {
+      q: 'ما معنى كلمة "رمضان"؟',
+      opts: ['شدة البرد','شدة الحر أو الاحتراق','كثرة الأمطار','ضوء القمر'],
+      ans: 1,
+      fb: '✦ رمضان من "الرمض" أي شدة الحر، فيقال أرمضته الشمس أي أحرقته.'
+    },
+    {
+      q: 'من راوي الحديث: "إذا جاءَ رمضانُ فُتِّحَتْ أبوابُ الجنّةِ وغُلِّقَتْ أبوابُ النارِ وصُفِّدَتِ الشياطينُ"؟',
+      opts: ['ابن عمر رضي الله عنه','أنس بن مالك رضي الله عنه','أبو هريرة رضي الله عنه','عائشة رضي الله عنها'],
+      ans: 2,
+      fb: '✦ رواه أبو هريرة رضي الله عنه، وهو حديث متفق عليه.'
+    },
+    {
+      q: 'ما أول صلاة فُرضت على رسول الله ﷺ؟',
+      opts: ['صلاة الفجر','صلاة العصر','صلاة الظهر','صلاة المغرب'],
+      ans: 2,
+      fb: '✦ صلاة الظهر هي أول صلاة صلّاها النبي ﷺ بعد فرض الصلوات ليلة الإسراء.'
+    },
+    {
+      q: 'من الصحابي الجليل الذي تستحي منه الملائكة؟',
+      opts: ['أبو بكر الصديق رضي الله عنه','عمر بن الخطاب رضي الله عنه','علي بن أبي طالب رضي الله عنه','عثمان بن عفان رضي الله عنه'],
+      ans: 3,
+      fb: '✦ عثمان بن عفان رضي الله عنه، قال النبي ﷺ: "أَلَا أَسْتَحِي مِمَّنْ تَسْتَحِي مِنْهُ الْمَلَائِكَةُ".'
+    },
+    {
+      q: 'من أول من بنى السجون في الإسلام؟',
+      opts: ['أبو بكر الصديق رضي الله عنه','عمر بن الخطاب رضي الله عنه','عثمان بن عفان رضي الله عنه','علي بن أبي طالب رضي الله عنه'],
+      ans: 3,
+      fb: '✦ علي بن أبي طالب رضي الله عنه هو أول من بنى السجون في الإسلام.'
+    },
+    {
+      q: 'من هو رفيق رسول الله ﷺ في رحلة الهجرة إلى المدينة؟',
+      opts: ['عمر بن الخطاب رضي الله عنه','علي بن أبي طالب رضي الله عنه','أبو بكر الصديق رضي الله عنه','الزبير بن العوام رضي الله عنه'],
+      ans: 2,
+      fb: '✦ أبو بكر الصديق رضي الله عنه رافق النبي ﷺ في رحلة الهجرة المباركة.'
+    },
+    {
+      q: 'ما هو ثاني مسجد أُقيمت فيه صلاة الجمعة في الإسلام؟',
+      opts: ['المسجد النبوي بالمدينة','مسجد قباء','مسجد جواثا في الأحساء','المسجد الأقصى'],
+      ans: 2,
+      fb: '✦ مسجد جواثا في مدينة الأحساء بالمملكة العربية السعودية هو ثاني مسجد أُقيمت فيه الجمعة.'
+    },
+    {
+      q: 'ما السورة القرآنية التي لا تخلو آيةٌ منها من لفظ الجلالة "الله"؟',
+      opts: ['سورة الإخلاص','سورة البقرة','سورة المجادلة','سورة الفاتحة'],
+      ans: 2,
+      fb: '✦ سورة المجادلة هي السورة التي يُذكر فيها لفظ الجلالة في كل آية من آياتها.'
+    },
+    {
+      q: 'ما اسم الملَك الذي كان يُنزِّل الوحي على النبي محمد ﷺ؟',
+      opts: ['إسرافيل عليه السلام','ميكائيل عليه السلام','جبريل عليه السلام','عزرائيل عليه السلام'],
+      ans: 2,
+      fb: '✦ جبريل عليه السلام هو أمين الوحي الذي كان ينزل بالقرآن على رسول الله ﷺ.'
+    },
+    {
+      q: 'من الصحابي الذي اقترح حفر الخندق في غزوة الأحزاب؟',
+      opts: ['أبو بكر الصديق رضي الله عنه','عمر بن الخطاب رضي الله عنه','سلمان الفارسي رضي الله عنه','معاذ بن جبل رضي الله عنه'],
+      ans: 2,
+      fb: '✦ الصحابي الجليل سلمان الفارسي رضي الله عنه هو من اقترح حفر الخندق يوم الأحزاب.'
+    },
+    {
+      q: 'من أول نبي نطق لسانه بالعربية؟',
+      opts: ['آدم عليه السلام','نوح عليه السلام','إبراهيم عليه السلام','إسماعيل عليه السلام'],
+      ans: 3,
+      fb: '✦ إسماعيل عليه السلام هو أول من نطق لسانه بالعربية، وكان ابن أربع عشرة سنة.'
+    },
+    {
+      q: '🌙 من يُحبّكِ؟',
+      opts: ['لا أحد 😅','صديقة فقط 🤍','الكل طبعاً 😄','محمود 🌙💛'],
+      ans: 3,
+      fb: '✦ محمود يُحبّكِ في الله يا نور، وهذا أصدق جواب 🌙💛'
+    }
+  ];
+
+  let cur=0, score=0, answered=false;
+
+  function render(){
+    const q = Qs[cur];
+    document.getElementById('q-counter').textContent = (cur+1)+' / '+Qs.length;
+    document.getElementById('q-text').textContent = q.q;
+    document.getElementById('q-feedback').textContent = '';
+    document.getElementById('q-next').style.display='none';
+    document.getElementById('q-score').style.display='none';
+    answered=false;
+    const opts = document.getElementById('q-options');
+    opts.innerHTML='';
+    q.opts.forEach((o,i)=>{
+      const btn=document.createElement('button');
+      btn.className='q-opt';
+      btn.textContent=o;
+      btn.addEventListener('click',()=>answer(i,btn));
+      opts.appendChild(btn);
+    });
+  }
+
+  function answer(idx,btn){
+    if(answered) return;
+    answered=true;
+    const q=Qs[cur];
+    const all=document.querySelectorAll('.q-opt');
+    all.forEach(b=>{b.disabled=true;});
+    all[q.ans].classList.add('correct');
+    if(idx===q.ans){
+      score++;
+      document.getElementById('q-feedback').textContent='✦ صحيح! ' + q.fb;
+      document.getElementById('q-feedback').style.color='rgba(150,240,130,.8)';
+    } else {
+      btn.classList.add('wrong');
+      document.getElementById('q-feedback').textContent='✗ خطأ — ' + q.fb;
+      document.getElementById('q-feedback').style.color='rgba(255,130,130,.75)';
+    }
+    document.getElementById('q-next').style.display='inline-block';
+    if(cur===Qs.length-1) document.getElementById('q-next').textContent='النتيجة ★ Result';
+  }
+
+  document.getElementById('q-next').addEventListener('click',()=>{
+    cur++;
+    if(cur < Qs.length){
+      render();
+    } else {
+      // show score
+      document.getElementById('q-options').innerHTML='';
+      document.getElementById('q-text').textContent='';
+      document.getElementById('q-feedback').textContent='';
+      document.getElementById('q-next').style.display='none';
+      const pct=Math.round(score/Qs.length*100);
+      const msgs=[
+        ['0-39','تشجعك نور 💛 Keep trying, Noor is cheering for you!'],
+        ['40-59','جيد، استمر! 🌙 Good effort — review & retry!'],
+        ['60-79','ممتاز! ✨ Great job — almost perfect!'],
+        ['80-100','مَاشَاءَاللّٰه! 🌟 Perfect — رمضان مبارك!']
+      ];
+      let msg=msgs[0][1];
+      if(pct>=80) msg=msgs[3][1];
+      else if(pct>=60) msg=msgs[2][1];
+      else if(pct>=40) msg=msgs[1][1];
+      document.getElementById('qs-num').textContent=score+' / '+Qs.length;
+      document.getElementById('qs-msg').textContent=msg;
+      document.getElementById('q-score').style.display='block';
+    }
+  });
+
+  document.getElementById('q-restart').addEventListener('click',()=>{
+    cur=0;score=0;render();
+  });
+
+  // auto-render quiz inline on page load
+  render();
+})();
+
+/* ═══ QURAN TRACKER ═══ */
+(function(){
+  const JUZNAMES=[
+    'الفاتحة والبقرة','البقرة','البقرة وآل عمران','آل عمران والنساء','النساء',
+    'النساء والمائدة','المائدة والأنعام','الأنعام والأعراف','الأعراف','الأنفال والتوبة',
+    'التوبة وهود','هود ويوسف','يوسف والرعد وإبراهيم','الحجر والنحل','الإسراء والكهف',
+    'الكهف ومريم وطه','الأنبياء والحج','المؤمنون والنور','الفرقان والشعراء والنمل','النمل والقصص والعنكبوت',
+    'العنكبوت والروم ولقمان','الأحزاب وسبأ وفاطر','يس والصافات وص','الزمر وغافر وفصلت','الأحقاف ومحمد والفتح',
+    'الحجرات والذاريات','الطور والنجم والقمر والرحمن','الواقعة والحديد والمجادلة','الحشر والتحريم والملك','النبأ والناس'
+  ];
+  const KEY='qr_tracker_noor';
+  const grid=document.getElementById('qr-grid');
+  const fill=document.getElementById('qr-fill');
+  const label=document.getElementById('qr-label');
+  if(!grid||!fill||!label)return;
+
+  let done=JSON.parse(localStorage.getItem(KEY)||'[]');
+
+  function save(){localStorage.setItem(KEY,JSON.stringify(done));}
+
+  function updateProgress(){
+    const count=done.length;
+    const pct=Math.round(count/30*100);
+    fill.style.width=pct+'%';
+    label.textContent=count+' / 30 أجزاء — '+pct+'%';
+    if(count===30)celebrate();
+  }
+
+  function celebrate(){
+    const body=document.body;
+    for(let i=0;i<60;i++){
+      const b=document.createElement('div');
+      b.className='burst-p';
+      b.textContent=['🌙','⭐','💚','📖','✨'][Math.floor(Math.random()*5)];
+      b.style.cssText='left:'+Math.random()*100+'vw;top:60vh;animation-delay:'+Math.random()*.8+'s;';
+      body.appendChild(b);
+      setTimeout(()=>b.remove(),3000);
+    }
+  }
+
+  function buildGrid(){
+    grid.innerHTML='';
+    for(let d=1;d<=30;d++){
+      const el=document.createElement('div');
+      el.className='qr-day'+(done.includes(d)?' done':'');
+      el.innerHTML='<span class="day-num">'+d+'</span><span class="day-juz">'+d+'</span>';
+      el.title='الجزء '+d+': '+JUZNAMES[d-1];
+      el.addEventListener('click',function(){
+        if(done.includes(d)){done=done.filter(x=>x!==d);}
+        else{done.push(d);}
+        save();
+        el.classList.toggle('done',done.includes(d));
+        updateProgress();
+      });
+      grid.appendChild(el);
+    }
+    updateProgress();
+  }
+
+  buildGrid();
+})();
+
+/* ═══ FLOATING PARTICLES ═══ */
+(function(){
+  const layer=document.getElementById('ptcls');
+  const syms=['✦','☪','✧','⋆','✶','❋'];
+  for(let i=0;i<22;i++){
+    const p=document.createElement('div');
+    p.className='ptcl';
+    p.textContent=syms[Math.floor(Math.random()*syms.length)];
+    p.style.left=Math.random()*100+'vw';
+    p.style.color=Math.random()>.5?'rgba(200,134,10,.5)':'rgba(245,216,74,.4)';
+    p.style.fontSize=(8+Math.random()*10)+'px';
+    const dur=14+Math.random()*14;
+    p.style.animationDuration=dur+'s';
+    p.style.animationDelay=-(Math.random()*dur)+'s';
+    layer.appendChild(p);
+  }
+})();
+</script>
+</body>
+</html>
