@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💕 A Game For You 💕</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Quicksand:wght@300;400;600&family=Pacifico&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0015;overflow:hidden;font-family:'Quicksand',sans-serif;user-select:none}
+canvas#gameCanvas{display:block;position:fixed;top:0;left:0;z-index:0}
+
+/* LEVEL COMPLETE OVERLAY */
+#levelCompleteOverlay{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;background:rgba(8,0,18,.85);z-index:95;transition:opacity .5s}
+#levelCompleteOverlay.show{display:flex}
+.lc-icon{font-size:70px;animation:bp 1s ease-in-out infinite}
+.lc-text{font-family:'Pacifico',cursive;font-size:38px;color:#ff6b9d;text-shadow:0 0 30px rgba(255,107,157,.5);margin-top:10px}
+.lc-sub{font-family:'Dancing Script',cursive;font-size:22px;color:#ffb6d9;margin-top:8px}
+
+/* START */
+#startScreen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:200;transition:opacity 1.2s}
+#startScreen.hidden{opacity:0;pointer-events:none}
+.start-bg{position:absolute;inset:0;background:linear-gradient(135deg,#1a0a2e,#2d1b4e 40%,#1a0a2e 70%,#0f0520);overflow:hidden}
+.float-heart{position:absolute;bottom:-60px;opacity:.22;animation:floatUp linear infinite}
+@keyframes floatUp{0%{transform:translateY(0) rotate(0) scale(1);opacity:.22}50%{opacity:.45;transform:translateY(-55vh) rotate(180deg) scale(1.15)}100%{transform:translateY(-115vh) rotate(360deg) scale(.8);opacity:0}}
+.start-content{position:relative;z-index:2;text-align:center}
+/* HER IMAGE on start screen */
+.her-photo{width:130px;height:130px;border-radius:50%;border:3px solid #ff6b9d;object-fit:cover;box-shadow:0 0 30px rgba(255,107,157,.4);margin-bottom:12px}
+.her-photo-placeholder{width:130px;height:130px;border-radius:50%;border:3px solid #ff6b9d;background:linear-gradient(135deg,#2d1b4e,#1a0a2e);display:flex;align-items:center;justify-content:center;font-size:50px;box-shadow:0 0 30px rgba(255,107,157,.4);margin:0 auto 12px}
+.title-main{font-family:'Pacifico',cursive;font-size:52px;color:#ff6b9d;text-shadow:0 0 40px rgba(255,107,157,.5);margin-bottom:5px}
+.title-noor{font-family:'Dancing Script',cursive;font-size:64px;font-weight:700;color:#ffb6d9;text-shadow:0 0 40px rgba(255,182,217,.5);animation:tp 2.5s ease-in-out infinite}
+@keyframes tp{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+.title-sub{font-size:16px;color:#c49bff;letter-spacing:2px;margin:6px 0 25px}
+.start-btn{padding:16px 60px;border:2px solid #ff6b9d;border-radius:50px;background:linear-gradient(135deg,rgba(255,107,157,.2),rgba(196,155,255,.15));color:#ff6b9d;font-family:'Dancing Script',cursive;font-size:28px;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
+.start-btn:hover{background:linear-gradient(135deg,rgba(255,107,157,.4),rgba(196,155,255,.3));box-shadow:0 0 40px rgba(255,107,157,.4);transform:scale(1.06)}
+.start-btn::after{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent,rgba(255,255,255,.08),transparent);animation:bs 3s infinite}
+@keyframes bs{0%{transform:translateX(-100%) rotate(45deg)}100%{transform:translateX(100%) rotate(45deg)}}
+.controls-info{margin-top:20px;color:#7755aa;font-size:12px;line-height:2}
+
+/* HUD */
+#hud{position:fixed;top:0;left:0;right:0;padding:8px 16px;display:none;justify-content:space-between;align-items:center;background:linear-gradient(180deg,rgba(26,10,46,.9),transparent);z-index:50;pointer-events:none}
+.hud-left,.hud-right{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.hud-item{color:#d0b0ff;font-size:13px}.hud-item span{color:#ff6b9d;font-weight:600}
+.hud-title{font-family:'Dancing Script',cursive;color:#c49bff;font-size:16px}
+
+/* MISSION POPUP */
+#missionPopup{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;background:rgba(8,0,18,.9);z-index:80}
+#missionPopup.show{display:flex}
+.mp-icon{font-size:50px;margin-bottom:8px}
+.mp-title{font-family:'Pacifico',cursive;font-size:34px;color:#ff6b9d;text-shadow:0 0 25px rgba(255,107,157,.4);margin-bottom:5px;text-align:center}
+.mp-sub{font-family:'Dancing Script',cursive;font-size:20px;color:#ffb6d9;margin-bottom:5px}
+.mp-desc{font-size:15px;color:#b898dd;text-align:center;max-width:460px;line-height:1.7;margin-bottom:5px;white-space:pre-line}
+.mp-goal{font-size:13px;color:#8a6cb8;margin-bottom:18px;text-align:center}
+.mp-hint{font-size:12px;color:#6b50a0;margin-bottom:15px;text-align:center;font-style:italic}
+.mp-btn{padding:12px 45px;border:2px solid #c49bff;border-radius:30px;background:rgba(196,155,255,.12);color:#c49bff;font-size:18px;cursor:pointer;transition:all .3s;font-family:'Dancing Script',cursive}
+.mp-btn:hover{background:rgba(196,155,255,.3);box-shadow:0 0 20px rgba(196,155,255,.3)}
+
+/* LOVE MSG */
+#loveMsg{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);padding:10px 26px;border-radius:18px;background:rgba(255,107,157,.15);border:1px solid rgba(255,107,157,.3);color:#ffb6d9;font-family:'Dancing Script',cursive;font-size:20px;opacity:0;transition:opacity .4s;z-index:60;pointer-events:none;white-space:nowrap}
+#loveMsg.show{opacity:1}
+
+/* PUZZLE POPUP */
+#puzzlePopup{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;background:rgba(8,0,18,.92);z-index:85}
+#puzzlePopup.show{display:flex}
+.pz-title{font-family:'Pacifico',cursive;font-size:30px;color:#c49bff;margin-bottom:10px}
+.pz-question{font-size:18px;color:#e0c0ff;text-align:center;max-width:450px;margin-bottom:20px;line-height:1.6}
+.pz-options{display:flex;flex-direction:column;gap:10px;width:300px}
+.pz-opt{padding:12px 20px;border:2px solid #6b3fa0;border-radius:12px;background:rgba(107,63,160,.15);color:#d0b0ff;font-size:16px;cursor:pointer;transition:all .3s;text-align:center}
+.pz-opt:hover{background:rgba(107,63,160,.35);border-color:#9b6fd0;transform:scale(1.03)}
+.pz-opt.correct{background:rgba(80,200,120,.25);border-color:#50c878;color:#90eeb0}
+.pz-opt.wrong{background:rgba(255,60,60,.2);border-color:#ff4444;color:#ff8888}
+.pz-result{font-family:'Dancing Script',cursive;font-size:22px;color:#ffb6d9;margin-top:12px;min-height:30px}
+
+/* MINI GAME */
+#miniGameOverlay{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;background:rgba(8,0,18,.95);z-index:90}
+#miniGameOverlay.show{display:flex}
+#miniGameOverlay h2{font-family:'Pacifico',cursive;color:#ff6b9d;font-size:32px;margin-bottom:3px}
+.mini-sub{color:#b898dd;font-size:14px;margin-bottom:12px}
+#miniGameCanvas{border:2px solid #6b3fa0;border-radius:8px;background:#0a0020}
+#miniGameInfo{color:#ffb6d9;font-family:'Dancing Script',cursive;font-size:18px;margin-top:8px}
+#miniGameBtn{display:none;margin-top:12px;padding:10px 35px;border:2px solid #ff6b9d;border-radius:30px;background:rgba(255,107,157,.12);color:#ff6b9d;font-family:'Dancing Script',cursive;font-size:18px;cursor:pointer;transition:all .3s}
+#miniGameBtn:hover{background:rgba(255,107,157,.3)}
+
+/* FINAL */
+#finalScreen{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a0a2e,#2d1b4e,#1a0a2e);z-index:200;overflow-y:auto;padding:30px}
+#finalScreen.show{display:flex}
+.fh{font-size:80px;animation:bp 1.4s ease-in-out infinite}
+@keyframes bp{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+.ft{font-family:'Pacifico',cursive;font-size:42px;color:#ff6b9d;text-shadow:0 0 35px rgba(255,107,157,.5);margin:12px 0 5px}
+.fn{font-family:'Dancing Script',cursive;font-size:50px;color:#ffb6d9;text-shadow:0 0 40px rgba(255,182,217,.4);margin-bottom:10px;animation:tp 2s ease-in-out infinite}
+.fm{font-size:16px;color:#b898dd;text-align:center;max-width:500px;line-height:1.8;margin-bottom:8px}
+.fp{font-family:'Dancing Script',cursive;font-size:18px;color:#ffb6d9;text-align:center;max-width:450px;line-height:2;margin:12px 0}
+.fb{font-family:'Pacifico',cursive;font-size:28px;color:#ff6b9d;margin:8px 0}
+.rbtn{margin-top:12px;padding:12px 45px;border:2px solid #ff6b9d;border-radius:50px;background:rgba(255,107,157,.12);color:#ff6b9d;font-family:'Dancing Script',cursive;font-size:20px;cursor:pointer;transition:all .3s}
+.rbtn:hover{background:rgba(255,107,157,.3);transform:scale(1.05)}
+.fwc{position:fixed;inset:0;pointer-events:none;z-index:199}
+#miniSkipBtn{display:none;margin-top:8px;padding:8px 28px;border:1px solid #6b50a0;border-radius:20px;background:rgba(107,80,160,.15);color:#9b7fcc;font-size:13px;cursor:pointer;transition:all .3s;font-family:'Quicksand',sans-serif}
+#miniSkipBtn:hover{background:rgba(107,80,160,.35);color:#c49bff}
+
+/* LOVE LETTER SCREEN */
+#letterScreen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:300;background:linear-gradient(135deg,#1a0a2e,#2d1b4e 40%,#1a0a2e);overflow:hidden;transition:opacity 1s}
+#letterScreen.hidden{opacity:0;pointer-events:none}
+.ls-floats{position:absolute;inset:0;pointer-events:none}
+.ls-envelope{width:220px;height:160px;position:relative;cursor:pointer;margin-bottom:10px;transition:transform .3s}
+.ls-envelope:hover{transform:scale(1.04)}
+.env-body{width:220px;height:140px;background:linear-gradient(135deg,#2d1b4e,#1a0430);border:2px solid rgba(255,107,157,.4);border-radius:6px;position:absolute;bottom:0}
+.env-flap{width:0;height:0;border-left:110px solid transparent;border-right:110px solid transparent;border-top:70px solid #3d1a5e;position:absolute;top:0;left:0;transform-origin:top center;transition:transform .5s;filter:drop-shadow(0 2px 6px rgba(255,107,157,.2))}
+.env-flap.open{transform:rotateX(180deg)}
+.env-seal{width:42px;height:42px;background:radial-gradient(circle,#ff6b9d,#c44088);border-radius:50%;position:absolute;top:32px;left:89px;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 0 18px rgba(255,107,157,.5);transition:opacity .4s}
+.env-seal.hidden{opacity:0}
+.env-lines{position:absolute;bottom:30px;left:30px;right:30px}
+.env-lines div{height:2px;background:rgba(255,107,157,.15);margin:12px 0;border-radius:2px}
+.letter-paper{position:absolute;background:linear-gradient(160deg,#fffef8,#fff5f9);border-radius:6px;padding:20px 22px;width:260px;min-height:auto;box-shadow:0 8px 30px rgba(0,0,0,.4);font-family:'Dancing Script',cursive;transition:transform .6s,opacity .6s;transform:translateY(0);opacity:0;z-index:2;top:-30px;left:-20px;pointer-events:none}
+.letter-paper.revealed{opacity:1;transform:translateY(-90px)}
+.letter-heading{font-size:15px;color:#c44088;font-weight:700;margin-bottom:8px;text-align:center}
+.letter-body{font-size:13px;color:#5a2d60;line-height:1.9}
+.letter-sign{font-size:14px;color:#c44088;margin-top:10px;text-align:right;font-weight:700}
+.ls-title{font-family:'Pacifico',cursive;font-size:30px;color:#ff6b9d;text-shadow:0 0 25px rgba(255,107,157,.4);margin-bottom:6px;text-align:center}
+.ls-sub{font-family:'Dancing Script',cursive;font-size:18px;color:#c49bff;margin-bottom:22px;text-align:center}
+.ls-open-btn{padding:13px 45px;border:2px solid #ff6b9d;border-radius:50px;background:linear-gradient(135deg,rgba(255,107,157,.15),rgba(196,155,255,.1));color:#ff6b9d;font-family:'Dancing Script',cursive;font-size:24px;cursor:pointer;transition:all .3s;margin-top:16px}
+.ls-open-btn:hover{background:linear-gradient(135deg,rgba(255,107,157,.35),rgba(196,155,255,.25));box-shadow:0 0 30px rgba(255,107,157,.3);transform:scale(1.05)}
+.ls-play-btn{padding:13px 45px;border:2px solid #c49bff;border-radius:50px;background:linear-gradient(135deg,rgba(196,155,255,.15),rgba(255,107,157,.1));color:#c49bff;font-family:'Dancing Script',cursive;font-size:24px;cursor:pointer;transition:all .3s;margin-top:16px;display:none}
+.ls-play-btn:hover{background:rgba(196,155,255,.3);box-shadow:0 0 30px rgba(196,155,255,.3);transform:scale(1.05)}
+.ls-hint{font-size:12px;color:#6b4a90;margin-top:8px;text-align:center;font-style:italic}
+
+/* DOOR */
+.door-hint{font-family:'Dancing Script',cursive;font-size:14px;color:#ffaa44;background:rgba(0,0,0,.5);padding:4px 10px;border-radius:8px;pointer-events:none}
+</style>
+</head>
+<body>
+
+<!-- GAME CANVAS (must be FIRST so overlays render on top) -->
+<canvas id="gameCanvas"></canvas>
+
+<!-- LOVE LETTER SCREEN (shows before everything) -->
+<div id="letterScreen">
+<div class="ls-floats" id="lsFloats"></div>
+<div class="ls-title">💌 A Message For You</div>
+<div class="ls-sub">Before you begin your adventure...</div>
+<div style="position:relative;display:inline-block">
+  <div class="ls-envelope" id="lsEnvelope" onclick="openLetter()">
+    <div class="env-body"><div class="env-lines"><div></div><div></div><div></div></div></div>
+    <div class="env-flap" id="envFlap"></div>
+    <div class="env-seal" id="envSeal">💕</div>
+  </div>
+  <div class="letter-paper" id="letterPaper">
+    <div class="letter-heading">~ To My Dearest Noor ~</div>
+    <div class="letter-body">
+      I made this little world<br>
+      just for you. 🌸<br><br>
+      Every heart you collect<br>
+      is a piece of my love.<br>
+      Every star is a wish I made<br>
+      thinking of you.<br><br>
+      Dooody will be by<br>
+      your side — just like<br>
+      I always will be. 💙<br><br>
+      Play, laugh, and know<br>
+      that you are so loved.
+    </div>
+    <div class="letter-sign">Forever Yours ❤️</div>
+  </div>
+</div>
+<button class="ls-open-btn" id="lsOpenBtn" onclick="openLetter()">💌 Open Letter</button>
+<button class="ls-play-btn" id="lsPlayBtn" onclick="closeLetter()">💕 Start Adventure</button>
+<div class="ls-hint" id="lsHint">Click the envelope or the button to read your letter</div>
+</div>
+
+<!-- START -->
+<div id="startScreen" style="opacity:0;pointer-events:none">
+<div class="start-bg" id="startBg"></div>
+<div class="start-content">
+<!-- 
+  ★ TO ADD HER PHOTO: Replace the placeholder div below with:
+  <img class="her-photo" src="her-photo.jpg" alt="♥">
+  Put the image file (her-photo.jpg) in the same folder as this file.
+-->
+<div class="her-photo-placeholder">👑</div>
+<div class="title-main">A Game For</div>
+<div class="title-noor">✨ Noor ✨</div>
+<div class="title-sub">~ 20 levels of adventure ~</div>
+<button class="start-btn" id="mainStartBtn" onclick="startGame()">💕 Start Adventure 💕</button>
+<div class="controls-info">
+🎮 Arrow Keys / WASD — Move &amp; Jump<br>
+🧩 Solve puzzles, defeat enemies, survive traps<br>
+💖 Collect items to win each level<br>
+💙 Dooody is by your side!
+</div>
+</div>
+</div>
+
+<!-- HUD -->
+<div id="hud">
+<div class="hud-left">
+<div class="hud-item">❤️ <span id="hLives">5</span></div>
+<div class="hud-item">💖 <span id="hHearts">0</span></div>
+<div class="hud-item">🌹 <span id="hRoses">0</span></div>
+<div class="hud-item">💌 <span id="hLetters">0</span></div>
+<div class="hud-item">⭐ <span id="hStars">0</span></div>
+<div class="hud-item">🔑 <span id="hKeys">0</span></div>
+</div>
+<div class="hud-right" style="gap:10px">
+<div class="hud-title" id="missionLabel">Level 1 / 20</div>
+<button onclick="missionDone=false;loadMission(3)" style="padding:4px 12px;border:1px solid #ff6b9d;border-radius:12px;background:rgba(255,107,157,.15);color:#ff6b9d;font-size:11px;cursor:pointer;pointer-events:auto">⏩ Go to Lvl 4</button>
+<button id="muteBtn" onclick="toggleMusic()" title="Toggle Music" style="padding:4px 10px;border:1px solid #c49bff;border-radius:12px;background:rgba(196,155,255,.12);color:#c49bff;font-size:14px;cursor:pointer;pointer-events:auto">🎵</button>
+<button id="sfxBtn" onclick="toggleSFX()" title="Toggle Sound FX" style="padding:4px 10px;border:1px solid #c49bff;border-radius:12px;background:rgba(196,155,255,.12);color:#c49bff;font-size:14px;cursor:pointer;pointer-events:auto">🔔</button>
+</div>
+</div>
+
+<!-- MISSION POPUP -->
+<div id="missionPopup">
+<div class="mp-icon" id="mpIcon"></div>
+<div class="mp-title" id="mpTitle"></div>
+<div class="mp-sub" id="mpSub"></div>
+<div class="mp-desc" id="mpDesc"></div>
+<div class="mp-goal" id="mpGoal"></div>
+<div class="mp-hint" id="mpHint"></div>
+<button class="mp-btn" onclick="closeMission()">⚔️ Let's Go!</button>
+</div>
+
+<!-- LOVE MSG -->
+<div id="loveMsg"></div>
+
+<!-- PUZZLE POPUP -->
+<div id="puzzlePopup">
+<div class="pz-title" id="pzTitle">🧩 الغاز</div>
+<div class="pz-question" id="pzQuestion"></div>
+<div class="pz-options" id="pzOptions"></div>
+<div class="pz-result" id="pzResult"></div>
+</div>
+
+<!-- MINI GAME -->
+<div id="miniGameOverlay">
+<h2 id="miniTitle"></h2>
+<div class="mini-sub" id="miniSub"></div>
+<canvas id="miniGameCanvas" width="400" height="400"></canvas>
+<div id="miniGameInfo"></div>
+<button id="miniGameBtn" onclick="miniGameDone()">Continue →</button>
+<button id="miniSkipBtn" onclick="skipMiniGame()">⏭️ Skip Level</button>
+</div>
+
+<!-- LEVEL COMPLETE -->
+<div id="levelCompleteOverlay">
+<div class="lc-icon">🎉</div>
+<div class="lc-text">Level Complete!</div>
+<div class="lc-sub" id="lcSub">Amazing job! 💕</div>
+</div>
+
+<!-- FINAL -->
+<div id="finalScreen">
+<canvas class="fwc" id="fireworkCanvas"></canvas>
+<div class="fh">💖</div>
+<div class="ft">I Love You</div>
+<div class="fn">Noor 👑</div>
+<div class="fm">You conquered every level, solved every puzzle, survived every trap...<br>Just like how you make my life an incredible adventure.</div>
+<div class="fp">
+You are the light in my universe,<br>
+The reason my heart beats in verse.<br>
+No level too hard, no puzzle too deep,<br>
+When you're the treasure I get to keep. 💕
+</div>
+<div class="fb">Forever Yours ❤️</div>
+<div class="fm" style="color:#4488ff;font-size:15px">💙 Dooody was with you every step of the way 💙</div>
+<div class="fm" style="font-size:14px;color:#8a6cb8">
+Every heart = a reason I love you • Every star = a wish for us<br>
+Every key you found = unlocking more of my heart
+</div>
+<button class="rbtn" onclick="location.reload()">🔄 Play Again</button>
+</div>
+
+<!-- YouTube BG Music container (hidden) -->
+<div id="ytContainer" style="position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;z-index:-1"></div>
+
+<script>
+const canvas=document.getElementById('gameCanvas'),ctx=canvas.getContext('2d');
+function resize(){canvas.width=innerWidth;canvas.height=innerHeight}
+resize();addEventListener('resize',resize);
+
+// floating hearts start screen
+(function(){const c=document.getElementById('startBg');
+const s=['💕','❤️','✨','🌹','⭐','💌','🌸','💗'];
+for(let i=0;i<35;i++){const h=document.createElement('div');h.className='float-heart';
+h.textContent=s[i%s.length];h.style.left=Math.random()*100+'%';
+h.style.animationDuration=(7+Math.random()*12)+'s';h.style.animationDelay=Math.random()*10+'s';
+h.style.fontSize=(14+Math.random()*22)+'px';c.appendChild(h)}})();
+
+// ═══════════════════════════════════════
+// LETTER SCREEN — shown before start
+// ═══════════════════════════════════════
+(function(){const c=document.getElementById('lsFloats');
+const s=['💕','❤️','✨','🌹','💌','🌸','💗','⭐'];
+for(let i=0;i<28;i++){const h=document.createElement('div');h.className='float-heart';
+h.textContent=s[i%s.length];h.style.left=Math.random()*100+'%';
+h.style.animationDuration=(8+Math.random()*10)+'s';h.style.animationDelay=Math.random()*8+'s';
+h.style.fontSize=(12+Math.random()*18)+'px';c.appendChild(h)}})();
+let letterOpened=false;
+function openLetter(){
+if(letterOpened)return;letterOpened=true;
+document.getElementById('envFlap').classList.add('open');
+document.getElementById('envSeal').classList.add('hidden');
+document.getElementById('lsEnvelope').style.pointerEvents='none';
+setTimeout(()=>{
+document.getElementById('letterPaper').classList.add('revealed');
+document.getElementById('lsOpenBtn').style.display='none';
+document.getElementById('lsPlayBtn').style.display='inline-block';
+document.getElementById('lsHint').textContent='Read the letter, then begin your adventure 💕';
+},600);
+}
+function closeLetter(){
+const ls=document.getElementById('letterScreen');
+ls.style.transition='opacity .8s';ls.style.opacity='0';
+const ss=document.getElementById('startScreen');
+ss.style.transition='opacity .8s';
+setTimeout(()=>{ls.style.display='none';ss.style.opacity='1';ss.style.pointerEvents='auto';},850);
+}
+
+// ═══════════════════════════════════════
+// SOUND ENGINE
+// ═══════════════════════════════════════
+let audioCtx=null,musicMuted=false,sfxMuted=false,ytPlayer=null;
+function initAudio(){
+if(!audioCtx){audioCtx=new(window.AudioContext||window.webkitAudioContext)();}
+if(audioCtx.state==='suspended')audioCtx.resume();
+}
+function _tone(notes){// notes: [{f,t:type,dur,vol,from,to,delay}]
+if(sfxMuted||!audioCtx)return;
+notes.forEach(n=>{
+try{const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+o.connect(g);g.connect(audioCtx.destination);
+o.type=n.t||'sine';
+const now=audioCtx.currentTime+(n.delay||0);
+if(n.from){o.frequency.setValueAtTime(n.from,now);o.frequency.exponentialRampToValueAtTime(n.to||n.f,now+n.dur);}
+else o.frequency.setValueAtTime(n.f,now);
+g.gain.setValueAtTime(n.vol||0.25,now);
+g.gain.exponentialRampToValueAtTime(0.001,now+n.dur);
+o.start(now);o.stop(now+n.dur+0.01);}catch(e){}
+});}
+// individual sounds
+function sndJump(){initAudio();_tone([{f:520,t:'sine',dur:.13,vol:.18,from:260,to:520}]);}
+function sndLand(){initAudio();_tone([{f:120,t:'sine',dur:.08,vol:.12,from:180,to:80}]);}
+function sndCollect(){initAudio();_tone([{f:523,t:'sine',dur:.12,vol:.2},{f:659,t:'sine',dur:.12,vol:.2,delay:.08},{f:784,t:'sine',dur:.18,vol:.22,delay:.16}]);}
+function sndKeyCollect(){initAudio();_tone([{f:1047,t:'triangle',dur:.1,vol:.2},{f:1319,t:'triangle',dur:.1,vol:.2,delay:.07},{f:1568,t:'triangle',dur:.18,vol:.22,delay:.14},{f:2093,t:'triangle',dur:.22,vol:.18,delay:.21}]);}
+function sndHurt(){initAudio();_tone([{f:120,t:'sawtooth',dur:.35,vol:.3,from:380,to:90},{f:80,t:'square',dur:.2,vol:.15,delay:.1}]);}
+function sndKill(){initAudio();_tone([{f:900,t:'square',dur:.08,vol:.2},{f:700,t:'square',dur:.08,vol:.2,delay:.07},{f:1100,t:'sine',dur:.14,vol:.22,delay:.14}]);}
+function sndLevelComplete(){initAudio();_tone([{f:523,t:'sine',dur:.2,vol:.25},{f:659,t:'sine',dur:.2,vol:.25,delay:.12},{f:784,t:'sine',dur:.2,vol:.25,delay:.24},{f:1047,t:'sine',dur:.4,vol:.28,delay:.36}]);}
+function sndWin(){initAudio();[523,659,784,659,784,1047,784,1047,1319].forEach((f,i)=>_tone([{f,t:'sine',dur:.35,vol:.22,delay:i*.14}]));}
+function sndPuzzleCorrect(){initAudio();_tone([{f:659,t:'sine',dur:.15,vol:.25},{f:784,t:'sine',dur:.15,vol:.25,delay:.1},{f:1047,t:'sine',dur:.28,vol:.28,delay:.2}]);}
+function sndPuzzleWrong(){initAudio();_tone([{f:280,t:'sawtooth',dur:.18,vol:.25},{f:220,t:'sawtooth',dur:.22,vol:.25,delay:.16}]);}
+function sndDoorOpen(){initAudio();_tone([{f:220,t:'sine',dur:.6,vol:.3,from:220,to:880},{f:440,t:'triangle',dur:.4,vol:.2,delay:.3}]);}
+function sndSpike(){initAudio();_tone([{f:200,t:'square',dur:.12,vol:.2},{f:150,t:'square',dur:.15,vol:.18,delay:.1}]);}
+function sndMiniWin(){initAudio();[784,880,1047,880,1047,1319].forEach((f,i)=>_tone([{f,t:'sine',dur:.25,vol:.22,delay:i*.1}]));}
+
+// ── YouTube background music via IFrame API
+(function(){
+const tag=document.createElement('script');
+tag.src='https://www.youtube.com/iframe_api';
+document.head.appendChild(tag);
+})();
+window.onYouTubeIframeAPIReady=function(){
+ytPlayer=new YT.Player('ytContainer',{
+height:'1',width:'1',
+videoId:'jfKfPfyJRdk',// LoFi Girl 24/7 — soft romantic lofi
+playerVars:{autoplay:1,loop:1,controls:0,disablekb:1,fs:0,
+iv_load_policy:3,modestbranding:1,playsinline:1,rel:0,mute:0},
+events:{onReady:e=>{e.target.setVolume(28);e.target.playVideo();}}
+});
+};
+function toggleMusic(){
+musicMuted=!musicMuted;
+const b=document.getElementById('muteBtn');
+if(musicMuted){if(ytPlayer&&ytPlayer.mute)ytPlayer.mute();b.textContent='🔇';}
+else{if(ytPlayer&&ytPlayer.unMute)ytPlayer.unMute();b.textContent='🎵';}
+}
+function toggleSFX(){
+sfxMuted=!sfxMuted;
+const b=document.getElementById('sfxBtn');
+b.textContent=sfxMuted?'🔕':'🔔';
+}
+
+const keys={};
+addEventListener('keydown',e=>{keys[e.code]=true;
+if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault()});
+addEventListener('keyup',e=>{keys[e.code]=false});
+
+// ═══════════════════════════════════════
+// LOVE MESSAGES (less frequent, varied)
+// ═══════════════════════════════════════
+const loveMsg=[
+"You make everything beautiful 💕","My heart is yours ❤️","You're incredible ✨",
+"Thinking of you always 💭","You light up my world 🌟","My favorite adventure 💖",
+"Every step is for you 👣","You're worth every level 🏆","Unstoppable! 💪",
+"My heart smiles because of you 😊","Beautiful soul ✨","You're my forever 💕",
+"I'd cross any ocean for you 🌊","My lucky star ⭐","You amaze me 🌹",
+"The best is yet to come 💫","My whole heart 💖","You and me, always ❤️"
+];
+
+// ═══════════════════════════════════════
+// PUZZLES DATABASE (الغاز)
+// ═══════════════════════════════════════
+const puzzlesDB=[
+{q:"I have keys but no locks. I have space but no room. You can enter but you can't go outside. What am I?",opts:["A keyboard","A house","A car","A phone"],ans:0},
+{q:"The more you take, the more you leave behind. What am I?",opts:["Footsteps","Money","Time","Photos"],ans:0},
+{q:"I speak without a mouth and hear without ears. I have no body, but I come alive with the wind. What am I?",opts:["A ghost","An echo","A shadow","A dream"],ans:1},
+{q:"What has a heart that doesn't beat?",opts:["A robot","A deck of cards","A clock","A stone"],ans:1},
+{q:"I'm tall when I'm young, and short when I'm old. What am I?",opts:["A tree","A candle","A person","A building"],ans:1},
+{q:"What can travel around the world while staying in a corner?",opts:["A spider","A stamp","Internet","A thought"],ans:1},
+{q:"What has many teeth but cannot bite?",opts:["A shark","A comb","A saw","A zipper"],ans:1},
+{q:"What gets wetter the more it dries?",opts:["A sponge","A towel","Rain","Sand"],ans:1},
+{q:"I have cities but no houses, forests but no trees, and water but no fish. What am I?",opts:["A dream","A painting","A map","A story"],ans:2},
+{q:"What can you catch but not throw?",opts:["A ball","A cold","A fish","Air"],ans:1},
+{q:"What has hands but can't clap?",opts:["A mannequin","A clock","A statue","A puppet"],ans:1},
+{q:"I follow you everywhere but you can never touch me. What am I?",opts:["A shadow","A ghost","The wind","A memory"],ans:0},
+{q:"What begins with T, ends with T, and has T in it?",opts:["Toast","Teapot","Tent","Test"],ans:1},
+{q:"The person who makes it, sells it. The person who buys it never uses it. The person who uses it never knows they're using it. What is it?",opts:["Medicine","A coffin","Insurance","A gift"],ans:1},
+{q:"What can fill a room but takes up no space?",opts:["Air","Light","Sound","Love"],ans:1},
+{q:"I have a neck but no head. What am I?",opts:["A snake","A guitar","A bottle","A shirt"],ans:2},
+{q:"What goes up but never comes down?",opts:["A balloon","Your age","A rocket","Temperature"],ans:1},
+{q:"What invention lets you look right through a wall?",opts:["X-ray","A window","A camera","A drill"],ans:1},
+{q:"What 5-letter word becomes shorter when you add 2 letters to it?",opts:["Small","Short","Quick","Tiny"],ans:1},
+{q:"What is always in front of you but can't be seen?",opts:["Air","The future","Your nose","Tomorrow"],ans:1},
+];
+
+// ═══════════════════════════════════════
+// 20 LEVELS — ADVENTURE FOCUSED
+// ═══════════════════════════════════════
+const missions=[
+{title:"⚔️ The Journey Begins",icon:"🏔️",sub:"First steps into adventure",desc:"Learn the basics! Jump across platforms\nand collect 8 hearts to open the gate.",goal:{hearts:8},bg:['#0a0015','#1a0a2e','#2d1050'],mobs:1,type:'platform',hint:"Use arrow keys to move, up to jump!",spikes:0,keys:0,puzzle:false,moving:0},
+{title:"🌹 Garden of Thorns",icon:"🌹",sub:"Beauty is dangerous",desc:"Navigate through the thorn garden.\nCollect 7 roses — watch for spikes!",goal:{roses:7},bg:['#0f0520','#1a1035','#2a0a3a'],mobs:2,type:'platform',hint:"Spikes hurt! Time your jumps carefully.",spikes:3,keys:0,puzzle:false,moving:0},
+{title:"🧩 The First Riddle",icon:"🧩",sub:"Think before you leap",desc:"A mysterious gate blocks your path.\nSolve the riddle to prove your worth!",goal:{puzzle:true},bg:['#120828','#1e0e40','#0d0520'],mobs:0,type:'puzzle',hint:"Read carefully — the answer hides in plain sight.",spikes:0,keys:0,puzzle:true,moving:0},
+{title:"⭐ Starfall Canyon",icon:"🌠",sub:"Stars are falling from the sky",desc:"Race through the canyon!\nCollect 10 stars before they fade away.",goal:{stars:10},bg:['#050010','#0a0025','#15003a'],mobs:3,type:'platform',hint:"Stars move! Chase them down.",spikes:2,keys:0,puzzle:false,moving:2},
+{title:"🐍 Snake Challenge",icon:"🐍",sub:"A test of reflexes",desc:"Guide the snake to eat 15 hearts.\nDon't hit walls or your own tail!",goal:{minigame:'snake',target:15},bg:['#0d0020','#1a0a3e','#2a1050'],mobs:0,type:'minigame',hint:"",spikes:0,keys:0,puzzle:false,moving:0},
+{title:"🔑 The Locked Temple",icon:"🏛️",sub:"Find the keys, unlock the secrets",desc:"Collect 3 keys to unlock the temple gate,\nthen gather 8 hearts inside.",goal:{hearts:8,keysNeeded:3},bg:['#0a0030','#1a1050','#251060'],mobs:3,type:'platform',hint:"Keys are hidden on high platforms!",spikes:3,keys:3,puzzle:false,moving:1},
+{title:"🧩 Riddle of the Flames",icon:"🔥",sub:"Fire blocks your path",desc:"Another riddle stands between you\nand the next chapter of this story.",goal:{puzzle:true},bg:['#150520','#2a1040','#1a0a30'],mobs:0,type:'puzzle',hint:"Think outside the box!",spikes:0,keys:0,puzzle:true,moving:0},
+{title:"🌙 Midnight Gauntlet",icon:"🌙",sub:"Darkness tests the brave",desc:"The hardest platforming yet!\n12 stars scattered across deadly platforms.",goal:{stars:12},bg:['#020005','#06001a','#0e002e'],mobs:4,type:'platform',hint:"Watch for moving platforms and bats!",spikes:5,keys:0,puzzle:false,moving:4},
+{title:"🧠 Memory Challenge",icon:"🧠",sub:"Test your memory",desc:"Match pairs of symbols to unlock\nthe path forward. Find all 8 pairs!",goal:{minigame:'memory',target:8},bg:['#0d0020','#1a0a3e','#2a1050'],mobs:0,type:'minigame',hint:"",spikes:0,keys:0,puzzle:false,moving:0},
+{title:"💀 Spike Valley",icon:"💀",sub:"One wrong step and...",desc:"Navigate the deadliest valley!\n6 letters hidden among the spikes.",goal:{letters:6},bg:['#100010','#1e0820','#2d0530'],mobs:4,type:'platform',hint:"Patience > Speed here!",spikes:8,keys:0,puzzle:false,moving:2},
+{title:"🧩 The Sphinx's Question",icon:"🗿",sub:"Answer wisely",desc:"The Sphinx blocks the bridge.\nOnly the clever may pass!",goal:{puzzle:true},bg:['#120828','#1e0e40','#0d0520'],mobs:0,type:'puzzle',hint:"Ancient wisdom required.",spikes:0,keys:0,puzzle:true,moving:0},
+{title:"🎯 Heart Catcher",icon:"🎯",sub:"Quick reflexes needed!",desc:"Catch 20 falling hearts!\nYou have 30 seconds. Don't miss!",goal:{minigame:'catch',target:20},bg:['#0d0020','#1a0a3e','#2a1050'],mobs:0,type:'minigame',hint:"",spikes:0,keys:0,puzzle:false,moving:0},
+{title:"🏰 Castle Siege",icon:"🏰",sub:"Storm the enchanted castle",desc:"Fight through enemies and traps!\nCollect 8 roses, 8 hearts, and 4 stars.",goal:{roses:8,hearts:8,stars:4},bg:['#0f0020','#1e0a3e','#2d1555'],mobs:6,type:'platform',hint:"Jump on enemies to defeat them!",spikes:5,keys:2,puzzle:false,moving:3},
+{title:"🧩 Riddle of the Abyss",icon:"🕳️",sub:"Look into the darkness",desc:"The abyss asks a question.\nAnswer correctly or face the challenge again!",goal:{puzzle:true},bg:['#050008','#0a0015','#120020'],mobs:0,type:'puzzle',hint:"The answer is simpler than you think.",spikes:0,keys:0,puzzle:true,moving:0},
+{title:"🎨 Paint Your Love",icon:"🎨",sub:"Create something beautiful",desc:"Click to paint a canvas with love stamps!\n25 stamps to complete the masterpiece.",goal:{minigame:'paint',target:25},bg:['#0d0020','#1a0a3e','#2a1050'],mobs:0,type:'minigame',hint:"",spikes:0,keys:0,puzzle:false,moving:0},
+{title:"⚡ Thunder Peaks",icon:"⚡",sub:"Speed and precision",desc:"Race across electrified platforms!\nCollect 10 hearts, 5 roses, 5 stars.",goal:{hearts:10,roses:5,stars:5},bg:['#0a0020','#151040','#200a4a'],mobs:5,type:'platform',hint:"Moving platforms require perfect timing!",spikes:6,keys:0,puzzle:false,moving:5},
+{title:"🧩 The Final Riddle",icon:"🔮",sub:"The last test of wisdom",desc:"One final riddle before the grand challenge.\nProve you are worthy!",goal:{puzzle:true},bg:['#0d0015','#180a30','#220a40'],mobs:0,type:'puzzle',hint:"You've come so far — you can do this!",spikes:0,keys:0,puzzle:true,moving:0},
+{title:"🌊 Ocean of Trials",icon:"🌊",sub:"The deepest challenge",desc:"Survive the ocean gauntlet!\n10 hearts, 5 roses, 5 stars, 5 letters.",goal:{hearts:10,roses:5,stars:5,letters:5},bg:['#000a1a','#001030','#051540'],mobs:7,type:'platform',hint:"Enemies are everywhere — stay sharp!",spikes:7,keys:3,puzzle:false,moving:4},
+{title:"🐍 Snake Master",icon:"🐍",sub:"The ultimate snake challenge",desc:"Faster, longer, harder!\nEat 25 hearts to prove mastery!",goal:{minigame:'snake2',target:25},bg:['#0d0020','#1a0a3e','#2a1050'],mobs:0,type:'minigame',hint:"",spikes:0,keys:0,puzzle:false,moving:0},
+{title:"👑 The Final Castle",icon:"👑",sub:"The grand finale",desc:"Everything you've learned leads here.\n15💖  10🌹  10⭐  8💌  4🔑\nConquer this and claim your victory!",goal:{hearts:15,roses:10,stars:10,letters:8,keysNeeded:4},bg:['#0d0020','#1a0a3e','#2d1555'],mobs:8,type:'platform',hint:"The hardest level — give it everything!",spikes:10,keys:4,puzzle:false,moving:5}
+];
+
+// ═══════════════════════════════════════
+// GAME STATE
+// ═══════════════════════════════════════
+let gameRunning=false,gamePaused=false,currentMission=0,missionDone=false;
+let platforms=[],collectibles=
+[],enemies=[],particles=[],bgStars=[],spikes=[],movingPlats=[];
+let cameraX=0,levelWidth=3000;
+let door=null,doorOpen=false,playerJumped=false;
+const GRAVITY=0.55,FRICTION=0.83;
+const player={x:100,y:400,w:34,h:42,vx:0,vy:0,jumpPow:-13.5,grounded:false,facing:1,
+lives:5,hearts:0,roses:0,letters:0,stars:0,foundKeys:0,invincible:0,walkFrame:0};
+
+// ═══════════════════════════════════════
+// DOOODY — Blue companion (you!)
+// ═══════════════════════════════════════
+const dooody={x:60,y:400,w:30,h:38,vx:0,vy:0,grounded:false,facing:1,walkFrame:0};
+const dooodySayings=['You got this! 💪','Keep going! 🌟','I\'m here for you! 💙','Together we win! ✨','Love you! 💕','So proud of you! 🏆'];
+let dooodySayTimer=0,dooodySayText='';
+let dooodTarget=null,dooodRageTimer=0; // revenge target
+
+// ═══════════════════════════════════════
+// LEVEL GENERATION
+// ═══════════════════════════════════════
+function genStars(){bgStars=[];for(let i=0;i<200;i++)bgStars.push({x:Math.random()*levelWidth,y:Math.random()*(canvas.height-80),r:Math.random()*1.8+.4,tw:Math.random()*Math.PI*2,sp:.02+Math.random()*.025})}
+
+function genLevel(idx){
+const m=missions[idx];
+if(m.type==='minigame'||m.type==='puzzle'){showMissionPopup(idx);return}
+platforms=[];collectibles=[];enemies=[];particles=[];spikes=[];movingPlats=[];
+levelWidth=3200+idx*300;
+
+// Ground
+for(let x=0;x<levelWidth;x+=180)platforms.push({x,y:canvas.height-45,w:180,h:45,type:'ground'});
+// Gaps
+if(idx>2){const gc=Math.min(Math.floor(idx/3),5);
+for(let g=0;g<gc;g++){const gx=500+g*(levelWidth/(gc+1));
+platforms=platforms.filter(p=>!(p.type==='ground'&&p.x>=gx&&p.x<gx+180))}}
+
+// Float platforms
+const pc=20+idx*3;
+for(let i=0;i<pc;i++){
+const px=150+(i/pc)*(levelWidth-300)+((Math.random()-.5)*50);
+const py=canvas.height-130-Math.random()*310;
+const pw=75+Math.random()*85;
+platforms.push({x:px,y:py,w:pw,h:16,type:'float',origY:py,
+floatOff:Math.random()*Math.PI*2,floatAmp:3+Math.random()*7,floatSpd:.005+Math.random()*.008})}
+
+// Moving platforms
+for(let i=0;i<(m.moving||0);i++){
+const mx=300+(i/(m.moving+1))*(levelWidth-400);
+const my=canvas.height-150-Math.random()*200;
+movingPlats.push({x:mx,y:my,w:90,h:16,type:'moving',origX:mx,origY:my,
+moveX:Math.random()>.5?80+Math.random()*60:0,moveY:Math.random()>.5?40+Math.random()*40:0,
+moveSpd:.015+Math.random()*.01,moveOff:Math.random()*Math.PI*2})}
+
+// Spikes
+for(let i=0;i<(m.spikes||0);i++){
+const sx=400+(i/(m.spikes+1))*(levelWidth-500);
+spikes.push({x:sx,y:canvas.height-60,w:40,h:15})}
+
+// Collectibles
+const goal=m.goal;const types=[];
+const add=(t,n)=>{for(let i=0;i<n+Math.ceil(idx/6)+1;i++)types.push(t)};
+if(goal.hearts)add('heart',goal.hearts);
+if(goal.roses)add('rose',goal.roses);
+if(goal.letters)add('letter',goal.letters);
+if(goal.stars)add('star',goal.stars);
+// Keys
+for(let i=0;i<(m.keys||0);i++)types.push('key');
+// Shuffle
+for(let i=types.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[types[i],types[j]]=[types[j],types[i]]}
+for(let i=0;i<types.length;i++){
+const cx=200+(i/types.length)*(levelWidth-400)+Math.random()*60;
+const cy=canvas.height-90-Math.random()*340;
+collectibles.push({x:cx,y:cy,w:28,h:28,type:types[i],collected:false,bob:Math.random()*Math.PI*2})}
+
+// Enemies
+const mc=m.mobs||0;
+for(let i=0;i<mc;i++){
+const ex=350+(i/(mc+1))*(levelWidth-500);
+const r=Math.random();
+let et='shadow';
+if(r<.18&&idx>4)et='bat';
+else if(r<.32&&idx>2)et='butterfly';
+else if(r<.48&&idx>1)et='bunny';
+else if(r<.62&&idx>7)et='spider';
+const isAir=et==='bat'||et==='butterfly'||et==='spider';
+const ey=isAir?canvas.height-220-Math.random()*80:canvas.height-80;
+enemies.push({x:ex,y:ey,w:32,h:32,vx:(et==='bunny'?.7:1)+Math.random()*1.2*(idx>12?1.3:1),
+range:100+Math.random()*90,origX:ex,type:et,origY:ey,
+batOff:Math.random()*Math.PI*2,hopTimer:0,hopVy:0,hopGrounded:true})}
+
+// Door — placed near end of level for all platform levels
+door=null;doorOpen=false;
+if(m.type==='platform'){
+// Ensure solid ground near door
+platforms.push({x:levelWidth-280,y:canvas.height-45,w:260,h:45,type:'ground'});
+door={x:levelWidth-220,y:canvas.height-45-100,w:48,h:100,open:false,
+keysNeeded:m.goal.keysNeeded||0,hintTimer:0}}
+
+genStars();showMissionPopup(idx);
+}
+
+// ═══════════════════════════════════════
+// COLLISION
+// ═══════════════════════════════════════
+function rc(a,bx,by,bw,bh){return a.x<bx+bw&&a.x+a.w>bx&&a.y<by+bh&&a.y+a.h>by}
+
+function movePlayer(){
+const p=player;let mx=0;playerJumped=false;
+if(keys.ArrowLeft||keys.KeyA){mx=-1;p.facing=-1}
+if(keys.ArrowRight||keys.KeyD){mx=1;p.facing=1}
+if((keys.ArrowUp||keys.KeyW||keys.Space)&&p.grounded){p.vy=p.jumpPow;p.grounded=false;playerJumped=true;sndJump();}
+
+p.vx+=mx*1.1;p.vx*=FRICTION;p.vy+=GRAVITY;
+if(Math.abs(p.vx)<.1)p.vx=0;if(p.vy>16)p.vy=16;
+const prevBottom=p.y+p.h;
+
+// Move X
+p.x+=p.vx;
+if(p.x<0){p.x=0;p.vx=0}
+if(p.x+p.w>levelWidth){p.x=levelWidth-p.w;p.vx=0}
+// X collision with ground only
+const allPlats=[...platforms,...movingPlats];
+for(const pl of allPlats){
+if(pl.type!=='ground'&&pl.type!=='moving')continue;
+if(!rc(p,pl.x,pl.y,pl.w,pl.h))continue;
+if(pl.type==='ground'){if(p.vx>0)p.x=pl.x-p.w;else if(p.vx<0)p.x=pl.x+pl.w;p.vx=0}
+}
+
+// Move Y
+p.y+=p.vy;p.grounded=false;
+for(const pl of allPlats){
+if(!rc(p,pl.x,pl.y,pl.w,pl.h))continue;
+if(pl.type==='float'||pl.type==='moving'){
+if(p.vy>=0&&prevBottom<=pl.y+6){p.y=pl.y-p.h;p.vy=0;p.grounded=true}
+}else{
+if(p.vy>=0&&prevBottom<=pl.y+10){p.y=pl.y-p.h;p.vy=0;p.grounded=true}
+else if(p.vy<0){p.y=pl.y+pl.h;p.vy=0}
+}}
+
+if(Math.abs(p.vx)>.3&&p.grounded)p.walkFrame+=.15;
+else if(p.grounded)p.walkFrame=0;
+if(p.y>canvas.height+120){p.x=100;p.y=canvas.height-200;p.vx=0;p.vy=0;hitPlayer()}
+if(p.invincible>0)p.invincible--;
+
+// Move Dooody companion — follows player with delay + mirrors jump
+const d=dooody;
+// If Dooody has a rage target, chase it instead of the player
+let dx2,dy2;
+if(dooodTarget&&dooodTarget.origX!==-9999&&dooodRageTimer>0){
+  dooodRageTimer--;
+  const tx=dooodTarget.x+dooodTarget.w/2-(d.w/2);
+  dx2=tx-d.x;
+  // Boost speed toward enemy
+  d.vx+=(dx2>0?1:-1)*1.4;
+  // Jump to reach aerial enemies
+  if(d.grounded&&Math.abs(dx2)<120&&(dooodTarget.y<d.y-20)){
+    d.vy=-13.5;d.grounded=false;
+  }
+  if(dooodRageTimer<=0||dooodTarget.origX===-9999)dooodTarget=null;
+}else{
+  dooodTarget=null;
+  dx2=player.x-55-d.x;
+  d.vx+=(dx2)*.04;
+}d.vy+=GRAVITY;
+d.vx*=.85;if(Math.abs(d.vx)<.05)d.vx=0;
+if(d.vy>14)d.vy=14;
+// Mirror player jump — Dooody jumps when player jumps
+if(playerJumped&&d.grounded){d.vy=-12.5;d.grounded=false}
+// Auto-jump if Dooody is stuck against a wall and trying to move
+if(d.grounded&&Math.abs(d.vx)<0.2&&Math.abs(dx2)>40){d.vy=-11;d.grounded=false}
+const dPrevBottom=d.y+d.h;
+d.x+=d.vx;d.y+=d.vy;d.grounded=false;
+if(d.x<0)d.x=0;if(d.x+d.w>levelWidth)d.x=levelWidth-d.w;
+for(const pl of allPlats){
+if(!(d.x<pl.x+pl.w&&d.x+d.w>pl.x&&d.y<pl.y+pl.h&&d.y+d.h>pl.y))continue;
+if(pl.type==='float'||pl.type==='moving'){
+if(d.vy>=0&&dPrevBottom<=pl.y+8){d.y=pl.y-d.h;d.vy=0;d.grounded=true}}
+else{if(d.vy>=0&&dPrevBottom<=pl.y+10){d.y=pl.y-d.h;d.vy=0;d.grounded=true}}}
+if(d.y>canvas.height+120){d.x=player.x-55;d.y=player.y;d.vx=0;d.vy=0}
+d.facing=d.vx>=0?1:-1;
+if(Math.abs(d.vx)>.3&&d.grounded)d.walkFrame+=.13;else if(d.grounded)d.walkFrame=0;
+if(dooodySayTimer>0)dooodySayTimer--;
+}
+
+// ═══════════════════════════════════════
+// DRAW CHARACTER (cute)
+// ═══════════════════════════════════════
+function drawChar(sx,sy){
+const p=player,cx=sx+p.w/2,cy=sy+p.h/2;
+const g=ctx.createRadialGradient(cx,cy,5,cx,cy,45);
+g.addColorStop(0,'rgba(255,107,157,.2)');g.addColorStop(1,'rgba(255,107,157,0)');
+ctx.fillStyle=g;ctx.fillRect(cx-45,cy-45,90,90);
+if(p.invincible>0&&Math.floor(p.invincible/3)%2)ctx.globalAlpha=.35;
+
+// Body
+const bg2=ctx.createLinearGradient(cx,cy-8,cx,cy+18);
+bg2.addColorStop(0,'#ff6b9d');bg2.addColorStop(1,'#e8458a');
+ctx.fillStyle=bg2;ctx.beginPath();ctx.ellipse(cx,cy+6,16,19,0,0,Math.PI*2);ctx.fill();
+ctx.fillStyle='#ff85b0';ctx.beginPath();ctx.ellipse(cx,cy+22,18,6,0,0,Math.PI);ctx.fill();
+// Sparkles
+ctx.fillStyle='rgba(255,255,255,.25)';
+for(let i=0;i<4;i++){const dx=cx-8+Math.sin(i*2.5+Date.now()/500)*10;
+ctx.beginPath();ctx.arc(dx,cy+4+i*3.5,1,0,Math.PI*2);ctx.fill()}
+
+// Head
+ctx.fillStyle='#ffe4c9';ctx.beginPath();ctx.arc(cx,sy+12,13,0,Math.PI*2);ctx.fill();
+// Blush
+ctx.fillStyle='rgba(255,130,140,.3)';
+ctx.beginPath();ctx.ellipse(cx-9,sy+16,3.5,2.2,0,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.ellipse(cx+9,sy+16,3.5,2.2,0,0,Math.PI*2);ctx.fill();
+// Eyes
+const ed=p.facing;
+ctx.fillStyle='#fff';
+ctx.beginPath();ctx.ellipse(cx+ed*3,sy+10,4.5,4,0,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.ellipse(cx+ed*11,sy+10,4.5,4,0,0,Math.PI*2);ctx.fill();
+ctx.fillStyle='#2d1040';
+ctx.beginPath();ctx.ellipse(cx+ed*4,sy+10,2.8,3,0,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.ellipse(cx+ed*12,sy+10,2.8,3,0,0,Math.PI*2);ctx.fill();
+ctx.fillStyle='#fff';
+ctx.beginPath();ctx.arc(cx+ed*3+1,sy+9,1.2,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.arc(cx+ed*11+1,sy+9,1.2,0,Math.PI*2);ctx.fill();
+// Smile
+ctx.strokeStyle='#d4578a';ctx.lineWidth=1.5;ctx.lineCap='round';
+ctx.beginPath();ctx.arc(cx+ed*5,sy+16,3.5,.1,Math.PI-.1);ctx.stroke();
+// Hair
+ctx.fillStyle='#5a2d82';
+ctx.beginPath();ctx.ellipse(cx,sy+5,14.5,10,0,Math.PI,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.ellipse(cx-13,sy+12,5,14,-.15,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.ellipse(cx+13,sy+12,5,14,.15,0,Math.PI*2);ctx.fill();
+// Bow
+ctx.fillStyle='#ff4488';ctx.beginPath();ctx.ellipse(cx+11,sy+2,7,4.5,.3,0,Math.PI*2);ctx.fill();
+ctx.fillStyle='#ff6b9d';ctx.beginPath();ctx.arc(cx+11,sy+2,2.5,0,Math.PI*2);ctx.fill();
+// Crown
+ctx.font='13px serif';ctx.fillText('👑',cx-8,sy-5);
+// Legs
+const ls=Math.sin(p.walkFrame)*5;ctx.strokeStyle='#ffe4c9';ctx.lineWidth=3;ctx.lineCap='round';
+if(!p.grounded){
+ctx.beginPath();ctx.moveTo(cx-5,cy+18);ctx.lineTo(cx-9,cy+27);ctx.stroke();
+ctx.beginPath();ctx.moveTo(cx+5,cy+18);ctx.lineTo(cx+9,cy+27);ctx.stroke();
+}else{
+ctx.beginPath();ctx.moveTo(cx-4,cy+18);ctx.lineTo(cx-4+ls,cy+29);ctx.stroke();
+ctx.beginPath();ctx.moveTo(cx+4,cy+18);ctx.lineTo(cx+4-ls,cy+29);ctx.stroke();
+}
+ctx.fillStyle='#ff4488';
+const lx=p.grounded?ls:5,ly=p.grounded?30:28;
+ctx.beginPath();ctx.ellipse(cx-4+(p.grounded?ls:-5),cy+ly,4.5,2.5,0,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.ellipse(cx+4-(p.grounded?ls:-5),cy+ly,4.5,2.5,0,0,Math.PI*2);ctx.fill();
+// Arms
+const as2=Math.sin(p.walkFrame)*4;ctx.strokeStyle='#ffe4c9';ctx.lineWidth=2.5;
+ctx.beginPath();ctx.moveTo(cx-14,cy+2);ctx.lineTo(cx-20,cy+12+as2);ctx.stroke();
+ctx.beginPath();ctx.moveTo(cx+14,cy+2);ctx.lineTo(cx+20,cy+12-as2);ctx.stroke();
+// Float heart
+const hb=Math.sin(Date.now()/300)*3;ctx.font='11px serif';ctx.fillText('💕',cx-7,sy-13+hb);
+// Noor name tag
+ctx.font='bold 11px Quicksand,sans-serif';ctx.fillStyle='#ff6b9d';ctx.textAlign='center';
+ctx.shadowColor='rgba(255,107,157,.6)';ctx.shadowBlur=8;
+ctx.fillText('Noor',cx,sy-22+hb);
+ctx.shadowBlur=0;ctx.textAlign='left';
+ctx.globalAlpha=1;
+}
+
+// ═══════════════════════════════════════
+// DRAW DOOODY (blue boy companion)
+// ═══════════════════════════════════════
+function drawDooody(sx,sy){
+const d=dooody,cx=sx+d.w/2,cy=sy+d.h/2;
+const g=ctx.createRadialGradient(cx,cy,5,cx,cy,40);
+g.addColorStop(0,'rgba(68,170,255,.2)');g.addColorStop(1,'rgba(68,170,255,0)');
+ctx.fillStyle=g;ctx.fillRect(cx-40,cy-40,80,80);
+// Body (blue hoodie)
+const bg2=ctx.createLinearGradient(cx,cy-8,cx,cy+16);
+bg2.addColorStop(0,'#4488ff');bg2.addColorStop(1,'#2266dd');
+ctx.fillStyle=bg2;ctx.beginPath();ctx.ellipse(cx,cy+5,14,17,0,0,Math.PI*2);ctx.fill();
+ctx.fillStyle='#5599ff';ctx.beginPath();ctx.ellipse(cx,cy+20,16,5,0,0,Math.PI);ctx.fill();
+// Hoodie lines
+ctx.strokeStyle='rgba(255,255,255,.15)';ctx.lineWidth=1;
+ctx.beginPath();ctx.moveTo(cx,cy-8);ctx.lineTo(cx,cy+15);ctx.stroke();
+// Head
+ctx.fillStyle='#ffe4c9';ctx.beginPath();ctx.arc(cx,sy+11,12,0,Math.PI*2);ctx.fill();
+// Hair (short, dark)
+ctx.fillStyle='#2a1a40';
+ctx.beginPath();ctx.ellipse(cx,sy+5,13,8,0,Math.PI,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.ellipse(cx+5,sy+4,8,5,.2,Math.PI,Math.PI*2);ctx.fill();
+// Small tuft
+ctx.beginPath();ctx.moveTo(cx+8,sy+1);ctx.lineTo(cx+12,sy-5);ctx.lineTo(cx+6,sy+2);ctx.fill();
+// Blush
+ctx.fillStyle='rgba(100,160,255,.25)';
+ctx.beginPath();ctx.ellipse(cx-8,sy+15,3,2,0,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.ellipse(cx+8,sy+15,3,2,0,0,Math.PI*2);ctx.fill();
+// Eyes
+const ed=d.facing;
+ctx.fillStyle='#fff';
+ctx.beginPath();ctx.ellipse(cx+ed*3,sy+9,4,3.5,0,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.ellipse(cx+ed*10,sy+9,4,3.5,0,0,Math.PI*2);ctx.fill();
+ctx.fillStyle='#1a1040';
+ctx.beginPath();ctx.ellipse(cx+ed*4,sy+9,2.5,2.8,0,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.ellipse(cx+ed*11,sy+9,2.5,2.8,0,0,Math.PI*2);ctx.fill();
+ctx.fillStyle='#fff';
+ctx.beginPath();ctx.arc(cx+ed*3+1,sy+8,1,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.arc(cx+ed*10+1,sy+8,1,0,Math.PI*2);ctx.fill();
+// Smile
+ctx.strokeStyle='#cc7755';ctx.lineWidth=1.3;ctx.lineCap='round';
+ctx.beginPath();ctx.arc(cx+ed*5,sy+14,3,.1,Math.PI-.1);ctx.stroke();
+// Legs
+const ls=Math.sin(d.walkFrame)*4;ctx.strokeStyle='#ffe4c9';ctx.lineWidth=2.5;ctx.lineCap='round';
+if(!d.grounded){
+ctx.beginPath();ctx.moveTo(cx-4,cy+16);ctx.lineTo(cx-7,cy+24);ctx.stroke();
+ctx.beginPath();ctx.moveTo(cx+4,cy+16);ctx.lineTo(cx+7,cy+24);ctx.stroke();
+}else{
+ctx.beginPath();ctx.moveTo(cx-3,cy+16);ctx.lineTo(cx-3+ls,cy+26);ctx.stroke();
+ctx.beginPath();ctx.moveTo(cx+3,cy+16);ctx.lineTo(cx+3-ls,cy+26);ctx.stroke();
+}
+// Shoes (dark blue)
+ctx.fillStyle='#2244aa';
+ctx.beginPath();ctx.ellipse(cx-3+(d.grounded?ls:-4),cy+(d.grounded?27:25),4,2.2,0,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.ellipse(cx+3-(d.grounded?ls:-4),cy+(d.grounded?27:25),4,2.2,0,0,Math.PI*2);ctx.fill();
+// Arms
+const as2=Math.sin(d.walkFrame)*3;ctx.strokeStyle='#ffe4c9';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(cx-12,cy+1);ctx.lineTo(cx-17,cy+10+as2);ctx.stroke();
+ctx.beginPath();ctx.moveTo(cx+12,cy+1);ctx.lineTo(cx+17,cy+10-as2);ctx.stroke();
+// Float star
+const hb=Math.sin(Date.now()/350)*3;ctx.font='10px serif';ctx.fillText('💙',cx-5,sy-11+hb);
+// Name label
+ctx.font='bold 10px Quicksand';ctx.fillStyle='#4488ff';ctx.textAlign='center';
+ctx.fillText('Dooody',cx,sy-17+hb);ctx.textAlign='left';
+// Speech bubble
+if(dooodySayTimer>0&&dooodySayText){
+ctx.font='11px Dancing Script';ctx.fillStyle='rgba(68,136,255,.85)';ctx.textAlign='center';
+const tw=ctx.measureText(dooodySayText).width+14;
+ctx.fillStyle='rgba(15,8,40,.8)';ctx.beginPath();ctx.roundRect(cx-tw/2,sy-42,tw,20,8);ctx.fill();
+ctx.strokeStyle='rgba(68,136,255,.4)';ctx.lineWidth=1;ctx.beginPath();ctx.roundRect(cx-tw/2,sy-42,tw,20,8);ctx.stroke();
+ctx.fillStyle='#88bbff';ctx.fillText(dooodySayText,cx,sy-28);ctx.textAlign='left';
+}}
+
+function drawPlat(p){
+const sx=p.x-cameraX;if(sx+p.w<-50||sx>canvas.width+50)return;
+if(p.type==='ground'){
+const grd=ctx.createLinearGradient(sx,p.y,sx,p.y+p.h);
+grd.addColorStop(0,'#3d2060');grd.addColorStop(1,'#1a0a2e');
+ctx.fillStyle=grd;ctx.fillRect(sx,p.y,p.w,p.h);
+ctx.fillStyle='#7b4faa';ctx.fillRect(sx,p.y,p.w,3);
+}else if(p.type==='moving'){
+ctx.fillStyle='#e8458a';ctx.beginPath();ctx.roundRect(sx,p.y,p.w,p.h,6);ctx.fill();
+ctx.shadowColor='#ff6b9d';ctx.shadowBlur=6;
+ctx.strokeStyle='rgba(255,107,157,.5)';ctx.lineWidth=1;
+ctx.beginPath();ctx.roundRect(sx,p.y,p.w,p.h,6);ctx.stroke();ctx.shadowBlur=0;
+}else{
+const grd=ctx.createLinearGradient(sx,p.y,sx,p.y+p.h);
+grd.addColorStop(0,'#9b59b6');grd.addColorStop(1,'#7b3fa0');
+ctx.fillStyle=grd;ctx.beginPath();ctx.roundRect(sx,p.y,p.w,p.h,7);ctx.fill();
+ctx.shadowColor='#c49bff';ctx.shadowBlur=6;
+ctx.strokeStyle='rgba(196,155,255,.4)';ctx.lineWidth=1;
+ctx.beginPath();ctx.roundRect(sx,p.y,p.w,p.h,7);ctx.stroke();ctx.shadowBlur=0;
+}}
+
+function drawColl(c,t){
+if(c.collected)return;const sx=c.x-cameraX;if(sx<-40||sx>canvas.width+40)return;
+const bob=Math.sin(t/380+c.bob)*5;
+const cm={heart:'#ff6b9d',rose:'#ff4466',star:'#ffdd44',letter:'#ffaa00',key:'#44ddff'};
+ctx.shadowColor=cm[c.type]||'#fff';ctx.shadowBlur=12;
+const em={heart:'💖',rose:'🌹',letter:'💌',star:'⭐',key:'🔑'}[c.type];
+ctx.font='22px serif';ctx.fillText(em,sx,c.y+bob+16);ctx.shadowBlur=0;
+}
+
+function drawSpike(s){
+const sx=s.x-cameraX;if(sx<-50||sx>canvas.width+50)return;
+ctx.fillStyle='#8844aa';
+for(let i=0;i<4;i++){
+ctx.beginPath();ctx.moveTo(sx+i*10,s.y+s.h);ctx.lineTo(sx+i*10+5,s.y);ctx.lineTo(sx+i*10+10,s.y+s.h);ctx.fill();
+}
+ctx.fillStyle='#aa66cc';
+for(let i=0;i<4;i++){
+ctx.beginPath();ctx.moveTo(sx+i*10+1,s.y+s.h);ctx.lineTo(sx+i*10+5,s.y+3);ctx.lineTo(sx+i*10+9,s.y+s.h);ctx.fill();
+}}
+
+function drawEnemy(e,t){
+const sx=e.x-cameraX;if(sx<-60||sx>canvas.width+60)return;
+const wb=Math.sin(t/180+e.origX)*2;
+const cx2=sx+e.w/2,cy2=e.y+e.h/2+wb;
+if(e.type==='bat'){
+ctx.fillStyle='#4a1a6a';ctx.beginPath();ctx.ellipse(cx2,cy2,e.w/2+3,e.h/2,0,0,Math.PI*2);ctx.fill();
+const wing=Math.sin(t/80)*10;
+ctx.beginPath();ctx.ellipse(sx-5,cy2+wing/2,14,6,-.3,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.ellipse(sx+e.w+5,cy2-wing/2,14,6,.3,0,Math.PI*2);ctx.fill();
+ctx.fillStyle='#ff3333';ctx.shadowColor='#ff0000';ctx.shadowBlur=5;
+ctx.beginPath();ctx.arc(cx2-5,cy2-2,2.5,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.arc(cx2+5,cy2-2,2.5,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+}else if(e.type==='butterfly'){
+// Colorful butterfly - decorative but damages
+const flutter=Math.sin(t/60+e.batOff)*12;
+const col1='rgba(255,100,180,.85)',col2='rgba(200,80,255,.85)';
+ctx.fillStyle=col1;
+ctx.beginPath();ctx.ellipse(cx2-12,cy2+flutter/2,13,8,.4,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.ellipse(cx2+12,cy2-flutter/2,13,8,-.4,0,Math.PI*2);ctx.fill();
+ctx.fillStyle=col2;
+ctx.beginPath();ctx.ellipse(cx2-10,cy2+5+flutter/3,8,5,.2,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.ellipse(cx2+10,cy2+5-flutter/3,8,5,-.2,0,Math.PI*2);ctx.fill();
+// Body
+ctx.fillStyle='#2a0050';ctx.beginPath();ctx.ellipse(cx2,cy2,3,7,0,0,Math.PI*2);ctx.fill();
+// Antennae
+ctx.strokeStyle='#330066';ctx.lineWidth=1;
+ctx.beginPath();ctx.moveTo(cx2,cy2-7);ctx.lineTo(cx2-6,cy2-14);ctx.stroke();
+ctx.beginPath();ctx.moveTo(cx2,cy2-7);ctx.lineTo(cx2+6,cy2-14);ctx.stroke();
+ctx.fillStyle='#ff88cc';ctx.beginPath();ctx.arc(cx2-6,cy2-14,2.5,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.arc(cx2+6,cy2-14,2.5,0,Math.PI*2);ctx.fill();
+// Heart pattern on wings
+ctx.font='8px serif';ctx.fillText('💕',cx2-16,cy2+flutter/2+4);
+ctx.fillText('💕',cx2+7,cy2-flutter/2+4);
+}else if(e.type==='bunny'){
+// Cute but dangerous bunny that hops
+const hop=Math.max(0,Math.sin(e.hopTimer*0.12))*-14;
+const by=e.y+hop;
+// Body
+ctx.fillStyle='#e8d0f0';ctx.beginPath();ctx.ellipse(cx2,by+e.h*.55,e.w/2,e.h*.45,0,0,Math.PI*2);ctx.fill();
+// Head
+ctx.fillStyle='#f0deff';ctx.beginPath();ctx.arc(cx2,by+e.h*.18,e.w/2*.75,0,Math.PI*2);ctx.fill();
+// Ears
+ctx.fillStyle='#e8d0f0';ctx.beginPath();ctx.ellipse(cx2-6,by-8,4,12,-.1,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.ellipse(cx2+6,by-8,4,12,.1,0,Math.PI*2);ctx.fill();
+ctx.fillStyle='#ff99cc';ctx.beginPath();ctx.ellipse(cx2-6,by-8,2.5,9,-.1,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.ellipse(cx2+6,by-8,2.5,9,.1,0,Math.PI*2);ctx.fill();
+// Eyes (red - evil bunny!)
+ctx.fillStyle='#ff0000';ctx.shadowColor='#ff0000';ctx.shadowBlur=4;
+ctx.beginPath();ctx.arc(cx2-5,by+e.h*.16,2.2,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.arc(cx2+5,by+e.h*.16,2.2,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+// Nose
+ctx.fillStyle='#ff99cc';ctx.beginPath();ctx.arc(cx2,by+e.h*.22,1.5,0,Math.PI*2);ctx.fill();
+// Tail
+ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(cx2+e.w/2-2,by+e.h*.5,5,0,Math.PI*2);ctx.fill();
+}else if(e.type==='spider'){
+// Creepy spider dangles from top
+const dangle=e.y;
+// Web line
+const anchorY=dangle-60;
+ctx.strokeStyle='rgba(180,140,220,.3)';ctx.lineWidth=1;
+ctx.beginPath();ctx.moveTo(cx2,anchorY);ctx.lineTo(cx2,dangle);ctx.stroke();
+// Body
+ctx.fillStyle='#1a0030';ctx.beginPath();ctx.arc(cx2,dangle+e.h*.3,e.w/2*.7,0,Math.PI*2);ctx.fill();
+ctx.fillStyle='#2d0050';ctx.beginPath();ctx.arc(cx2,dangle+e.h*.7,e.w/2*.5,0,Math.PI*2);ctx.fill();
+// Legs (8 legs)
+ctx.strokeStyle='#2d0050';ctx.lineWidth=1.5;
+for(let leg=0;leg<4;leg++){
+const angle=.4+leg*.25;const wig=Math.sin(t/120+leg)*4;
+ctx.beginPath();ctx.moveTo(cx2-6,dangle+e.h*.35);
+ctx.lineTo(cx2-18-leg*3,dangle+e.h*.35+wig);ctx.lineTo(cx2-22-leg*3,dangle+e.h*.55+wig);ctx.stroke();
+ctx.beginPath();ctx.moveTo(cx2+6,dangle+e.h*.35);
+ctx.lineTo(cx2+18+leg*3,dangle+e.h*.35-wig);ctx.lineTo(cx2+22+leg*3,dangle+e.h*.55-wig);ctx.stroke();}
+// Eyes
+ctx.fillStyle='#ff2200';ctx.shadowColor='#ff2200';ctx.shadowBlur=4;
+for(let i=0;i<3;i++){ctx.beginPath();ctx.arc(cx2-5+i*4,dangle+e.h*.25,1.5,0,Math.PI*2);ctx.fill();}
+ctx.shadowBlur=0;
+}else{// shadow (default)
+ctx.fillStyle='rgba(60,20,100,.85)';ctx.beginPath();ctx.ellipse(cx2,cy2,e.w/2+3,e.h/2+3,0,0,Math.PI*2);ctx.fill();
+ctx.fillStyle='#3a1560';ctx.beginPath();ctx.ellipse(cx2,cy2,e.w/2,e.h/2,0,0,Math.PI*2);ctx.fill();
+for(let s=-2;s<=2;s++){ctx.beginPath();ctx.moveTo(cx2+s*6,e.y+e.h/2-e.h/2+wb);
+ctx.lineTo(cx2+s*4,e.y-5+wb);ctx.lineTo(cx2+s*6+4,e.y+e.h/2-e.h/2+wb);ctx.fill()}
+ctx.fillStyle='#ff3333';ctx.shadowColor='#ff0000';ctx.shadowBlur=5;
+ctx.beginPath();ctx.arc(cx2-5,cy2-2,2.5,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.arc(cx2+5,cy2-2,2.5,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+}
+}
+
+// ═══════════════════════════════════════
+// DRAW DOOR
+// ═══════════════════════════════════════
+function drawDoor(d){
+const sx=d.x-cameraX;if(sx+d.w<-60||sx>canvas.width+60)return;
+const t=Date.now();
+const locked=d.keysNeeded>0&&player.foundKeys<d.keysNeeded;
+// Door frame
+const frameCol=locked?'#552255':'#4488aa';
+ctx.fillStyle=frameCol;ctx.beginPath();ctx.roundRect(sx-5,d.y-5,d.w+10,d.h+5,6);ctx.fill();
+// Door body
+const doorGrd=ctx.createLinearGradient(sx,d.y,sx+d.w,d.y+d.h);
+if(locked){doorGrd.addColorStop(0,'#2a0a3a');doorGrd.addColorStop(1,'#1a0025');}
+else{doorGrd.addColorStop(0,'#ffe066');doorGrd.addColorStop(.5,'#ffaa22');doorGrd.addColorStop(1,'#ff7700');}
+ctx.fillStyle=doorGrd;ctx.fillRect(sx,d.y,d.w,d.h);
+// Door shimmer if open
+if(!locked){
+ctx.shadowColor='#ffcc44';ctx.shadowBlur=20;
+ctx.strokeStyle='rgba(255,220,100,.6)';ctx.lineWidth=2;
+ctx.strokeRect(sx,d.y,d.w,d.h);ctx.shadowBlur=0;
+const glow=ctx.createRadialGradient(sx+d.w/2,d.y+d.h/2,5,sx+d.w/2,d.y+d.h/2,d.w);
+glow.addColorStop(0,'rgba(255,220,100,.25)');glow.addColorStop(1,'rgba(255,220,100,0)');
+ctx.fillStyle=glow;ctx.fillRect(sx,d.y,d.w,d.h);
+}
+// Door panel detail
+ctx.strokeStyle=locked?'rgba(150,80,180,.3)':'rgba(255,255,200,.3)';ctx.lineWidth=1.5;
+ctx.strokeRect(sx+5,d.y+8,d.w-10,d.h*.4);
+ctx.strokeRect(sx+5,d.y+d.h*.48,d.w-10,d.h*.45);
+// Knob
+ctx.fillStyle=locked?'#aa6622':'#ffdd44';
+ctx.shadowColor=locked?'#aa6622':'#ffcc00';ctx.shadowBlur=6;
+ctx.beginPath();ctx.arc(sx+d.w-9,d.y+d.h/2,4,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+// Lock icon
+if(locked){
+ctx.font='16px serif';ctx.fillText('🔒',sx+d.w/2-8,d.y+d.h/2+6);
+// Keys needed indicator
+ctx.font='bold 10px Quicksand,sans-serif';ctx.fillStyle='#ffaa44';ctx.textAlign='center';
+ctx.fillText(player.foundKeys+'/'+d.keysNeeded+'🔑',sx+d.w/2,d.y-10);
+ctx.textAlign='left';
+}else{
+ctx.font='16px serif';ctx.fillText('🚪',sx+d.w/2-8,d.y+d.h/2+6);
+}
+// "OPEN" sparkle hint
+if(!locked){const bob=Math.sin(t/300)*3;
+ctx.font='12px serif';ctx.fillText('✨',sx+d.w/2-6,d.y-16+bob);}
+}
+
+// ═══════════════════════════════════════
+// PARTICLES
+// ═══════════════════════════════════════
+function spawnP(x,y,n,em){const es=em||['💕','✨','💖','⭐'];
+for(let i=0;i<n;i++)particles.push({x,y,vx:(Math.random()-.5)*5,vy:(Math.random()-.5)*5-2,
+life:30+Math.random()*25,ml:45,sz:3+Math.random()*3,e:es[Math.floor(Math.random()*es.length)]})}
+function updatePart(){for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.x+=p.vx;p.y+=p.vy;p.vy+=.04;p.life--;if(p.life<=0)particles.splice(i,1)}}
+function drawPart(){particles.forEach(p=>{ctx.globalAlpha=p.life/p.ml;ctx.font=(p.sz*2)+'px serif';ctx.fillText(p.e,p.x-cameraX,p.y)});ctx.globalAlpha=1}
+
+// ═══════════════════════════════════════
+// HUD & UI
+// ═══════════════════════════════════════
+const loveMsgEl=document.getElementById('loveMsg');let loveMsgT=0;
+function showLove(m){loveMsgEl.textContent=m;loveMsgEl.classList.add('show');loveMsgT=160}
+function updateHUD(){
+document.getElementById('hLives').textContent=player.lives;
+document.getElementById('hHearts').textContent=player.hearts;
+document.getElementById('hRoses').textContent=player.roses;
+document.getElementById('hLetters').textContent=player.letters;
+document.getElementById('hStars').textContent=player.stars;
+document.getElementById('hKeys').textContent=player.foundKeys;
+document.getElementById('missionLabel').textContent='Level '+(currentMission+1)+' / 20';
+}
+
+function showMissionPopup(idx){
+gamePaused=true;const m=missions[idx];
+document.getElementById('mpIcon').textContent=m.icon;
+document.getElementById('mpTitle').textContent=m.title;
+document.getElementById('mpSub').textContent=m.sub;
+document.getElementById('mpDesc').textContent=m.desc;
+const g=m.goal;let gt=[];
+if(g.hearts)gt.push('💖'+g.hearts);if(g.roses)gt.push('🌹'+g.roses);
+if(g.stars)gt.push('⭐'+g.stars);if(g.letters)gt.push('💌'+g.letters);
+if(g.keysNeeded)gt.push('🔑'+g.keysNeeded);
+if(g.minigame)gt.push('🎮 Mini-game');if(g.puzzle)gt.push('🧩 الغاز');
+document.getElementById('mpGoal').textContent='Goal: '+gt.join('  ');
+document.getElementById('mpHint').textContent=m.hint?'💡 '+m.hint:'';
+document.getElementById('missionPopup').classList.add('show');updateHUD();
+}
+
+function closeMission(){
+gamePaused=false;document.getElementById('missionPopup').classList.remove('show');
+const m=missions[currentMission];
+if(m.type==='minigame')startMiniGame(m.goal.minigame,m.goal.target);
+else if(m.type==='puzzle')startPuzzle();
+}
+
+function checkGoal(){
+const g=missions[currentMission].goal;
+if(g.hearts&&player.hearts<g.hearts)return false;
+if(g.roses&&player.roses<g.roses)return false;
+if(g.letters&&player.letters<g.letters)return false;
+if(g.stars&&player.stars<g.stars)return false;
+if(g.keysNeeded&&player.foundKeys<g.keysNeeded)return false;
+return true;
+}
+
+function missionComplete(){
+if(missionDone)return;missionDone=true;
+// Dooody celebration message
+dooodySayText=dooodySayings[Math.floor(Math.random()*dooodySayings.length)];dooodySayTimer=200;
+sndLevelComplete();
+// Big particle burst
+for(let i=0;i<25;i++)particles.push({x:player.x+player.w/2+(Math.random()-.5)*60,
+y:player.y+(Math.random()-.5)*40,vx:(Math.random()-.5)*6,vy:-Math.random()*5-2,
+life:40+Math.random()*30,ml:60,sz:4+Math.random()*4,e:['🎉','💖','✨','⭐','🌟','💕'][Math.floor(Math.random()*6)]});
+if(currentMission<missions.length-1){
+const lcOverlay=document.getElementById('levelCompleteOverlay');
+const lcMsg=['Amazing job! 💕','You\'re unstoppable! 🔥','Incredible! ✨','So proud of you! 💙','Onward! ⚔️'];
+document.getElementById('lcSub').textContent=lcMsg[Math.floor(Math.random()*lcMsg.length)];
+lcOverlay.classList.add('show');gamePaused=true;
+setTimeout(()=>{lcOverlay.classList.remove('show');gamePaused=false;loadMission(currentMission+1)},2200);
+}else{gameRunning=false;document.getElementById('hud').style.display='none';
+setTimeout(sndWin,300);
+document.getElementById('finalScreen').classList.add('show');startFireworks()}}
+
+function hitPlayer(){
+if(player.invincible>0)return;player.lives--;player.invincible=80;updateHUD();
+sndHurt();
+spawnP(player.x+player.w/2,player.y+player.h/2,5,['💔','😣']);
+// Dooody gets angry and chases the attacker
+const attacker=enemies.find(e=>e.origX!==-9999&&rc(player,e.x,e.y,e.w,e.h));
+if(attacker){
+  dooodTarget=attacker;
+  dooodRageTimer=220;
+  dooodySayText='💢 Leave her alone!!';
+  dooodySayTimer=160;
+}
+if(player.lives<=0){player.lives=5;showLove("Don't give up! Try again! 💪");
+player.x=100;player.y=canvas.height-200;player.vx=0;player.vy=0;updateHUD()}}
+
+function loadMission(idx){
+currentMission=idx;missionDone=false;
+player.x=100;player.y=canvas.height-200;player.vx=0;player.vy=0;
+player.hearts=0;player.roses=0;player.letters=0;player.stars=0;player.foundKeys=0;
+dooody.x=60;dooody.y=canvas.height-200;dooody.vx=0;dooody.vy=0;
+door=null;doorOpen=false;
+dooodTarget=null;dooodRageTimer=0;
+genLevel(idx);
+}
+function startGame(){
+const ss=document.getElementById('startScreen');
+ss.style.transition='opacity 1.2s';ss.style.opacity='0';ss.style.pointerEvents='none';
+document.getElementById('hud').style.display='flex';
+initAudio();
+setTimeout(()=>{ss.style.display='none';gameRunning=true;loadMission(0)},1100);
+}
+
+// ═══════════════════════════════════════
+// PUZZLES (الغاز)
+// ═══════════════════════════════════════
+let puzzleUsed=[];
+function startPuzzle(){
+const popup=document.getElementById('puzzlePopup');popup.classList.add('show');
+// Pick unused puzzle
+let avail=puzzlesDB.filter((_,i)=>!puzzleUsed.includes(i));
+if(avail.length===0){puzzleUsed=[];avail=puzzlesDB}
+const ri=Math.floor(Math.random()*avail.length);
+const pi=puzzlesDB.indexOf(avail[ri]);puzzleUsed.push(pi);
+const pz=puzzlesDB[pi];
+document.getElementById('pzQuestion').textContent=pz.q;
+document.getElementById('pzResult').textContent='';
+const optDiv=document.getElementById('pzOptions');optDiv.innerHTML='';
+pz.opts.forEach((o,i)=>{
+const btn=document.createElement('div');btn.className='pz-opt';btn.textContent=o;
+btn.onclick=()=>answerPuzzle(i,pz.ans,btn);optDiv.appendChild(btn);
+});
+}
+
+function answerPuzzle(chosen,correct,btn){
+const opts=document.querySelectorAll('.pz-opt');
+if(chosen===correct){
+btn.classList.add('correct');
+document.getElementById('pzResult').textContent='✅ Correct! You\'re so smart! 💕';
+sndPuzzleCorrect();
+opts.forEach(o=>o.style.pointerEvents='none');
+setTimeout(()=>{document.getElementById('puzzlePopup').classList.remove('show');
+missionComplete()},1500);
+}else{
+btn.classList.add('wrong');btn.style.pointerEvents='none';
+document.getElementById('pzResult').textContent='❌ Try again!';
+sndPuzzleWrong();
+setTimeout(()=>{btn.classList.remove('wrong');document.getElementById('pzResult').textContent='';
+btn.style.pointerEvents='auto'},800);
+}}
+
+// ═══════════════════════════════════════
+// MINI GAMES
+// ═══════════════════════════════════════
+let miniActive=false,miniType='',miniTarget=0;
+const miniCanvas=document.getElementById('miniGameCanvas'),mCtx=miniCanvas.getContext('2d');
+let miniState={};
+
+function startMiniGame(type,target){
+miniActive=true;miniType=type;miniTarget=target;
+document.getElementById('miniGameOverlay').classList.add('show');
+document.getElementById('miniGameBtn').style.display='none';
+document.getElementById('miniSkipBtn').style.display='inline-block';
+
+if(type==='snake'||type==='snake2'){
+document.getElementById('miniTitle').textContent='🐍 Snake Challenge';
+document.getElementById('miniSub').textContent='Arrow keys to move. Eat hearts, avoid walls & yourself!';
+miniCanvas.width=400;miniCanvas.height=400;
+const fast=type==='snake2';const gs=20;
+miniState={snake:[{x:10,y:10}],dir:{x:1,y:0},nextDir:{x:1,y:0},food:null,
+score:0,interval:fast?5:7,timer:0,gameOver:false,gs,cols:20,rows:20};
+placeSnakeFood();
+document.getElementById('miniGameInfo').textContent='💖 0 / '+target;
+}else if(type==='memory'){
+document.getElementById('miniTitle').textContent='🧠 Memory Match';
+document.getElementById('miniSub').textContent='Click cards to find matching pairs!';
+miniCanvas.width=400;miniCanvas.height=400;
+const syms=['💖','🌹','⭐','💌','👑','💕','🌸','💎'];
+let cards=[];syms.forEach((s,i)=>{cards.push({s,id:i,flip:false,matched:false});cards.push({s,id:i,flip:false,matched:false})});
+for(let i=cards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]]}
+miniState={cards,first:null,second:null,lockBoard:false,matched:0,cols:4,rows:4};
+document.getElementById('miniGameInfo').textContent='0 / '+target+' pairs';
+miniCanvas.onclick=memClick;
+}else if(type==='catch'){
+document.getElementById('miniTitle').textContent='🎯 Heart Catcher';
+document.getElementById('miniSub').textContent='Arrow keys to move the basket. Catch hearts!';
+miniCanvas.width=400;miniCanvas.height=400;
+miniState={basket:{x:170,w:60},falling:[],score:0,timer:30*60,spawnT:0};
+document.getElementById('miniGameInfo').textContent='💖 0 / '+target+' — 30s';
+}else if(type==='paint'){
+document.getElementById('miniTitle').textContent='🎨 Paint Canvas';
+document.getElementById('miniSub').textContent='Click to stamp love symbols!';
+miniCanvas.width=400;miniCanvas.height=400;miniState={score:0};
+mCtx.fillStyle='#0d0025';mCtx.fillRect(0,0,400,400);
+mCtx.font='bold 55px Dancing Script';mCtx.fillStyle='rgba(255,107,157,.06)';
+mCtx.textAlign='center';mCtx.fillText('♥',200,210);mCtx.textAlign='left';
+document.getElementById('miniGameInfo').textContent='🎨 0 / '+target;
+miniCanvas.onclick=paintClick;
+}}
+
+function placeSnakeFood(){const s=miniState;let pos;
+do{pos={x:Math.floor(Math.random()*s.cols),y:Math.floor(Math.random()*s.rows)}}
+while(s.snake.some(sg=>sg.x===pos.x&&sg.y===pos.y));s.food=pos}
+
+function updateMiniGame(){
+if(!miniActive)return;
+if(miniType==='snake'||miniType==='snake2')updateSnake();
+else if(miniType==='catch')updateCatch();
+drawMiniGame();
+}
+
+function updateSnake(){
+const s=miniState;if(s.gameOver)return;
+if(keys.ArrowUp&&s.dir.y!==1)s.nextDir={x:0,y:-1};
+if(keys.ArrowDown&&s.dir.y!==-1)s.nextDir={x:0,y:1};
+if(keys.ArrowLeft&&s.dir.x!==1)s.nextDir={x:-1,y:0};
+if(keys.ArrowRight&&s.dir.x!==-1)s.nextDir={x:1,y:0};
+s.timer++;if(s.timer<s.interval)return;s.timer=0;s.dir=s.nextDir;
+const head={x:s.snake[0].x+s.dir.x,y:s.snake[0].y+s.dir.y};
+if(head.x<0||head.x>=s.cols||head.y<0||head.y>=s.rows||s.snake.some(sg=>sg.x===head.x&&sg.y===head.y)){
+s.gameOver=true;setTimeout(()=>{s.snake=[{x:10,y:10}];s.dir={x:1,y:0};s.nextDir={x:1,y:0};s.gameOver=false;placeSnakeFood()},1000);return}
+s.snake.unshift(head);
+if(head.x===s.food.x&&head.y===s.food.y){s.score++;
+document.getElementById('miniGameInfo').textContent='💖 '+s.score+' / '+miniTarget;
+if(s.score>=miniTarget){miniWin();return}placeSnakeFood()}else s.snake.pop();
+}
+
+function updateCatch(){
+const s=miniState;
+if(keys.ArrowLeft||keys.KeyA)s.basket.x-=6;
+if(keys.ArrowRight||keys.KeyD)s.basket.x+=6;
+s.basket.x=Math.max(0,Math.min(340,s.basket.x));
+s.spawnT++;if(s.spawnT>22){s.spawnT=0;
+s.falling.push({x:Math.random()*370,y:-20,sp:2.5+Math.random()*3,
+emoji:['💖','💕','❤️','💗'][Math.floor(Math.random()*4)]})}
+for(let i=s.falling.length-1;i>=0;i--){const f=s.falling[i];f.y+=f.sp;
+if(f.y>375&&f.x+20>s.basket.x&&f.x<s.basket.x+s.basket.w){s.falling.splice(i,1);s.score++;
+if(s.score>=miniTarget){miniWin();return}}else if(f.y>420)s.falling.splice(i,1)}
+s.timer--;
+document.getElementById('miniGameInfo').textContent='💖 '+s.score+' / '+miniTarget+' — '+Math.max(0,Math.ceil(s.timer/60))+'s';
+if(s.timer<=0){s.score=0;s.timer=30*60;s.falling=[];showLove("Try again! 💪")}
+}
+
+function memClick(e){
+const s=miniState;if(s.lockBoard)return;
+const rect=miniCanvas.getBoundingClientRect();
+const mx2=e.clientX-rect.left,my2=e.clientY-rect.top;
+const cw=100,ch=100;const col=Math.floor(mx2/cw),row=Math.floor(my2/ch);
+const idx=row*s.cols+col;if(idx<0||idx>=s.cards.length)return;
+const card=s.cards[idx];if(card.flip||card.matched)return;card.flip=true;
+if(!s.first)s.first=card;
+else{s.second=card;s.lockBoard=true;
+if(s.first.id===s.second.id){s.first.matched=true;s.second.matched=true;s.matched++;
+document.getElementById('miniGameInfo').textContent=s.matched+' / '+miniTarget+' pairs';
+s.first=null;s.second=null;s.lockBoard=false;if(s.matched>=miniTarget){miniWin();return}}
+else setTimeout(()=>{s.first.flip=false;s.second.flip=false;s.first=null;s.second=null;s.lockBoard=false},800)}
+}
+
+function paintClick(e){
+const rect=miniCanvas.getBoundingClientRect();
+const mx2=e.clientX-rect.left,my2=e.clientY-rect.top;
+const ems=['💖','💕','🌹','⭐','💌','🌸','❤️','✨'];
+const em=ems[Math.floor(Math.random()*ems.length)];
+const sz=20+Math.random()*22;mCtx.font=sz+'px serif';mCtx.fillText(em,mx2-sz/2,my2+sz/3);
+miniState.score++;document.getElementById('miniGameInfo').textContent='🎨 '+miniState.score+' / '+miniTarget;
+if(miniState.score>=miniTarget)miniWin();
+}
+
+function drawMiniGame(){
+if(miniType==='snake'||miniType==='snake2'){
+const s=miniState,gs=s.gs;
+mCtx.fillStyle='#0a0020';mCtx.fillRect(0,0,400,400);
+mCtx.strokeStyle='rgba(80,50,130,.1)';mCtx.lineWidth=.5;
+for(let x=0;x<20;x++){mCtx.beginPath();mCtx.moveTo(x*gs,0);mCtx.lineTo(x*gs,400);mCtx.stroke()}
+for(let y=0;y<20;y++){mCtx.beginPath();mCtx.moveTo(0,y*gs);mCtx.lineTo(400,y*gs);mCtx.stroke()}
+s.snake.forEach((sg,i)=>{const a=1-i/(s.snake.length+5)*.4;
+mCtx.fillStyle=i===0?'#ff6b9d':`rgba(196,155,255,${a})`;
+mCtx.beginPath();mCtx.roundRect(sg.x*gs+1,sg.y*gs+1,gs-2,gs-2,4);mCtx.fill();
+if(i===0){mCtx.font='12px serif';mCtx.fillText('😊',sg.x*gs+3,sg.y*gs+15)}});
+if(s.food){mCtx.font='15px serif';mCtx.fillText('💖',s.food.x*gs+2,s.food.y*gs+16)}
+if(s.gameOver){mCtx.fillStyle='rgba(0,0,0,.6)';mCtx.fillRect(0,0,400,400);
+mCtx.font='22px Dancing Script';mCtx.fillStyle='#ff6b9d';mCtx.textAlign='center';
+mCtx.fillText('Oops! Restarting... 💕',200,200);mCtx.textAlign='left'}
+}else if(miniType==='memory'){
+const s=miniState;mCtx.fillStyle='#0a0020';mCtx.fillRect(0,0,400,400);
+s.cards.forEach((card,i)=>{const col=i%4,row=Math.floor(i/4);
+const x=col*100+8,y=row*100+8,w=84,h=84;
+if(card.matched){mCtx.fillStyle='rgba(255,107,157,.15)';mCtx.beginPath();mCtx.roundRect(x,y,w,h,8);mCtx.fill();
+mCtx.font='28px serif';mCtx.fillText(card.s,x+w/2-14,y+h/2+10)}
+else if(card.flip){mCtx.fillStyle='rgba(196,155,255,.25)';mCtx.beginPath();mCtx.roundRect(x,y,w,h,8);mCtx.fill();
+mCtx.font='28px serif';mCtx.fillText(card.s,x+w/2-14,y+h/2+10)}
+else{mCtx.fillStyle='rgba(80,50,130,.4)';mCtx.beginPath();mCtx.roundRect(x,y,w,h,8);mCtx.fill();
+mCtx.strokeStyle='rgba(150,100,200,.3)';mCtx.lineWidth=1;mCtx.beginPath();mCtx.roundRect(x,y,w,h,8);mCtx.stroke();
+mCtx.font='18px serif';mCtx.textAlign='center';mCtx.fillStyle='#9b7fcc';mCtx.fillText('?',x+w/2,y+h/2+6);mCtx.textAlign='left'}
+})}else if(miniType==='catch'){
+const s=miniState;mCtx.fillStyle='#0a0020';mCtx.fillRect(0,0,400,400);
+mCtx.fillStyle='#ff6b9d';mCtx.beginPath();mCtx.roundRect(s.basket.x,378,s.basket.w,18,5);mCtx.fill();
+mCtx.font='12px serif';mCtx.fillText('🧺',s.basket.x+s.basket.w/2-7,393);
+s.falling.forEach(f=>{mCtx.font='16px serif';mCtx.fillText(f.emoji,f.x,f.y+16)});
+}}
+
+function miniWin(){
+if(missionDone)return;missionDone=true;
+sndMiniWin();
+showLove("🎉 Challenge Complete! 🎉");
+document.getElementById('miniGameBtn').style.display='inline-block';
+document.getElementById('miniSkipBtn').style.display='none';
+miniCanvas.onclick=null;
+}
+function miniGameDone(){
+miniActive=false;miniType='';
+document.getElementById('miniGameOverlay').classList.remove('show');
+document.getElementById('miniSkipBtn').style.display='none';
+document.getElementById('miniGameBtn').style.display='none';
+miniCanvas.onclick=null;
+// bypass missionDone check — advance directly
+dooodySayText=dooodySayings[Math.floor(Math.random()*dooodySayings.length)];dooodySayTimer=200;
+for(let i=0;i<20;i++)particles.push({x:player.x+player.w/2+(Math.random()-.5)*60,
+y:player.y+(Math.random()-.5)*40,vx:(Math.random()-.5)*6,vy:-Math.random()*5-2,
+life:40+Math.random()*30,ml:60,sz:4+Math.random()*4,e:['🎉','💖','✨','⭐','🌟','💕'][Math.floor(Math.random()*6)]});
+if(currentMission<missions.length-1){
+const lcOverlay=document.getElementById('levelCompleteOverlay');
+const lcMsg=['Amazing job! 💕','You\'re unstoppable! 🔥','Incredible! ✨','So proud of you! 💙','Onward! ⚔️'];
+document.getElementById('lcSub').textContent=lcMsg[Math.floor(Math.random()*lcMsg.length)];
+lcOverlay.classList.add('show');gamePaused=true;
+setTimeout(()=>{lcOverlay.classList.remove('show');gamePaused=false;loadMission(currentMission+1)},2200);
+}else{gameRunning=false;document.getElementById('hud').style.display='none';
+document.getElementById('finalScreen').classList.add('show');startFireworks()}
+}
+function skipMiniGame(){
+if(missionDone)return;missionDone=true;
+miniActive=false;miniType='';document.getElementById('miniGameOverlay').classList.remove('show');
+document.getElementById('miniSkipBtn').style.display='none';
+miniCanvas.onclick=null;
+showLove('Level skipped! Moving on... ➡️');
+if(currentMission<missions.length-1)setTimeout(()=>loadMission(currentMission+1),800);
+}
+
+// ═══════════════════════════════════════
+// MAIN UPDATE
+// ═══════════════════════════════════════
+function update(){
+if(!gameRunning)return;
+if(miniActive){updateMiniGame();return}
+if(gamePaused)return;
+const t=Date.now();movePlayer();
+
+// Float platforms
+platforms.forEach(pl=>{if(pl.type==='float')pl.y=pl.origY+Math.sin(t/1000*pl.floatSpd*60+pl.floatOff)*pl.floatAmp});
+// Moving platforms
+movingPlats.forEach(mp=>{
+const phase=t/1000*mp.moveSpd*60+mp.moveOff;
+if(mp.moveX)mp.x=mp.origX+Math.sin(phase)*mp.moveX;
+if(mp.moveY)mp.y=mp.origY+Math.sin(phase*.7)*mp.moveY;
+});
+
+// Spikes
+spikes.forEach(s=>{if(rc(player,s.x,s.y,s.w,s.h)){sndSpike();hitPlayer();}});
+
+// Collectibles
+collectibles.forEach(c=>{
+if(c.collected)return;const bob=Math.sin(t/380+c.bob)*5;
+if(rc(player,c.x,c.y+bob-8,c.w,c.h)){
+c.collected=true;
+if(c.type==='heart')player.hearts++;else if(c.type==='rose')player.roses++;
+else if(c.type==='letter')player.letters++;else if(c.type==='star')player.stars++;
+else if(c.type==='key'){player.foundKeys++;sndKeyCollect();}
+if(c.type!=='key')sndCollect();
+spawnP(c.x+c.w/2,c.y+bob,8);updateHUD();
+if(Math.random()<.25)showLove(loveMsg[Math.floor(Math.random()*loveMsg.length)]);
+// Dooody cheers sometimes
+if(Math.random()<.15){dooodySayText=dooodySayings[Math.floor(Math.random()*dooodySayings.length)];dooodySayTimer=120}
+if(checkGoal()&&!missionDone){
+  if(!door){showLove('🎉 All goals complete! 🎉');setTimeout(missionComplete,800)}
+  else showLove('🔑 Reach the door! 🚪');
+};
+}});
+
+// Enemies
+enemies.forEach(e=>{
+if(e.type==='bat'||e.type==='butterfly')e.y=e.origY+Math.sin(t/600+e.batOff)*40;
+else if(e.type==='spider')e.y=e.origY+Math.sin(t/800+e.batOff)*30;
+// Bunny hop
+if(e.type==='bunny'){e.hopTimer++;if(e.hopTimer%55<5)e.x+=e.vx>0?1.5:-1.5;}
+e.x+=e.vx;if(Math.abs(e.x-e.origX)>e.range)e.vx*=-1;
+e.facing=e.vx>0?1:-1;
+// Dooody collision — Dooody kills any enemy he touches
+if(e.origX!==-9999&&rc(dooody,e.x,e.y,e.w,e.h)){
+  const ox=e.x,oy=e.y;e.origX=-9999;e.x=-9999;
+  sndKill();
+  spawnP(ox+e.w/2,oy+e.h/2,8,['💥','✨','💫','💙']);
+  dooodySayText='💪 Got you!! 💙';
+  dooodySayTimer=140;
+  if(dooodTarget===e){dooodTarget=null;dooodRageTimer=0;}
+  return;
+}
+// Player collision
+if(rc(player,e.x,e.y,e.w,e.h)){
+if(player.vy>0&&player.y+player.h-e.y<16&&e.type!=='spider'&&e.type!=='butterfly'){
+const ox=e.x,oy=e.y;e.origX=-9999;e.x=-9999;player.vy=-10;
+sndKill();
+spawnP(ox+e.w/2,oy+e.h/2,6,['💥','✨']);showLove("Defeated! 💪")
+}else hitPlayer()}
+});
+
+// Door collision
+if(door&&!missionDone){
+if(rc(player,door.x,door.y,door.w,door.h)){
+const hasKeys=door.keysNeeded===0||player.foundKeys>=door.keysNeeded;
+if(!hasKeys){
+if(door.hintTimer<=0){showLove('Need '+door.keysNeeded+'🔑 to open the door!');door.hintTimer=120;}
+player.x-=player.vx;player.vx=0;// push player back
+}else if(checkGoal()&&!missionDone){
+spawnP(door.x+door.w/2,door.y+door.h/2,12,['🚪','✨','💫','🎉']);
+showLove('🚪 Door opened! 🎉');door.open=true;sndDoorOpen();
+setTimeout(missionComplete,600);}}
+if(door.hintTimer>0)door.hintTimer--;
+}
+
+const tc=player.x-canvas.width/3;cameraX+=(tc-cameraX)*.08;
+cameraX=Math.max(0,Math.min(levelWidth-canvas.width,cameraX));
+if(loveMsgT>0){loveMsgT--;if(loveMsgT<=0)loveMsgEl.classList.remove('show')}
+if(Math.abs(player.vx)>1||!player.grounded){
+if(Math.random()<.18)particles.push({x:player.x+player.w/2+(Math.random()-.5)*8,
+y:player.y+player.h,vx:-player.vx*.1,vy:-Math.random(),life:16,ml:16,sz:2,e:'✨'})}
+updatePart();
+}
+
+// ═══════════════════════════════════════
+// MAIN DRAW
+// ═══════════════════════════════════════
+function draw(){
+const t=Date.now();
+// Hide canvas entirely when any overlay is active so HTML overlays show through
+const anyOverlay = gamePaused || miniActive ||
+  document.getElementById('puzzlePopup').classList.contains('show') ||
+  document.getElementById('levelCompleteOverlay').classList.contains('show');
+if(anyOverlay){canvas.style.display='none';return;}
+canvas.style.display='block';
+ctx.clearRect(0,0,canvas.width,canvas.height);
+if(!gameRunning)return;
+if(missions[currentMission].type==='minigame'||missions[currentMission].type==='puzzle')return;
+const m=missions[currentMission];
+
+const bg=ctx.createLinearGradient(0,0,0,canvas.height);
+bg.addColorStop(0,m.bg[0]);bg.addColorStop(.5,m.bg[1]);bg.addColorStop(1,m.bg[2]);
+ctx.fillStyle=bg;ctx.fillRect(0,0,canvas.width,canvas.height);
+
+bgStars.forEach(s=>{s.tw+=s.sp;const a=.25+Math.sin(s.tw)*.4;
+const sx=s.x-cameraX*.3;if(sx<-5||sx>canvas.width+5)return;
+ctx.globalAlpha=a;ctx.fillStyle='#d0b0ff';ctx.beginPath();ctx.arc(sx,s.y,s.r,0,Math.PI*2);ctx.fill()});
+ctx.globalAlpha=1;
+
+// Moon
+const moonX=canvas.width*.8-cameraX*.04;
+ctx.fillStyle='#ffe8cc';ctx.shadowColor='#ffe8cc';ctx.shadowBlur=35;
+ctx.beginPath();ctx.arc(moonX,85,40,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+
+// Mountains
+ctx.fillStyle='rgba(25,12,50,.5)';ctx.beginPath();ctx.moveTo(0,canvas.height-45);
+for(let x=0;x<=canvas.width;x+=3){
+const h=Math.sin((x+cameraX*.08)*.005)*75+Math.sin((x+cameraX*.08)*.012)*30+canvas.height-165;
+ctx.lineTo(x,h)}ctx.lineTo(canvas.width,canvas.height-45);ctx.fill();
+
+// All platforms
+platforms.forEach(p=>drawPlat(p));
+movingPlats.forEach(p=>drawPlat(p));
+// Spikes
+spikes.forEach(s=>drawSpike(s));
+// Door (behind collectibles)
+if(door)drawDoor(door);
+// Collectibles
+collectibles.forEach(c=>drawColl(c,t));
+// Enemies
+enemies.forEach(e=>drawEnemy(e,t));
+// Dooody companion
+drawDooody(dooody.x-cameraX,dooody.y);
+// Player
+drawChar(player.x-cameraX,player.y);
+// Key hold indicator near player (when carrying keys)
+if(player.foundKeys>0){
+const ksx=player.x-cameraX+player.w+4,ksy=player.y-6;
+const hb2=Math.sin(t/250)*3;
+ctx.font='14px serif';ctx.fillText('🔑',ksx,ksy+hb2);
+ctx.font='bold 9px Quicksand,sans-serif';ctx.fillStyle='#44ddff';ctx.textAlign='center';
+ctx.fillText('x'+player.foundKeys,ksx+7,ksy+14+hb2);ctx.textAlign='left';
+}
+// Particles
+drawPart();
+
+// Subtle ambient
+if(Math.random()<.01)particles.push({x:cameraX+Math.random()*canvas.width,y:canvas.height,
+vx:(Math.random()-.5)*.3,vy:-.3-Math.random()*.5,life:200,ml:200,sz:5+Math.random()*6,
+e:['✨','💕','🌸'][Math.floor(Math.random()*3)]});
+}
+
+// ═══════════════════════════════════════
+// FIREWORKS
+// ═══════════════════════════════════════
+let fireworks=[],fwCtx=null;
+function startFireworks(){const fc=document.getElementById('fireworkCanvas');
+fc.width=innerWidth;fc.height=innerHeight;fwCtx=fc.getContext('2d');
+setInterval(()=>{const x=Math.random()*fc.width,y=Math.random()*fc.height*.5;
+const cols=['#ff6b9d','#c49bff','#ffb6d9','#ff4488','#9b59b6','#ffdd44'];
+const c=cols[Math.floor(Math.random()*cols.length)];
+for(let i=0;i<40;i++){const a=(Math.PI*2/40)*i,sp=2+Math.random()*3;
+fireworks.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:50+Math.random()*25,color:c,sz:2+Math.random()*2})}},700)}
+function updateFW(){if(!fwCtx)return;const c=fwCtx;c.clearRect(0,0,c.canvas.width,c.canvas.height);
+for(let i=fireworks.length-1;i>=0;i--){const f=fireworks[i];
+f.x+=f.vx;f.y+=f.vy;f.vy+=.04;f.vx*=.98;f.vy*=.98;f.life--;
+if(f.life<=0){fireworks.splice(i,1);continue}
+c.globalAlpha=f.life/70;c.fillStyle=f.color;c.shadowColor=f.color;c.shadowBlur=4;
+c.beginPath();c.arc(f.x,f.y,f.sz,0,Math.PI*2);c.fill()}c.globalAlpha=1;c.shadowBlur=0}
+
+function gameLoop(){update();draw();updateFW();requestAnimationFrame(gameLoop)}
+gameLoop();
+</script>
+</body>
+</html>
