@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Gift For You</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.youtube.com/iframe_api"></script>
+</head>
+<body>
+    <canvas id="bg" aria-hidden="true"></canvas>
+
+<!-- Lock -->
+<div class="layer" id="lock-screen" role="dialog" aria-modal="true" aria-labelledby="lock-title">
+  <div class="lock-card">
+    <p class="lock-eyebrow">Private &amp; Protected</p>
+    <p class="lock-title" id="lock-title"><em>Enter</em> the secret</p>
+    <p class="lock-sub">Protected with love</p>
+    <div class="lock-rule"><span class="lock-rule-dot"></span></div>
+    <div class="input-wrap">
+      <label for="pw" class="sr-only">Secret passphrase</label>
+      <input type="password" id="pw" autocomplete="current-password" placeholder="Our special word…" aria-describedby="err-msg" aria-required="true" />
+    </div>
+    <button class="lock-btn" id="pw-btn" type="button">
+      <span class="btn-label">Unlock</span>
+      <span class="spinner" aria-hidden="true"></span>
+    </button>
+    <p class="err-msg" id="err-msg" role="alert" aria-live="assertive"></p>
+  </div>
+</div>
+
+<!-- Welcome -->
+<div class="layer hidden gone" id="welcome" aria-hidden="true">
+  <p class="welcome-text">Welcome, Noor ✦</p>
+</div>
+
+<!-- App -->
+<main id="app" style="display:none" aria-label="Letter for Noor">
+
+  <header class="app-header">
+    <p class="app-eyebrow">A special message</p>
+    <h1 class="app-title">For Noor</h1>
+    <p class="app-sub">from my heart</p>
+  </header>
+
+  <div class="card">
+
+    <!-- Letter -->
+    <section class="panel active" id="panel-letter" role="tabpanel">
+      <div class="panel-header">
+        <p class="panel-title">A Letter For You</p>
+        <span class="panel-ornament">✦</span>
+      </div>
+      
+      <div class="letter-parts">
+        <!-- Part 1 -->
+        <div class="letter-part active" id="part-1">
+          <h2 class="letter-heading">A Letter For You</h2>
+          <div class="letter-body-large">
+            <p>My dearest Noor, my love,</p>
+            <p>I wanted to take a moment to tell you something that my heart has been wanting to say. Every single day with you is a blessing I don't take for granted.</p>
+          </div>
+        </div>
+
+        <!-- Part 2 -->
+        <div class="letter-part" id="part-2">
+          <div class="letter-body-large">
+            <p>My love, your smile brightens even my darkest days.</p>
+            <p>The way your eyes light up when you laugh is my favorite sight in the entire world. There's something magical about your presence, and I find myself losing track of time whenever I'm with you.</p>
+          </div>
+        </div>
+
+        <!-- Part 3 -->
+        <div class="letter-part" id="part-3">
+          <div class="letter-body-large">
+            <p>You have this incredible way of making everything feel like it's going to be okay, my love.</p>
+            <p>When the world feels overwhelming, I think of you and suddenly everything becomes manageable. Your strength inspires me, and your compassion touches everyone around you.</p>
+          </div>
+        </div>
+
+        <!-- Part 4 -->
+        <div class="letter-part" id="part-4">
+          <div class="letter-body-large">
+            <p>My love, I cherish every moment we spend together.</p>
+            <p>From our silly inside jokes that only we understand, to our deep conversations under the stars — those moments are the ones I treasure the most.</p>
+          </div>
+        </div>
+
+        <!-- Part 5 -->
+        <div class="letter-part" id="part-5">
+          <div class="letter-body-large">
+            <p>You make me laugh in ways no one else can, my love.</p>
+            <p>Your humor is one of my favorite things about you. But beyond the laughter, I cherish the quiet moments too — when we just sit together, and no words are needed.</p>
+          </div>
+        </div>
+
+        <!-- Part 6 -->
+        <div class="letter-part" id="part-6">
+          <div class="letter-body-large">
+            <p>You've shown me what true happiness feels like, my love.</p>
+            <p>Before you, I didn't know it was possible to feel this complete. You filled a space in my heart that I didn't even know was empty.</p>
+          </div>
+        </div>
+
+        <!-- Part 7 -->
+        <div class="letter-part" id="part-7">
+          <div class="letter-body-large">
+            <p>I'm forever grateful to have you in my life, my love, my Noor.</p>
+            <p>You've changed me in the most beautiful ways. You've taught me what it means to truly care about someone, to put another person's happiness above your own.</p>
+          </div>
+        </div>
+
+        <!-- Part 8 -->
+        <div class="letter-part" id="part-8">
+          <div class="letter-body-large">
+            <p>My love, you inspire me to be a better person every single day.</p>
+            <p>Your kindness, your strength, your resilience — they all take my breath away. The way you handle life's challenges with grace amazes me.</p>
+          </div>
+        </div>
+
+        <!-- Part 9 -->
+        <div class="letter-part" id="part-9">
+          <div class="letter-body-large">
+            <p>Your beauty, both inside and out, is something I'll never take for granted, my love.</p>
+            <p>But it's not just your physical beauty that captivates me. It's your soul, your spirit, the way you light up every room you walk into.</p>
+          </div>
+        </div>
+
+        <!-- Part 10 -->
+        <div class="letter-part" id="part-10">
+          <div class="letter-body-large">
+            <p>I never want to take a single moment with you for granted, my love.</p>
+            <p>Life is precious, and you make every second of it worth living. With you, I found my home, my peace, my everything.</p>
+          </div>
+        </div>
+
+        <!-- Part 11 -->
+        <div class="letter-part" id="part-11">
+          <div class="letter-body-large">
+            <p>My love, thank you for believing in me when I doubted myself.</p>
+            <p>Thank you for standing by me through everything. Thank you for being patient, kind, and the most amazing person I've ever had the privilege of loving.</p>
+          </div>
+        </div>
+
+        <!-- Part 12 -->
+        <div class="letter-part" id="part-12">
+          <div class="letter-body-large">
+            <p>No matter where life takes us, my love, always remember this:</p>
+            <p>My heart belongs to you, now and forever. You are my greatest blessing, and I promise to love you with everything I have.</p>
+            <p><em>Forever yours and always your love,<br>Me ✦</em></p>
+          </div>
+        </div>
+
+        <!-- Part 13 - Final -->
+        <div class="letter-part animated-final" id="part-13">
+          <div class="letter-body-large">
+            <div class="emoji-float">💕</div>
+            <div class="emoji-float emoji-2">🌹</div>
+            <div class="emoji-float emoji-3">✨</div>
+            <div class="emoji-float emoji-4">💐</div>
+            <div class="emoji-float emoji-5">💖</div>
+            <div class="emoji-float emoji-6">🌸</div>
+            
+            <h1 class="love-message">💕 Love You My Everything 💕</h1>
+            <p class="love-subtitle">🌹 Forever and Always 🌹</p>
+            <p class="love-heart">💖 ✨ 💕 ✨ 💖</p>
+            <p class="love-flowers">🌸 🌹 💐 🌹 🌸</p>
+            
+            <div class="heart-burst">
+              <span>💕</span><span>💖</span><span>💕</span><span>💖</span><span>💕</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="letter-navigation">
+        <button id="prev-btn" class="nav-btn prev-btn" aria-label="Previous part">← Back</button>
+        <span class="part-counter"><span id="current-part">1</span> / 13</span>
+        <button id="next-btn" class="nav-btn next-btn" aria-label="Next part">Next →</button>
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="site-footer" aria-label="Footer">
+    <div class="footer-inner">
+      <span class="footer-logo">&#169; <strong>Mahmoud Loves Noor</strong></span>
+      <span class="footer-sep">&#8231;</span>
+      <span class="footer-year">2026</span>
+    </div>
+  </footer>
+
+  <!-- Music Player Button -->
+  <button id="music-toggle-btn" class="music-toggle" aria-label="Toggle music player" title="Play Music">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M9 18v-3.5a6 6 0 0 1 12 0V18M9 13h12M9 13a6 6 0 0 0-6 6v3M3 19v-3a6 6 0 0 1 6-6"></path>
+      <circle cx="12" cy="6" r="1"></circle>
+    </svg>
+  </button>
+
+  <!-- Music Player Modal -->
+  <div id="music-modal" class="music-modal" aria-hidden="true">
+    <div class="music-modal-content">
+      <button id="music-close-btn" class="music-close" aria-label="Close music player">×</button>
+      <div class="music-header">
+        <h2>Now Playing ♪</h2>
+      </div>
+      <div id="youtube-player-container" style="width: 100%; padding-bottom: 56.25%; position: relative; border-radius: 8px; overflow: hidden; margin-bottom: 20px;">
+        <iframe id="youtube-iframe" 
+          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+          src="https://www.youtube.com/embed/XHjxj78AYc0?autoplay=1&controls=1&modestbranding=1" 
+          frameborder="0" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen>
+        </iframe>
+      </div>
+      <p class="music-note">🎵 Enjoy the music, Noor 💕</p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</main>
