@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For My Love 💕</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style-57ef4rk.css" />
+</head>
+<body class="intro-active">
+
+  <div id="intro-screen" class="intro-screen">
+    <div class="intro-screen__glow intro-screen__glow--one"></div>
+    <div class="intro-screen__glow intro-screen__glow--two"></div>
+    <div class="intro-screen__card">
+      <p class="intro-screen__eyebrow">a little surprise for you</p>
+      <h1 class="intro-screen__title">For My Love</h1>
+      <p class="intro-screen__text">Open the page and start the music.</p>
+      <button id="intro-start" class="intro-screen__button" onclick="startExperience()">Open it</button>
+    </div>
+  </div>
+
+  <canvas id="petals-canvas"></canvas>
+  <canvas id="stars-canvas"></canvas>
+
+  <!-- ===== FLOATING MUSIC PLAYER ===== -->
+  <div id="music-player" class="music-player">
+    <div id="yt-container" style="display:none;">
+      <iframe
+        id="yt-player"
+        width="1"
+        height="1"
+        src="about:blank"
+        data-src="https://www.youtube.com/embed/iGC02RLvIDk?autoplay=1&controls=0&disablekb=1&fs=0&loop=1&modestbranding=1&playlist=iGC02RLvIDk&rel=0&enablejsapi=1&playsinline=1"
+        title="Background music"
+        allow="autoplay; encrypted-media"
+        referrerpolicy="strict-origin-when-cross-origin"
+      ></iframe>
+    </div>
+
+    <button id="music-toggle" class="music-toggle" onclick="toggleMusic()" title="Play / Pause music">
+      <div class="music-disc" id="music-disc">
+        <span class="music-note">♪</span>
+      </div>
+      <div class="music-info">
+        <span class="music-title">POV: falling in love</span>
+        <span class="music-sub">our playlist 🌷</span>
+      </div>
+      <div class="music-bars" id="music-bars">
+        <span></span><span></span><span></span><span></span>
+      </div>
+    </button>
+
+    <div class="music-tooltip" id="music-tooltip">Click to play our song 🎵</div>
+  </div>
+
+  <!-- ===== 1. HERO / LETTER ===== -->
+  <section id="hero" class="section hero-section">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow animate-fade-up delay-1">a message, just for you</p>
+      <div class="name-wrapper animate-fade-up delay-2">
+        <div class="name-glow-ring"></div>
+        <h1 class="hero-name">My Love</h1>
+      </div>
+      <div class="letter-card animate-fade-up delay-3">
+        <div class="letter-deco top-left">✦</div>
+        <div class="letter-deco top-right">✦</div>
+        <div class="letter-inner">
+          <p class="letter-greeting">Hey you,</p>
+          <p class="letter-body">
+            I don't usually know how to say these things out loud. So I made this instead.
+          </p>
+          <p class="letter-body">
+            I think about you more than you know. And not in a complicated way — just in that quiet,
+            warm kind of way where you randomly appear in my mind and I smile without even realizing it.
+          </p>
+          <p class="letter-body">
+            I'm not trying to be perfect with my words here. I just wanted you to see
+            a little bit of what you mean to me. Because you deserve to know.
+          </p>
+          <p class="letter-body">
+            Keep scrolling. I made this whole thing for you. 🌷
+          </p>
+          <p class="letter-signature">— Yours 💕</p>
+        </div>
+        <div class="letter-deco bottom-left">✦</div>
+        <div class="letter-deco bottom-right">✦</div>
+      </div>
+      <button class="scroll-btn animate-fade-up delay-4" onclick="scrollToSection('song')">
+        <span>Keep going</span>
+        <div class="scroll-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </button>
+    </div>
+  </section>
+
+  <!-- ===== 2. OUR SONG ===== -->
+  <section id="song" class="section song-section">
+    <div class="section-particles" id="song-particles"></div>
+    <div class="song-content reveal">
+      <p class="section-eyebrow">our song</p>
+      <h2 class="section-title">The Song That Reminds Me of You</h2>
+      <div class="vinyl-scene">
+        <div class="vinyl-glow"></div>
+        <div class="vinyl" id="vinyl-disc">
+          <div class="vinyl-grooves"></div>
+          <div class="vinyl-label">
+            <p class="vinyl-title">♪ Falling in Love ♪</p>
+            <p class="vinyl-artist">— Love &amp; Chill Vibes —</p>
+          </div>
+        </div>
+        <div class="needle-arm">
+          <div class="needle" id="needle"></div>
+        </div>
+      </div>
+      <div class="song-card reveal">
+        <div class="song-wave">
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span>
+        </div>
+        <p class="song-quote">
+          "Every song on this playlist feels like us.
+          Like someone wrote it knowing exactly what I feel for you."
+        </p>
+      </div>
+      <button class="scroll-btn reveal" onclick="scrollToSection('timeline')">
+        <span>Our story</span>
+        <div class="scroll-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </button>
+    </div>
+  </section>
+
+  <!-- ===== 3. TIMELINE ===== -->
+  <section id="timeline" class="section timeline-section">
+    <div class="section-particles" id="timeline-particles"></div>
+    <div class="timeline-content">
+      <p class="section-eyebrow reveal">our story</p>
+      <h2 class="section-title reveal">Every Step That Led to Us</h2>
+      <div class="timeline" id="timeline-items"></div>
+      <button class="scroll-btn reveal" onclick="scrollToSection('bucket')">
+        <span>What's next</span>
+        <div class="scroll-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </button>
+    </div>
+  </section>
+
+  <!-- ===== 4. BUCKET LIST ===== -->
+  <section id="bucket" class="section bucket-section">
+    <div class="section-particles" id="bucket-particles"></div>
+    <div class="bucket-content">
+      <p class="section-eyebrow reveal">our dreams</p>
+      <h2 class="section-title reveal">Things I Want to Do With You</h2>
+      <p class="bucket-subtitle reveal">Because life is better when it's with you 🌷</p>
+      <div class="bucket-grid" id="bucket-grid"></div>
+      <button class="scroll-btn reveal" onclick="scrollToSection('reasons')">
+        <span>10 reasons</span>
+        <div class="scroll-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </button>
+    </div>
+  </section>
+
+  <!-- ===== 5. 10 REASONS ===== -->
+  <section id="reasons" class="section reasons-section">
+    <div class="section-particles" id="reasons-particles"></div>
+    <div class="reasons-content">
+      <p class="section-eyebrow reveal">from my heart</p>
+      <h2 class="section-title reveal">10 Reasons I Love You</h2>
+      <p class="reasons-subtitle reveal">Tap each card to open it 🌷</p>
+      <div class="cards-grid" id="cards-grid"></div>
+      <button class="scroll-btn reveal" onclick="scrollToSection('secret')">
+        <span>Something secret</span>
+        <div class="scroll-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </button>
+    </div>
+  </section>
+
+  <!-- ===== 6. SECRET MESSAGE ===== -->
+  <section id="secret" class="section secret-section">
+    <div class="section-particles" id="secret-particles"></div>
+    <div class="secret-content reveal">
+      <p class="section-eyebrow">psst… only for you</p>
+      <h2 class="section-title">A Secret Message</h2>
+      <p class="secret-hint">Enter the password to unlock it 🔒</p>
+
+      <div class="secret-box" id="secret-box">
+        <div class="lock-icon" id="lock-icon">🔒</div>
+        <div class="password-field">
+          <input type="password" id="password-input" placeholder="enter the password…" maxlength="20" autocomplete="off" />
+          <button id="unlock-btn" onclick="tryUnlock()">Unlock</button>
+        </div>
+        <p class="password-hint">Hint: it's your name 🌷</p>
+        <p class="password-error" id="pw-error"></p>
+      </div>
+
+      <div class="secret-reveal" id="secret-reveal">
+        <div class="secret-message-card">
+          <div class="secret-emoji">💌</div>
+          <p class="secret-text">
+            You found it. 🌷
+          </p>
+          <p class="secret-text">
+            This part is just for you. No one else gets to read this.
+            Just you and me.
+          </p>
+          <p class="secret-text">
+            Loving you is one of the most natural things I've ever felt.
+            Like it was always supposed to happen — like I was always supposed to find you.
+          </p>
+          <p class="secret-text">
+            You are my favorite person. My safe place. The one I think about
+            when everything around me gets loud — you're the quiet that brings me back.
+          </p>
+          <p class="secret-text">
+            I don't just love you. I am in love with you.
+            With every part of you — the parts you show the world,
+            and the parts only I get to see.
+          </p>
+          <p class="secret-sig">— Yours, completely. 💕</p>
+        </div>
+      </div>
+
+      <button class="scroll-btn reveal" onclick="scrollToSection('goodnight')">
+        <span>One last thing</span>
+        <div class="scroll-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </button>
+    </div>
+  </section>
+
+  <!-- ===== 7. GOODNIGHT ===== -->
+  <section id="goodnight" class="section goodnight-section">
+    <div class="section-particles" id="goodnight-particles"></div>
+    <div class="goodnight-content reveal">
+      <div class="moon-container">
+        <div class="moon">🌙</div>
+        <div class="moon-glow"></div>
+      </div>
+      <p class="section-eyebrow">goodnight, my love</p>
+      <h2 class="goodnight-title">Before You Sleep</h2>
+      <div class="goodnight-card">
+        <p class="goodnight-text">
+          I hope tonight is gentle to you.
+        </p>
+        <p class="goodnight-text">
+          I hope your mind slows down, your heart feels light,
+          and you go to sleep knowing that somewhere out there —
+          someone is thinking about you.
+        </p>
+        <p class="goodnight-text">
+          That someone is me.
+        </p>
+        <p class="goodnight-text">
+          Sleep well, my love. 🌷
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 8. FINAL ===== -->
+  <section id="final" class="section final-section">
+    <div class="final-content">
+      <div class="tulip-deco">🌷🌷🌷</div>
+      <h2 class="final-title reveal">Always yours,</h2>
+      <p class="final-sub reveal">Made with love — for you, my love.</p>
+      <div class="heart-container reveal">
+        <div class="heart-pulse">❤️</div>
+        <div class="heart-ripple r1"></div>
+        <div class="heart-ripple r2"></div>
+        <div class="heart-ripple r3"></div>
+      </div>
+      <div class="star-row reveal">
+        <span class="s1">✦</span>
+        <span class="s2">✦</span>
+        <span class="s3">✦</span>
+      </div>
+    </div>
+  </section>
+
+  <script src="app-57ef4rk.js"></script>
+</body>
+</html>
